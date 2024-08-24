@@ -1,5 +1,5 @@
-const User = require("../models/user");
 const bcryptjs = require("bcryptjs");
+const User = require("../models/user");
 const errorhandler = require("../utils/error");
 
 // signup controller
@@ -7,16 +7,16 @@ const signup = async (req, res, next) => {
   const { username, email, password } = req.body;
 
   if(!username || !email || !password) {
-    return next(errorhandler(400,"All fields are required"));
+    next(errorhandler(400,"All fields are required"));
   }
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
-    return next(errorhandler(400,"Invalid email format"));
+     next(errorhandler(400,"Invalid email format"));
   }
 
-  if (password.length < 6) {
-    return next(errorhandler(400,"Password must be at least 6 characters long"));
+  if (password.length < 8) {
+     next(errorhandler(400,"Password must be at least 8 characters long"));
   }
 
   try {
@@ -28,10 +28,10 @@ const signup = async (req, res, next) => {
       password: hashedPassword,
     });
     await newUser.save();
-    re.send("Signup successful");
+    res.status(201).json({ success: true, message: "User created successfully" });
   } 
   catch (error) {
-    next(error);
+    next(errorhandler(400,"user not created"));
   }
 };
 

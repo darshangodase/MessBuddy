@@ -1,9 +1,7 @@
-
-const errorhandler=(statusCode, message) => {
-    const error = new Error();
+const errorhandler = (statusCode = 500, message = "An error occurred") => {
+    const error = new Error(message);
     error.statusCode = statusCode;
-    error.message = message;
     return error;
 };
 
-module.exports=errorhandler;
+module.exports = errorhandler;
