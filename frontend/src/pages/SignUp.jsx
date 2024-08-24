@@ -1,29 +1,64 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Button, Label, TextInput } from 'flowbite-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Alert, Button, Label, Spinner, TextInput } from 'flowbite-react';
 
 function SignUp() {
   const [formdata, setformdata] = useState({});
-
+  const [errorMessage, seterrorMessage] = useState(null);
+  const [loading, setloading] = useState(false);
+  const navigate = useNavigate();
+   
   const handleChange = (e) => {
-    setformdata({ ...formdata, [e.target.id]: e.target.value });
+    setformdata({ ...formdata, [e.target.id]: e.target.value.trim() });
   };
 
   const handlesubmit = async (e) => {
     e.preventDefault();
-    console.log("req hit");
+  
+    const { username, email, password } = formdata;
+  
+    if(!username || !email || !password) {
+      setloading(false);
+      return seterrorMessage('All fields are required');
+    }
+    
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if(!emailRegex.test(email)) 
+      {
+         setloading(false);
+         return seterrorMessage('Invalid email format');
+      }
+      if(password.length < 8) {
+      setloading(false);
+      return seterrorMessage('Password must be at least 8 characters long');
+    }
+  
     try {
+      seterrorMessage(null); 
+      setloading(true); 
       const res = await fetch('/api/auth/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formdata),
       });
-
       const data = await res.json();
-      console.log(data); // Handle the response data as needed
-    } catch (error) {
-      console.log('Error:', error); // Handle the error as needed
-    }
+
+      if (data.success === false) {
+        setloading(false);
+        seterrorMessage('User Already Exists');
+      } 
+      else 
+      {
+        setloading(false);
+        seterrorMessage('User Sign Up Successful');
+        navigate('/signin');
+      }
+    } 
+    catch (error) 
+    {
+      setloading(false);
+      seterrorMessage(error.message || 'Failed to Sign Up');
+    } 
   };
 
   return (
@@ -40,28 +75,40 @@ function SignUp() {
           </p>
         </div>
         <div className="flex-1">
-            <h2 className=" mb-3 text-3xl text-center font-semibold">Sign Up</h2>
+          <h2 className="mb-3 text-3xl text-center font-semibold">Sign Up</h2>
           <form className="flex flex-col gap-2" onSubmit={handlesubmit}>
             <div>
               <Label value="Username" className="" />
-              <TextInput type="text" placeholder="xyz" id="username" onChange={handleChange} />
+              <TextInput type="text" placeholder="darshan@10" id="username" onChange={handleChange} />
             </div>
             <div>
               <Label value="Email" className="" />
-              <TextInput type="email" placeholder="xyz@gmail.com" id="email" onChange={handleChange} />
+              <TextInput type="email" placeholder="abc@gmail.com" id="email" onChange={handleChange} />
             </div>
             <div>
               <Label value="Password" className="" />
               <TextInput type="password" placeholder="Password" id="password" onChange={handleChange} />
             </div>
-            <Button type="submit" gradientDuoTone="purpleToPink" className="mt-4">
-              Sign Up
+            <Button type="submit" gradientDuoTone="purpleToPink" className="mt-4" disabled={loading}>
+              {
+                loading ? (<><Spinner size='sm' /><span className='ml-2'>Loading...</span></>) :"Sign Up"
+              }
             </Button>
           </form>
-          <div className="flex gap-2 mt-5 ">
+
+
+          <div className="flex gap-2 mt-5">
             <span className="text-md">Have an account?</span>
             <Link to='/signin' className='text-blue-500 font-medium'>Sign In</Link>
           </div>
+
+
+          {errorMessage && (
+            <Alert className='mt-5 text-black font-semibold text-md' color='failure'>
+              {errorMessage}
+            </Alert>
+          )}
+
         </div>
       </div>
     </div>

@@ -6,32 +6,29 @@ const errorhandler = require("../utils/error");
 const signup = async (req, res, next) => {
   const { username, email, password } = req.body;
 
-  if(!username || !email || !password) {
-    next(errorhandler(400,"All fields are required"));
-  }
-
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
-     next(errorhandler(400,"Invalid email format"));
-  }
-
-  if (password.length < 8) {
-     next(errorhandler(400,"Password must be at least 8 characters long"));
-  }
-
-  try {
+  try 
+  {
+    if(!username || !email || !password) 
+      {
+        return res.status(400).json({ success: false, message: "All fields are required" });
+      }
+    const existingUser = await User.findOne({ email });
+    if(existingUser) 
+      {
+        return res.status(400).json({ success: false, message: "User already exists" });
+      }
     const hashedPassword = await bcryptjs.hash(password, 10);
-
     const newUser = new User({
       username,
       email,
       password: hashedPassword,
     });
+
     await newUser.save();
     res.status(201).json({ success: true, message: "User created successfully" });
   } 
   catch (error) {
-    next(errorhandler(400,"user not created"));
+    next(errorhandler(500, "Internal Server Error"));
   }
 };
 
