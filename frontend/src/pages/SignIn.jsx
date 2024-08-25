@@ -1,29 +1,34 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Alert, Button, Label, Spinner, TextInput } from 'flowbite-react';
-
+import { signInSuccess,signInStart,signInFailure } from '../redux/user/userSlice';
+import {useDispatch,useSelector } from 'react-redux';
 function SignIn() {
+
   const [formdata, setformdata] = useState({});
-  const [errorMessage, seterrorMessage] = useState(null);
-  const [loading, setloading] = useState(false);
   const navigate = useNavigate();
-   
-  const handleChange = (e) => {
+
+  const dispatch = useDispatch();
+  const {loading,error:errorMessage} = useSelector(state => state.user);
+
+  const handleChange = (e) => 
+  {
     setformdata({ ...formdata, [e.target.id]: e.target.value.trim() });
   };
 
-  const handlesubmit = async (e) => {
+  const handlesubmit = async (e) => 
+    {
     e.preventDefault();
-  
     const { username, password } = formdata;
   
-    if(!username || !password) {
-      setloading(false);
-      return seterrorMessage('All fields are required');
-    }
+    if(!username || !password) 
+      {
+         return dispatch(signInFailure('All fields are required'));
+      }
+
     try {
-      seterrorMessage(null); 
-      setloading(true); 
+
+     dispatch(signInStart());
       const res = await fetch('/api/auth/signin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -32,20 +37,17 @@ function SignIn() {
       const data = await res.json();
 
       if (data.success === false) {
-        setloading(false);
-        seterrorMessage('Invalid credentials');
+        dispatch(signInFailure('Invalid credentials'));
       } 
-      else 
+     if(res.ok)
       {
-        setloading(false);
-        seterrorMessage('User Sign In Successful');
+        dispatch(signInSuccess(data));
         navigate('/');
       }
     } 
     catch (error) 
     {
-      setloading(false);
-      seterrorMessage(error.message || 'Failed to Sign In');
+      dispatch(signInFailure('Failed to Sign In'));
     } 
   };
 
