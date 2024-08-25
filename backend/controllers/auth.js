@@ -9,7 +9,7 @@ const signup = async (req, res, next) => {
 
   try 
   {
-    if(!username || !email || !password) 
+    if(!username || !email || !password || username==="" || email==="" || password==="") 
       {
         return res.status(400).json({ success: false, message: "All fields are required" });
       }
@@ -26,9 +26,10 @@ const signup = async (req, res, next) => {
     });
 
     await newUser.save();
-    res.status(201).json({ success: true, message: "User created successfully" });
+    res.status(200).json({ success: true, message: "User created successfully" });
   } 
-  catch (error) {
+  catch (error) 
+  {
     next(errorhandler(500, "Internal Server Error"));
   }
 };
@@ -59,11 +60,37 @@ const signin=async (req, res, next) => {
         const token = jwt.sign({ id: validUser._id,},process.env.JWT_SECRET_KEY);
 
         const {password:pass,...rest}=validUser._doc;
-        res.status(200).cookie('token', token, { httpOnly: true }).json(rest);
+        res.status(200).cookie('access_token', token, { httpOnly: true }).json(rest);
     }
     catch (error) {
       next(errorhandler(500, "Internal Server Error"));
     }
 };
 
-module.exports = {signup: signup,signin:signin};
+
+const google = async (req, res, next) => {
+  const { email, name, photoUrl } = req.body;
+  try {
+    const user = await User.findOne({ email: email });
+    if (user) {
+      return res.status(400).json({ success: false, message: "User already exists" });
+    } else {
+      const generatedPassword = Math.random().toString(36).slice(-8);
+      const hashedPassword = await bcryptjs.hash(generatedPassword, 10);
+      const newUser = new User({
+        username: name.toLowerCase().split(' ').join('') + '@' + Math.random().toString(36).slice(-4),
+        email: email,
+        password: hashedPassword,
+        profilePicture: photoUrl,
+      });
+      await newUser.save();
+      const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET_KEY);
+      const { password: pass, ...rest } = newUser._doc;
+      res.status(200).cookie('access_token', token, { httpOnly: true }).json(rest);
+    }
+  } catch (error) {
+    next(errorhandler(500, "Internal Server Error"));
+  }
+};
+
+module.exports = { signup, signin, google };

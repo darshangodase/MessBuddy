@@ -1,34 +1,34 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Alert, Button, Label, Spinner, TextInput } from 'flowbite-react';
-import { signInSuccess,signInStart,signInFailure } from '../redux/user/userSlice';
-import {useDispatch,useSelector } from 'react-redux';
-function SignIn() {
+import { signInSuccess, signInStart, signInFailure, clearError } from '../redux/user/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
+function SignIn() {
   const [formdata, setformdata] = useState({});
   const navigate = useNavigate();
-
   const dispatch = useDispatch();
-  const {loading,error:errorMessage} = useSelector(state => state.user);
+  const { loading, error: errorMessage } = useSelector((state) => state.user);
 
-  const handleChange = (e) => 
-  {
+  useEffect(() => {
+    dispatch(clearError());
+  }, [dispatch]);
+
+  const handleChange = (e) => {
     setformdata({ ...formdata, [e.target.id]: e.target.value.trim() });
   };
 
-  const handlesubmit = async (e) => 
-    {
+  const handlesubmit = async (e) => {
     e.preventDefault();
     const { username, password } = formdata;
-  
-    if(!username || !password) 
-      {
-         return dispatch(signInFailure('All fields are required'));
-      }
+
+    // Basic validation
+    if (!username || !password) {
+      return dispatch(signInFailure('All fields are required'));
+    }
 
     try {
-
-     dispatch(signInStart());
+      dispatch(signInStart());
       const res = await fetch('/api/auth/signin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -36,19 +36,14 @@ function SignIn() {
       });
       const data = await res.json();
 
-      if (data.success === false) {
-        dispatch(signInFailure('Invalid credentials'));
-      } 
-     if(res.ok)
-      {
-        dispatch(signInSuccess(data));
-        navigate('/');
+      if (!res.ok) {
+        return dispatch(signInFailure('Invalid credentials'));
       }
-    } 
-    catch (error) 
-    {
-      dispatch(signInFailure('Failed to Sign In'));
-    } 
+      dispatch(signInSuccess(data));
+      navigate('/');
+    } catch (error) {
+      dispatch(signInFailure(error.message || 'Failed to Sign In'));
+    }
   };
 
   return (
@@ -76,23 +71,25 @@ function SignIn() {
               <TextInput type="password" placeholder="********" id="password" onChange={handleChange} />
             </div>
             <Button type="submit" gradientDuoTone="purpleToPink" className="mt-4" disabled={loading}>
-              {
-                loading ? (<><Spinner size='sm' /><span className='ml-2'>Loading...</span></>) :"Sign In"
-              }
+              {loading ? (
+                <>
+                  <Spinner size='sm' />
+                  <span className='ml-2'>Loading...</span>
+                </>
+              ) : (
+                'Sign In'
+              )}
             </Button>
           </form>
           <div className="flex gap-2 mt-5">
-            <span className="text-md"> Don't Have an account?</span>
+            <span className="text-md">Don't Have an account?</span>
             <Link to='/signup' className='text-blue-500 font-medium'>Sign Up</Link>
           </div>
-
-
           {errorMessage && (
             <Alert className='mt-5 text-black font-semibold text-md' color='failure'>
               {errorMessage}
             </Alert>
           )}
-
         </div>
       </div>
     </div>

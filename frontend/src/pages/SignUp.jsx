@@ -1,41 +1,49 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Alert, Button, Label, Spinner, TextInput } from 'flowbite-react';
+import Oauth from '../components/google_auth';
+import { useDispatch, useSelector } from 'react-redux';
+import { clearError } from '../redux/user/userSlice';
 
 function SignUp() {
   const [formdata, setformdata] = useState({});
   const [errorMessage, seterrorMessage] = useState(null);
   const [loading, setloading] = useState(false);
   const navigate = useNavigate();
-   
+  const dispatch = useDispatch();
+  const authError = useSelector((state) => state.user.error);
+
+  useEffect(() => {
+    dispatch(clearError());
+  }, [dispatch]);
+
   const handleChange = (e) => {
     setformdata({ ...formdata, [e.target.id]: e.target.value.trim() });
   };
 
   const handlesubmit = async (e) => {
     e.preventDefault();
-  
+
     const { username, email, password } = formdata;
-  
-    if(!username || !email || !password) {
+
+    if (!username || !email || !password) {
       setloading(false);
       return seterrorMessage('All fields are required');
     }
-    
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if(!emailRegex.test(email)) 
-      {
-         setloading(false);
-         return seterrorMessage('Invalid email format');
-      }
-      if(password.length < 8) {
+    if (!emailRegex.test(email)) {
+      setloading(false);
+      return seterrorMessage('Invalid email format');
+    }
+    if (password.length < 8) {
       setloading(false);
       return seterrorMessage('Password must be at least 8 characters long');
     }
-  
+
     try {
-      seterrorMessage(null); 
-      setloading(true); 
+      seterrorMessage(null);
+      setloading(true);
       const res = await fetch('/api/auth/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -46,19 +54,15 @@ function SignUp() {
       if (data.success === false) {
         setloading(false);
         seterrorMessage('User Already Exists');
-      } 
-      else 
-      {
+      } else {
         setloading(false);
         seterrorMessage('User Sign Up Successful');
         navigate('/signin');
       }
-    } 
-    catch (error) 
-    {
+    } catch (error) {
       setloading(false);
       seterrorMessage(error.message || 'Failed to Sign Up');
-    } 
+    }
   };
 
   return (
@@ -91,21 +95,20 @@ function SignUp() {
             </div>
             <Button type="submit" gradientDuoTone="purpleToPink" className="mt-4" disabled={loading}>
               {
-                loading ? (<><Spinner size='sm' /><span className='ml-2'>Loading...</span></>) :"Sign Up"
+                loading ? (<><Spinner size='sm' /><span className='ml-2'>Loading...</span></>) : "Sign Up"
               }
             </Button>
+            <Oauth />
           </form>
-
 
           <div className="flex gap-2 mt-5">
             <span className="text-md">Have an account?</span>
             <Link to='/signin' className='text-blue-500 font-medium'>Sign In</Link>
           </div>
 
-
-          {errorMessage && (
+          {(errorMessage || authError) && (
             <Alert className='mt-5 text-black font-semibold text-md' color='failure'>
-              {errorMessage}
+              {errorMessage || authError}
             </Alert>
           )}
 
