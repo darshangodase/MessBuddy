@@ -35,10 +35,10 @@ function GoogleAuth() {
         dispatch(signInSuccess(data));
         navigate('/');
       } else {
-        dispatch(signInFailure(data.message || 'Failed to Sign In with Google'));
+        dispatch(signInFailure('Failed to Sign Up with Google'));
       }
     } catch (error) {
-      dispatch(signInFailure(error.message || 'Failed to Sign In with Google'));
+      dispatch(signInFailure('Failed to Sign Up with Google'));
     }
   };
 

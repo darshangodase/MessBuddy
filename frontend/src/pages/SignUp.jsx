@@ -61,7 +61,7 @@ function SignUp() {
       }
     } catch (error) {
       setloading(false);
-      seterrorMessage(error.message || 'Failed to Sign Up');
+      seterrorMessage('Failed to Sign Up');
     }
   };
 

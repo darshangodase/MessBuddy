@@ -42,7 +42,7 @@ function SignIn() {
       dispatch(signInSuccess(data));
       navigate('/');
     } catch (error) {
-      dispatch(signInFailure(error.message || 'Failed to Sign In'));
+      dispatch(signInFailure('Failed to Sign In'));
     }
   };
 
