@@ -50,6 +50,7 @@ function Dashboardprofile() {
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           setimagefileurl(downloadURL);
+          setimageuploadprogress(null); // Reset progress after upload is complete
         });
       }
     );
@@ -61,8 +62,8 @@ function Dashboardprofile() {
       <form className='flex flex-col gap-4'>
         <input hidden type='file' accept='image/*' onChange={handleuploadimage} ref={filepickref} />
         <div className='relative w-32 h-32 self-center cursor-pointer shadow-md overflow-hidden rounded-full' onClick={() => filepickref.current.click()}>
-          {imageuploadprogress && (
-            <CircularProgressbar value={imageuploadprogress ||0}
+          {imageuploadprogress !== null && (
+            <CircularProgressbar value={imageuploadprogress || 0}
              text={ `${imageuploadprogress}%`} 
              strokeWidth={5} 
              styles={{ 
@@ -79,10 +80,10 @@ function Dashboardprofile() {
               }}
           />
           )}
-          <img className={`w-full h-full rounded-full border-8 border-[lightgray] object-cover ${imageuploadprogress && imageuploadprogress<100 && 'opacity-60'}`} src={imagefileurl || currentUser.profilePicture} alt='user' />
+          <img className={`w-full h-full rounded-full border-8 border-[lightgray] object-cover ${imageuploadprogress !== null && imageuploadprogress < 100 && 'opacity-60'}`} src={imagefileurl || currentUser.profilePicture} alt='user' />
         </div>
 
-        {imageuploaderror&& <Alert color='failure'>{imageuploaderror}</Alert>}
+        {imageuploaderror && <Alert color='failure'>{imageuploaderror}</Alert>}
         <TextInput type='text' id='username' placeholder='Username' defaultValue={currentUser.username} />
         <TextInput type='email' id='email' placeholder='Email' defaultValue={currentUser.email} />
         <TextInput type='password' id='password' placeholder='Password' />
@@ -90,7 +91,7 @@ function Dashboardprofile() {
           Update
         </Button>
       </form>
-      <div className='text-red-500 flex justify-between'>
+      <div className='text-red-500 flex justify-between mt-3'>
         <span className='cursor-pointer'>Delete Account</span>
         <span className='cursor-pointer'>Sign Out</span>
       </div>
