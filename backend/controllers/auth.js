@@ -77,6 +77,7 @@ const google = async (req, res, next) => {
     } else {
       const generatedPassword = Math.random().toString(36).slice(-8);
       const hashedPassword = await bcryptjs.hash(generatedPassword, 10);
+    
       const newUser = new User({
         username: name.toLowerCase().split(' ').join('') + '@' + Math.random().toString(36).slice(-4),
         email: email,
