@@ -1,14 +1,15 @@
-import { Alert, Button, TextInput } from 'flowbite-react';
+import { Alert, Button, Modal, TextInput } from 'flowbite-react';
 import React, { useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
 import { app } from '../firebase';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-import { updateFailure, updateStart, updateSuccess } from '../redux/user/userSlice';
+import { updateFailure, updateStart, updateSuccess, deleteUserStart, deleteUserSuccess, deleteUserFailure } from '../redux/user/userSlice';
+import { HiOutlineExclamationCircle } from 'react-icons/hi';
 
 function Dashboardprofile() {
-  const { currentUser } = useSelector((state) => state.user);
+  const { currentUser, error } = useSelector((state) => state.user);
   const filepickref = useRef();
   const dispatch = useDispatch();
   const [imagefile, setimagefile] = useState(null);
@@ -19,6 +20,7 @@ function Dashboardprofile() {
   const [imagefileuploading, setimageuploading] = useState(false);
   const [updateusersuccess, setupdateusersuccess] = useState(null);
   const [updateusererror, setupdateusererror] = useState(null);
+  const [showmodel, setshowmodel] = useState(false);
 
   const handleuploadimage = (e) => {
     const file = e.target.files[0];
@@ -71,16 +73,16 @@ function Dashboardprofile() {
 
   const handlesubmit = async (e) => {
     e.preventDefault();
-    setupdateusererror(null); 
+    setupdateusererror(null);
     setupdateusersuccess(null);
-    
+
     if (Object.keys(formdata).length === 0) {
       setupdateusererror("No changes detected");
       return;
     }
-    if(imagefileuploading){
+    if (imagefileuploading) {
       setupdateusererror("Please wait for image to upload");
-        return;
+      return;
     }
     dispatch(updateStart());
 
@@ -103,6 +105,27 @@ function Dashboardprofile() {
     } catch (e) {
       dispatch(updateFailure("Failed to update user"));
       setupdateusererror("Failed to update user");
+    }
+  };
+
+  const handledeleteuser = async () => {
+    setshowmodel(false);
+    try {
+      dispatch(deleteUserStart());
+      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      const data = await res.json();
+      if (res.ok) {
+        dispatch(deleteUserSuccess(data));
+      } else {
+        dispatch(deleteUserFailure(data.message));
+      }
+    } catch (error) {
+      dispatch(deleteUserFailure(error.message));
     }
   };
 
@@ -147,11 +170,26 @@ function Dashboardprofile() {
         </Button>
       </form>
       <div className='text-red-500 flex justify-between mt-3'>
-        <span className='cursor-pointer'>Delete Account</span>
+        <span onClick={() => setshowmodel(true)} className='cursor-pointer'>Delete Account</span>
         <span className='cursor-pointer'>Sign Out</span>
       </div>
-     { updateusersuccess && (<Alert className="mt-4"color='success'>{updateusersuccess}</Alert> )}
-     { updateusererror && (<Alert className="mt-4" color='failure'>{updateusererror}</Alert> )}
+      {updateusersuccess && (<Alert className="mt-4" color='success'>{updateusersuccess}</Alert>)}
+      {updateusererror && (<Alert className="mt-4" color='failure'>{updateusererror}</Alert>)}
+      {error && (<Alert className="mt-4" color='failure'>{error}</Alert>)}
+
+      <Modal show={showmodel} onClose={() => setshowmodel(false)} popup size='md'>
+        <Modal.Header />
+        <Modal.Body>
+          <div className="text-center">
+            <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400" />
+            <h3 className="mb-5 text-lg font-normal text-gray-500">Are you sure you want to delete your account?</h3>
+            <div className="flex justify-center gap-4">
+              <Button color="failure" onClick={handledeleteuser}>Yes, I'm sure</Button>
+              <Button color="gray" onClick={() => setshowmodel(false)}>No, cancel</Button>
+            </div>
+          </div>
+        </Modal.Body>
+      </Modal>
     </div>
   );
 }

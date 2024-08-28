@@ -67,10 +67,11 @@ const deleteuser = async (req, res, next) => {
       try{
       await User.findByIdAndDelete(req.params.userId);
       res.status(200).json('User has been deleted');
+      
       }
       catch(error)
       {
-        res.status(200).json('Could not delete the user');
+        res.status(400).json('Could not delete the user');
       }
 }
 module.exports = { test, updateUser,deleteuser };
