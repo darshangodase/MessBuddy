@@ -21,7 +21,8 @@ const errorHandler = require('../utils/error');
         const savedPost = await newPost.save();
         res.status(201).json(savedPost);
       }  catch (error) {
-        next(error);
+        return next(errorHandler(403,'This title has already been saved'));
+
       }
 
   }

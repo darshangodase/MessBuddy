@@ -1,60 +1,78 @@
-import React, { useEffect, useState } from 'react'
-import {Link, useLocation} from 'react-router-dom'
-import {Sidebar,} from 'flowbite-react'
-import { signoutsuccess } from "../redux/user/userSlice"; 
-import {HiUser, HiArrowSmRight} from 'react-icons/hi'
-import {useSelector ,useDispatch} from "react-redux";
+import React, { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { Sidebar } from "flowbite-react";
+import { signoutsuccess } from "../redux/user/userSlice";
+import { HiUser, HiArrowSmRight, HiDocumentText } from "react-icons/hi";
+import { useSelector, useDispatch } from "react-redux";
 
-function dashboardsidebar() {
-
-
-  const location=useLocation();
-  const [tab,settab]=useState();
-  const [errorMessage, setErrorMessage] = useState(null);
+function Dashboardsidebar() {
+  const location = useLocation();
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.user.user);
+  const [tab, setTab] = useState();
+  const [errorMessage, setErrorMessage] = useState(null);
+  const currentUser = useSelector((state) => state.user.currentUser);
 
-  useEffect(()=>{
-    const urlparams=new URLSearchParams(location.search)
-    const tabformurl=urlparams.get('tab')
-    if(tabformurl)
-    {
-      settab(tabformurl)
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const tabFromUrl = urlParams.get("tab");
+    if (tabFromUrl) {
+      setTab(tabFromUrl);
     }
-  },[location.search])
+  }, [location.search]);
 
-  const handlesignout = async () => {
+  const handleSignout = async () => {
     try {
       const res = await fetch(`/api/user/signout`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' }
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
       });
       const data = await res.json();
       if (res.ok) {
         dispatch(signoutsuccess(data));
-      } else { 
+      } else {
         setErrorMessage("User signout failed");
       }
     } catch (error) {
       setErrorMessage("User signout failed");
     }
   };
+
+  // Debugging: Log currentUser to verify its value
+  console.log("Current User:", currentUser);
+
   return (
-    <Sidebar className='w-full md:w-56'>
+    <Sidebar className="w-full md:w-56">
       <Sidebar.Items>
-        <Sidebar.ItemGroup>
-          <Link to='/dashboard?tab=profile'>
-          <Sidebar.Item active={tab==="profile"} icon={HiUser} label={'User'} labelColor="dark"as='div'>
-            Profile
+        <Sidebar.ItemGroup className="flex flex-col gap-1">
+          <Link to="/dashboard?tab=profile">
+            <Sidebar.Item
+              active={tab === "profile"}
+              icon={HiUser}
+              label={currentUser?.isAdmin ? "Admin" : "User"}
+              labelColor="dark"
+              as="div"
+            >
+              Profile
             </Sidebar.Item>
           </Link>
-          <Sidebar.Item icon={HiArrowSmRight} onClick={handlesignout} >
-                Sign Out
-            </Sidebar.Item>
+          {currentUser?.isAdmin && (
+            <Link to="/dashboard?tab=posts">
+              <Sidebar.Item
+                active={tab === "posts"}
+                icon={HiDocumentText}
+                as="div"
+              >
+                Posts
+              </Sidebar.Item>
+            </Link>
+          )}
+          <Sidebar.Item icon={HiArrowSmRight} onClick={handleSignout}>
+            Sign Out
+          </Sidebar.Item>
         </Sidebar.ItemGroup>
       </Sidebar.Items>
     </Sidebar>
-  )
+  );
 }
 
-export default dashboardsidebar
+export default Dashboardsidebar;
