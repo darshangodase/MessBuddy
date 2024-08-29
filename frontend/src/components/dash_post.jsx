@@ -3,7 +3,7 @@ import React from 'react'
 function dash_post() {
   return (
     <div className='h-full w-full'>
-      <h1 className="">hello moto</h1>
+      <h1 className=""></h1>
     </div>
   )
 }
