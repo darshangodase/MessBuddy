@@ -9,7 +9,8 @@ import Projects from './pages/Projects';
 import Header from './components/Header';
 import Footer from './components/footer';
 import PrivateRoute from './components/privateroute';
-
+import CreatePost from './pages/create_post';
+import Privateroute_admin_only from './components/privateroute_admin_only';
 function App() {
   
 
@@ -21,9 +22,15 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUP />} />
+
           <Route element={<PrivateRoute/>} >
-                 <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           </Route>
+
+          <Route  element={<Privateroute_admin_only />}>
+          <Route path="/create-post" element={<CreatePost />} />
+          </Route>
+
           <Route path="/projects" element={<Projects />} />
         </Routes>
         <Footer/>

@@ -6,7 +6,7 @@ const verifytoken =(req,res,next) => {
       
       if(!token) 
         {
-        return res.status(401).json({ success: false, message: 'No token provided.' });
+        return res.status(401).json({ success: false, message: 'Invalid User' });
         }
         
       jwt.verify(token,process.env.JWT_SECRET_KEY,(err,user)=>{

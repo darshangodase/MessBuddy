@@ -7,9 +7,10 @@ import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { updateFailure, updateStart, updateSuccess, deleteUserStart, deleteUserSuccess, deleteUserFailure, signoutsuccess } from '../redux/user/userSlice';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
+import { Link } from 'react-router-dom';
 
 function Dashboardprofile() {
-  const { currentUser, error } = useSelector((state) => state.user);
+  const { currentUser, error, isFetching } = useSelector((state) => state.user);
   const filepickref = useRef();
   const dispatch = useDispatch();
   const [imagefile, setimagefile] = useState(null);
@@ -182,9 +183,19 @@ function Dashboardprofile() {
         <TextInput type='text' id='username' placeholder='Username' defaultValue={currentUser.username} onChange={handlechange} />
         <TextInput type='email' id='email' placeholder='Email' defaultValue={currentUser.email} onChange={handlechange} />
         <TextInput type='password' id='password' placeholder='Password' onChange={handlechange} />
-        <Button type='submit' gradientDuoTone='purpleToBlue' outline>
-          Update
+
+        <Button type='submit' gradientDuoTone='purpleToBlue' disabled={isFetching || imagefileuploading} outline>
+          {isFetching ? 'Loading...' : 'Update'}
         </Button>
+        {
+          currentUser.isAdmin && (
+            <Link to={'/create-post'}>
+              <Button gradientDuoTone='purpleToPink' className='mt-3 w-full'>
+                Create a post
+              </Button>
+            </Link>
+          )
+        }
       </form>
 
       <div className='text-red-500 flex justify-between mt-3'>
