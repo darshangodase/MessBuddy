@@ -11,9 +11,10 @@ import { app } from '../firebase';
 import { useEffect, useState } from 'react';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-import { useNavigate,useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
-export default function CreatePost() {
+export default function UpdatePost() {
   const [file, setFile] = useState(null);
   const [imageUploadProgress, setImageUploadProgress] = useState(null);
   const [imageUploadError, setImageUploadError] = useState(null);
@@ -21,15 +22,14 @@ export default function CreatePost() {
   const [publishError, setPublishError] = useState(null);
   const { postId } = useParams();
   const navigate = useNavigate();
+  const { currentUser } = useSelector((state) => state.user);
 
   useEffect(() => {
     const fetchPost = async () => {
-
       try {
         const res = await fetch(`/api/post/getposts?postId=${postId}`);
         const data = await res.json();
-        if (!res.ok) 
-        {
+        if (!res.ok) {
           setPublishError(data.message);
           return;
         }
@@ -40,7 +40,6 @@ export default function CreatePost() {
     };
     fetchPost();
   }, [postId]);
-
 
   const handleUploadImage = async () => {
     try {
@@ -82,13 +81,16 @@ export default function CreatePost() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch('/api/post/update', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
+      const res = await fetch(
+        `/api/post/updatepost/${formData._id}/${currentUser._id}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        }
+      );
       const data = await res.json();
       if (!res.ok) {
         setPublishError(data.message);
@@ -137,7 +139,6 @@ export default function CreatePost() {
             type='file'
             accept='image/*'
             onChange={(e) => setFile(e.target.files[0])}
-
           />
           <Button
             type='button'
