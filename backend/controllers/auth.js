@@ -73,8 +73,11 @@ const google = async (req, res, next) => {
   try {
     const user = await User.findOne({ email: email });
     if (user) {
-      return res.status(400).json({ success: false, message: "User already exists" });
-    } else {
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY);
+      const { password: pass, ...rest } = user._doc;
+      return res.status(200).cookie('access_token', token, { httpOnly: true }).json(rest);
+    } 
+    else {
       const generatedPassword = Math.random().toString(36).slice(-8);
       const hashedPassword = await bcryptjs.hash(generatedPassword, 10);
     

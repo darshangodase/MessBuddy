@@ -5,7 +5,7 @@ import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/
 import { app } from '../firebase';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-import { updateFailure, updateStart, updateSuccess, deleteUserStart, deleteUserSuccess, deleteUserFailure } from '../redux/user/userSlice';
+import { updateFailure, updateStart, updateSuccess, deleteUserStart, deleteUserSuccess, deleteUserFailure, signoutsuccess } from '../redux/user/userSlice';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
 
 function Dashboardprofile() {
@@ -15,11 +15,10 @@ function Dashboardprofile() {
   const [imagefile, setimagefile] = useState(null);
   const [imagefileurl, setimagefileurl] = useState(null);
   const [imageuploadprogress, setimageuploadprogress] = useState(null);
-  const [imageuploaderror, setimageuploaderror] = useState(null);
   const [formdata, setformdata] = useState({});
   const [imagefileuploading, setimageuploading] = useState(false);
   const [updateusersuccess, setupdateusersuccess] = useState(null);
-  const [updateusererror, setupdateusererror] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
   const [showmodel, setshowmodel] = useState(false);
 
   const handleuploadimage = (e) => {
@@ -38,7 +37,7 @@ function Dashboardprofile() {
 
   const uploadImage = async () => {
     setimageuploading(true);
-    setimageuploaderror(null);
+    setErrorMessage(null);
     const storage = getStorage(app);
     const filename = new Date().getTime() + imagefile.name;
     const storageRef = ref(storage, filename);
@@ -51,7 +50,7 @@ function Dashboardprofile() {
         setimageuploadprogress(progress.toFixed(0));
       },
       (error) => {
-        setimageuploaderror('Could not upload image (File must be less than 2MB)');
+        setErrorMessage('Could not upload image (File must be less than 2MB)');
         setimageuploadprogress(null);
         setimagefile(null);
         setimagefileurl(null);
@@ -73,15 +72,15 @@ function Dashboardprofile() {
 
   const handlesubmit = async (e) => {
     e.preventDefault();
-    setupdateusererror(null);
+    setErrorMessage(null);
     setupdateusersuccess(null);
 
     if (Object.keys(formdata).length === 0) {
-      setupdateusererror("No changes detected");
+      setErrorMessage("No changes detected");
       return;
     }
     if (imagefileuploading) {
-      setupdateusererror("Please wait for image to upload");
+      setErrorMessage("Please wait for image to upload");
       return;
     }
     dispatch(updateStart());
@@ -99,12 +98,12 @@ function Dashboardprofile() {
         dispatch(updateSuccess(data));
         setupdateusersuccess("User's profile updated successfully");
       } else {
-        setupdateusererror(data.message);
+        setErrorMessage(data.message);
         dispatch(updateFailure(data.message));
       }
     } catch (e) {
       dispatch(updateFailure("Failed to update user"));
-      setupdateusererror("Failed to update user");
+      setErrorMessage("Failed to update user");
     }
   };
 
@@ -122,10 +121,29 @@ function Dashboardprofile() {
       if (res.ok) {
         dispatch(deleteUserSuccess(data));
       } else {
+        setErrorMessage(data.message);
         dispatch(deleteUserFailure(data.message));
       }
     } catch (error) {
+      setErrorMessage(error.message);
       dispatch(deleteUserFailure(error.message));
+    }
+  };
+
+  const handlesignout = async () => {
+    try {
+      const res = await fetch(`/api/user/signout`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      const data = await res.json();
+      if (res.ok) {
+        dispatch(signoutsuccess(data));
+      } else {
+        setErrorMessage("User signout failed");
+      }
+    } catch (error) {
+      setErrorMessage("User signout failed");
     }
   };
 
@@ -161,7 +179,6 @@ function Dashboardprofile() {
           />
         </div>
 
-        {imageuploaderror && <Alert color='failure'>{imageuploaderror}</Alert>}
         <TextInput type='text' id='username' placeholder='Username' defaultValue={currentUser.username} onChange={handlechange} />
         <TextInput type='email' id='email' placeholder='Email' defaultValue={currentUser.email} onChange={handlechange} />
         <TextInput type='password' id='password' placeholder='Password' onChange={handlechange} />
@@ -169,13 +186,13 @@ function Dashboardprofile() {
           Update
         </Button>
       </form>
+
       <div className='text-red-500 flex justify-between mt-3'>
         <span onClick={() => setshowmodel(true)} className='cursor-pointer'>Delete Account</span>
-        <span className='cursor-pointer'>Sign Out</span>
+        <span onClick={handlesignout} className='cursor-pointer'>Sign Out</span>
       </div>
+
       {updateusersuccess && (<Alert className="mt-4" color='success'>{updateusersuccess}</Alert>)}
-      {updateusererror && (<Alert className="mt-4" color='failure'>{updateusererror}</Alert>)}
-      {error && (<Alert className="mt-4" color='failure'>{error}</Alert>)}
 
       <Modal show={showmodel} onClose={() => setshowmodel(false)} popup size='md'>
         <Modal.Header />
@@ -190,6 +207,7 @@ function Dashboardprofile() {
           </div>
         </Modal.Body>
       </Modal>
+      {errorMessage && <Alert color='failure' className='mt-4'>{errorMessage}</Alert>}
     </div>
   );
 }

@@ -11,7 +11,8 @@ const updateUser = async (req, res, next) => {
         return next(errorHandler(400, "You are not authorized to update this user"));
     }
 
-    if (req.body.password) {
+    if (req.body.password) 
+        {
         if (req.body.password.length < 8) {
             return next(errorHandler(400, "Please enter a password of at least 8 characters"));
         }
@@ -28,7 +29,7 @@ const updateUser = async (req, res, next) => {
         if (req.body.username !== req.body.username.toLowerCase()) {
             return next(errorHandler(400, 'Username must be lowercase'));
         }
-        if (!req.body.username.match(/^[a-zA-Z0-9]+$/)) {
+        if (!req.body.username.match(/^[a-zA-Z0-9@]+$/)) {
             return next(errorHandler(400, 'Username can only contain letters and numbers'));
         }
     }
@@ -74,4 +75,16 @@ const deleteuser = async (req, res, next) => {
         res.status(400).json('Could not delete the user');
       }
 }
-module.exports = { test, updateUser,deleteuser };
+
+const signout = (req, res,next) => {
+    try
+    {
+       res.clearCookie('access_token').status(200).json("User has been signed out");
+    }
+    catch(error) 
+    {
+        next(error);
+    }
+}
+
+module.exports = { test, updateUser,deleteuser,signout };

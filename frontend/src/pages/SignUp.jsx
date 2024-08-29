@@ -93,7 +93,7 @@ function SignUp() {
               <Label value="Password" className="" />
               <TextInput type="password" placeholder="Password" id="password" onChange={handleChange} />
             </div>
-            <Button type="submit" gradientDuoTone="purpleToPink" className="mt-4" disabled={loading}>
+            <Button type="submit" gradientDuoTone="purpleToPink" className="mt-4 mb-2" disabled={loading}>
               {
                 loading ? (<><Spinner size='sm' /><span className='ml-2'>Loading...</span></>) : "Sign Up"
               }
