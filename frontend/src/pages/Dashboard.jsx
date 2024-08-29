@@ -17,17 +17,14 @@ function Dashboard() {
   }, [location.search]);
 
   return (
-    <div className='min-h-screen flex flex-col md:flex-row'>
-
+    <div className='min-h-screen flex flex-col md:flex-row overflow-x-hidden'>
       <div className="md:w-56">
         <Dashboardsidebar />
       </div>
-
-      <div className="flex-1 flex justify-center items-center">
+      <div className="flex-1 flex justify-center items-center overflow-x-auto">
         {tab === 'profile' && <Dashboardprofile />}
         {tab === 'posts' && <Dashposts />}
       </div>
-      
     </div>
   );
 }
