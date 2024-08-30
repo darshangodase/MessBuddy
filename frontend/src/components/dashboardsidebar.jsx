@@ -48,14 +48,12 @@ function Dashboardsidebar() {
             <Sidebar.Item
               active={tab === "profile"}
               icon={HiUser}
-              label={currentUser?.isAdmin ? "Admin" : "User"}
-              labelColor="dark"
               as="div"
             >
               Profile
             </Sidebar.Item>
           </Link>
-          {currentUser?.isAdmin && (
+          {(
             <Link to="/dashboard?tab=posts">
               <Sidebar.Item
                 active={tab === "posts"}

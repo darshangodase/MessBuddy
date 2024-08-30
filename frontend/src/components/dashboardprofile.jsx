@@ -188,7 +188,7 @@ function Dashboardprofile() {
           {isFetching ? 'Loading...' : 'Update'}
         </Button>
         {
-          currentUser.isAdmin && (
+           (
             <Link to={'/create-post'}>
               <Button gradientDuoTone='purpleToPink' className='mt-3 w-full'>
                 Create a post

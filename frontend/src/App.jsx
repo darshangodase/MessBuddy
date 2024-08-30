@@ -1,17 +1,17 @@
 import React from 'react';
 import {BrowserRouter ,Routes,Route} from 'react-router-dom';
+import PrivateRoute from './components/privateroute';
+import Privateroute_admin_only from './components/privateroute_admin_only';
 import Home from './pages/Home';
 import About from './pages/About';
 import SignIn from './pages/SignIn';
 import SignUP from './pages/SignUp';
 import Dashboard from './pages/Dashboard';
-import Projects from './pages/Projects';
 import Header from './components/Header';
 import Footer from './components/footer';
-import PrivateRoute from './components/privateroute';
 import CreatePost from './pages/create_post';
 import UpdatePost from './pages/updatePost';
-import Privateroute_admin_only from './components/privateroute_admin_only';
+import PostPage from './pages/postPage';
 function App() {
   
 
@@ -33,7 +33,7 @@ function App() {
           <Route path='/update-post/:postId' element={<UpdatePost />} />
           </Route>
 
-          <Route path="/projects" element={<Projects />} />
+          <Route path='/post/:postSlug' element={<PostPage />} />
         </Routes>
         <Footer/>
        </BrowserRouter>

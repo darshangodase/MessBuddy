@@ -93,9 +93,6 @@ function Header() {
           <Navbar.Link active={path==='/about'}as={'div'}>
             <Link to="/about"className="text-xl">About</Link>
           </Navbar.Link>
-          <Navbar.Link active={path==='/projects'}as={'div'}> 
-            <Link to="/projects"className="text-xl">Blogs</Link>
-          </Navbar.Link>
         </Navbar.Collapse>
       </Navbar>
       

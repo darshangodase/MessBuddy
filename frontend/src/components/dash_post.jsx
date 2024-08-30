@@ -1,4 +1,4 @@
-import { Modal, Table, Button } from 'flowbite-react';
+import { Modal, Table, Button,Spinner } from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -26,9 +26,7 @@ export default function DashPosts() {
         console.log(error.message);
       }
     };
-    if (currentUser.isAdmin) {
       fetchPosts();
-    }
   }, [currentUser._id]);
 
   const handleShowMore = async () => {
@@ -73,7 +71,7 @@ export default function DashPosts() {
 
   return (
     <div className='h-full w-full max-w-full overflow-x-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500'>
-      {currentUser.isAdmin && userPosts.length > 0 ? (
+      {userPosts.length > 0 ? (
         <>
           <Table hoverable className='shadow-md w-full'>
             <Table.Head>
@@ -146,7 +144,9 @@ export default function DashPosts() {
           )}
         </>
       ) : (
-        <p>You have no posts yet!</p>
+        <div className='flex justify-center items-center min-h-screen'>
+        <Spinner size='xl' />
+      </div>
       )}
       <Modal
         show={showModal}
