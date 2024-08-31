@@ -2,12 +2,9 @@ const errorHandler = require("../utils/error");
 const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 
-const test = (req, res) => {
-    res.json({ message: 'Welcome to the BlogBreeze API!' });
-};
 
 const updateUser = async (req, res, next) => {
-    if (req.user.id != req.params.userId) {
+    if(req.user.id != req.params.userId) {
         return next(errorHandler(400, "You are not authorized to update this user"));
     }
 
@@ -139,4 +136,4 @@ const signout = (req, res,next) => {
       next(error);
     }
   };
-module.exports = { test, updateUser,deleteuser,signout ,getUsers,getUser};
+module.exports = {updateUser,deleteuser,signout ,getUsers,getUser};

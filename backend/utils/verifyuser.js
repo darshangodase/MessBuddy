@@ -1,4 +1,5 @@
 const jwt=require('jsonwebtoken');
+
 const verifytoken =(req,res,next) => {
       const token =req.cookies.access_token;
       
@@ -16,4 +17,5 @@ const verifytoken =(req,res,next) => {
              next();
       });
 }
+
 module.exports = verifytoken;

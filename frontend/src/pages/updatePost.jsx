@@ -1,4 +1,4 @@
-import { Alert, Button, FileInput, Select, TextInput } from 'flowbite-react';
+import { Alert, Button, FileInput, Select, Spinner, TextInput } from 'flowbite-react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import {
@@ -20,22 +20,28 @@ export default function UpdatePost() {
   const [imageUploadError, setImageUploadError] = useState(null);
   const [formData, setFormData] = useState({});
   const [publishError, setPublishError] = useState(null);
+  const [loading, setLoading] = useState(true);
   const { postId } = useParams();
   const navigate = useNavigate();
   const { currentUser } = useSelector((state) => state.user);
 
   useEffect(() => {
+    console.log('postId from URL:', postId); // Log the postId for debugging
+
     const fetchPost = async () => {
       try {
         const res = await fetch(`/api/post/getposts?postId=${postId}`);
         const data = await res.json();
         if (!res.ok) {
           setPublishError(data.message);
+          setLoading(false);
           return;
         }
         setFormData(data.posts[0]);
+        setLoading(false);
       } catch (error) {
         setPublishError('Something went wrong');
+        setLoading(false);
       }
     };
     fetchPost();
@@ -74,7 +80,6 @@ export default function UpdatePost() {
     } catch (error) {
       setImageUploadError('Image upload failed');
       setImageUploadProgress(null);
-      console.log(error);
     }
   };
 
@@ -105,6 +110,14 @@ export default function UpdatePost() {
       setPublishError('Something went wrong');
     }
   };
+
+  if (loading) {
+    return (
+      <div className='flex justify-center items-center min-h-screen'>
+        <Spinner size='xl' />
+      </div>
+    );
+  }
 
   return (
     <div className='p-3 max-w-3xl mx-auto min-h-screen'>

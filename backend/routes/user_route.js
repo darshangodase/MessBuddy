@@ -4,7 +4,6 @@ const { test, updateUser,deleteuser,signout } = require('../controllers/user_con
 const verifytoken = require('../utils/verifyuser');
 
 
-router.get('/test', test);
 router.put('/update/:userId', verifytoken, updateUser);
 router.delete('/delete/:userId',verifytoken, deleteuser);
 router.post('/signout', signout);
