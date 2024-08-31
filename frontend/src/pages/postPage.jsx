@@ -1,7 +1,7 @@
 import { Button, Spinner, Card } from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-// import CommentSection from '../components/CommentSection';
+import CommentSection from '../components/commentsection';
 // import PostCard from '../components/PostCard';
 
 export default function PostPage() {
@@ -76,17 +76,17 @@ export default function PostPage() {
     );
 
   return (
-    <main className='p-3 flex  flex-col lg:flex-row  max-w-6xl  mx-auto min-h-screen'>
+    <main className='p-3 flex flex-col lg:flex-row max-w-6xl mx-auto min-h-screen'>
       <div className='lg:w-3/5 w-full'>
         <h1 className='text-3xl mt-10 p-3 text-center font-serif max-w-5xl mx-auto lg:text-4xl'>
           {post && post.title}
         </h1>
         <div className='flex justify-center mt-5'>
-         <Link to={`/search?category=${post && post.category}`}>
+          <Link to={`/search?category=${post && post.category}`}>
             <Button color='gray' pill size='sm' className='px-3'>
               {post && post.category}
             </Button>
-         </Link>
+          </Link>
         </div>
         <img
           src={post && post.image}
@@ -103,6 +103,7 @@ export default function PostPage() {
           className='p-3 max-w-2xl mx-auto w-full post-content'
           dangerouslySetInnerHTML={{ __html: post && post.content }}
         ></div>
+        {post && <CommentSection postId={post._id} />}
       </div>
 
       <div className='lg:w-2/5 w-full lg:pl-5 mt-10 lg:mt-0'>
@@ -114,7 +115,7 @@ export default function PostPage() {
                 <img
                   src={post.image}
                   alt={post.title}
-                  className='w-full h-48 object-cover rounded-t-lg'
+                  className='w-full max-h-32 object-cover rounded-t-lg'
                 />
                 <div className='p-5'>
                   <h3 className='text-lg font-semibold'>{post.title}</h3>
@@ -139,7 +140,7 @@ export default function PostPage() {
                 <img
                   src={post.image}
                   alt={post.title}
-                  className='w-full h-48 object-cover rounded-t-lg'
+                  className='w-full max-h-32 object-cover rounded-t-lg'
                 />
                 <div className='p-5'>
                   <h3 className='text-lg font-semibold'>{post.title}</h3>

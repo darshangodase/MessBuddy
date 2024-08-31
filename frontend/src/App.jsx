@@ -12,11 +12,13 @@ import Footer from './components/footer';
 import CreatePost from './pages/create_post';
 import UpdatePost from './pages/updatePost';
 import PostPage from './pages/postPage';
+import ScrollToTop from './components/scrollToTop';
 function App() {
   
 
   return (
        <BrowserRouter>
+       <ScrollToTop/>
          <Header/>
         <Routes>
           <Route path="/" exact element={<Home />} />
