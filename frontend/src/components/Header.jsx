@@ -1,18 +1,39 @@
 import { Avatar, Button, Dropdown, Navbar, TextInput } from "flowbite-react";
-import { Link, useLocation } from "react-router-dom";
-import { AiOutlineSearch, AiOutlinePlus } from "react-icons/ai";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { AiOutlineSearch } from "react-icons/ai";
 import { FaMoon, FaSun } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import { toggleTheme } from "../redux/theme/themeSlice";
 import { signoutsuccess } from "../redux/user/userSlice";
+import { useEffect, useState } from "react";
 
 function Header() {
   const path = useLocation().pathname;
+  const location = useLocation();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
   const { theme } = useSelector((state) => state.theme);
+  const [searchTerm, setSearchTerm] = useState('');
 
-  const handlesignout = async () => {
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const searchTermFromUrl = urlParams.get('searchTerm');
+    if (searchTermFromUrl) {
+      setSearchTerm(searchTermFromUrl);
+    }
+  }, [location.search]);
+  
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const urlParams = new URLSearchParams(location.search);
+    urlParams.set('searchTerm', searchTerm);
+    const searchQuery = urlParams.toString();
+    navigate(`/search?${searchQuery}`);
+  };
+
+
+  const handleSignOut = async () => {
     try {
       const res = await fetch(`/api/user/signout`, {
         method: 'POST',
@@ -39,12 +60,14 @@ function Header() {
         </span>
       </Link>
 
-      <form>
+      <form onSubmit={handleSubmit}>
         <TextInput
           type="text"
           placeholder="Search..."
           rightIcon={AiOutlineSearch}
-          className="hidden text-bold lg:inline"
+          className="hidden lg:inline"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
         />
       </form>
 
@@ -78,7 +101,7 @@ function Header() {
               {theme === 'light' ? 'Dark Mode' : 'Light Mode'}
             </Dropdown.Item>
             <Dropdown.Divider />
-            <Dropdown.Item onClick={handlesignout}>Sign out</Dropdown.Item>
+            <Dropdown.Item onClick={handleSignOut}>Sign out</Dropdown.Item>
           </Dropdown>
         ) : (
           <Link to="/signin">
@@ -89,24 +112,24 @@ function Header() {
         <Navbar.Toggle />
       </div>
 
-  <Navbar.Collapse >
-  <Navbar.Link className="mt-2" active={path === '/'} as={'div'}>
-    <Link to="/" className="text-lg">Home</Link>
-  </Navbar.Link>
-  <Navbar.Link className="mt-2" active={path === '/about'} as={'div'}>
-    <Link to="/about" className="text-lg ">About</Link>
-  </Navbar.Link>
+      <Navbar.Collapse>
+        <Navbar.Link className="mt-2" active={path === '/'} as={'div'}>
+          <Link to="/" className="text-lg">Home</Link>
+        </Navbar.Link>
+        <Navbar.Link className="mt-2" active={path === '/about'} as={'div'}>
+          <Link to="/about" className="text-lg">About</Link>
+        </Navbar.Link>
 
-  {currentUser && (
-    <Navbar.Link className=" hidden md:block"active={path === '/create-post'} as={'div'}>
-      <Link to="/create-post">
-        <Button type="submit" gradientDuoTone="purpleToPink" outline>
-           Create Post
-        </Button>
-      </Link>
-    </Navbar.Link>
-  )}
-</Navbar.Collapse>
+        {currentUser && (
+          <Navbar.Link className="hidden sm:block mt-2" active={path === '/create-post'} as={'div'}>
+            <Link to="/create-post">
+              <Button type="submit" gradientDuoTone="purpleToPink" outline>
+                Create Post
+              </Button>
+            </Link>
+          </Navbar.Link>
+        )}
+      </Navbar.Collapse>
     </Navbar>
   );
 }
