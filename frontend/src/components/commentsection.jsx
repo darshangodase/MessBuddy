@@ -16,7 +16,7 @@ export default function CommentSection({ postId }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (comment.length > 200) {
+    if(comment.length > 200) {
       return;
     }
     try {
@@ -113,6 +113,7 @@ export default function CommentSection({ postId }) {
   };
   
   return (
+    
     <div className='max-w-2xl mx-auto w-full p-3'>
       {currentUser ? (
         <div className='flex items-center gap-1 my-5 text-gray-500 text-sm'>
@@ -137,6 +138,7 @@ export default function CommentSection({ postId }) {
           </Link>
         </div>
       )}
+
       {currentUser && (
         <form
           onSubmit={handleSubmit}
@@ -178,7 +180,9 @@ export default function CommentSection({ postId }) {
           </div>
           
           {comments.map((comment) => (
-            <Comment
+           
+           
+           <Comment
               key={comment._id}
               comment={comment}
               onLike={handleLike}
@@ -188,6 +192,8 @@ export default function CommentSection({ postId }) {
                 setCommentToDelete(commentId);
               }}
             />
+
+            
           ))}
         </>
       )}

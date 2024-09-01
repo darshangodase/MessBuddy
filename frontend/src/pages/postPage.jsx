@@ -2,7 +2,7 @@ import { Button, Spinner, Card } from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import CommentSection from '../components/commentsection';
-// import PostCard from '../components/PostCard';
+import PostCard from '../components/PostCard';
 
 export default function PostPage() {
   const { postSlug } = useParams();
@@ -11,6 +11,24 @@ export default function PostPage() {
   const [post, setPost] = useState(null);
   const [recentPosts, setRecentPosts] = useState(null);
   const [userPosts, setUserPosts] = useState(null);
+  const [user, setUser] = useState(null);
+  
+  useEffect(() => {
+    if (post && post.userId) {
+      const getUser = async () => {
+        try {
+          const res = await fetch(`/api/user/${post.userId}`);
+          const data = await res.json();
+          if (res.ok) {
+            setUser(data);
+          }
+        } catch (error) {
+          console.log(error.message);
+        }
+      };
+      getUser();
+    }
+  }, [post]);
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -76,7 +94,7 @@ export default function PostPage() {
     );
 
   return (
-    <main className='p-3 flex flex-col lg:flex-row max-w-6xl mx-auto min-h-screen'>
+    <main className='p-4 flex flex-col lg:flex-row gap-5 mx-auto min-h-screen max-w-full overflow-x-hidden'>
       <div className='lg:w-3/5 w-full'>
         <h1 className='text-3xl mt-10 p-3 text-center font-serif max-w-5xl mx-auto lg:text-4xl'>
           {post && post.title}
@@ -94,7 +112,10 @@ export default function PostPage() {
           className='mt-10 p-3 max-h-[600px] w-full object-cover'
         />
         <div className='flex justify-between p-3 border-b border-slate-500 mx-auto w-full max-w-2xl text-sm font-semibold'>
-          <span>{post && new Date(post.createdAt).toLocaleDateString()}</span>
+          <div className="">
+            <span className='mx-2 '>By <span className=" text-red-500">@{user && user.username}</span> |</span>
+            <span>{post && new Date(post.createdAt).toLocaleDateString()}</span>
+          </div>
           <span className='italic'>
             {post && (post.content.length / 1000).toFixed(0)} mins to read
           </span>
@@ -102,58 +123,28 @@ export default function PostPage() {
         <div
           className='p-3 max-w-2xl mx-auto w-full post-content'
           dangerouslySetInnerHTML={{ __html: post && post.content }}
-        ></div>
+        >
+        </div>
+        
         {post && <CommentSection postId={post._id} />}
       </div>
 
-      <div className='lg:w-2/5 w-full lg:pl-5 mt-10 lg:mt-0'>
-        <div className='mb-5'>
-          <h2 className='text-xl font-semibold mb-3'>Related Posts</h2>
+      <div className='lg:w-2/5  lg:p-10 w-full lg:pl-5 mt-10 lg:mt-[20vh]'>
+        <div className='mb-5 flex flex-col items-center p-2'>
+          <h2 className='text-3xl font-semibold mb-8 font-serif'>Recent Blogs</h2>
           {recentPosts &&
             recentPosts.map((post) => (
-              <Card key={post._id} className='mb-5'>
-                <img
-                  src={post.image}
-                  alt={post.title}
-                  className='w-full max-h-32 object-cover rounded-t-lg'
-                />
-                <div className='p-5'>
-                  <h3 className='text-lg font-semibold'>{post.title}</h3>
-                  <p className='text-sm text-gray-500'>
-                    {new Date(post.createdAt).toLocaleDateString()}
-                  </p>
-                  <Link to={`/post/${post.slug}`} className='mt-3 block'>
-                    <Button color='blue' pill size='xs'>
-                      Read More
-                    </Button>
-                  </Link>
-                </div>
-              </Card>
+              <PostCard key={post._id} post={post}/>
+                
             ))}
         </div>
 
-        <div>
-          <h2 className='text-xl font-semibold mb-3'>More from this Author</h2>
+        <div className=' flex flex-col items-center p-2'>
+          <h2 className='text-3xl text-center font-semibold mb-7 mt-10 font-serif '>More from the Author</h2>
+
           {userPosts &&
             userPosts.map((post) => (
-              <Card key={post._id} className='mb-5'>
-                <img
-                  src={post.image}
-                  alt={post.title}
-                  className='w-full max-h-32 object-cover rounded-t-lg'
-                />
-                <div className='p-5'>
-                  <h3 className='text-lg font-semibold'>{post.title}</h3>
-                  <p className='text-sm text-gray-500'>
-                    {new Date(post.createdAt).toLocaleDateString()}
-                  </p>
-                  <Link to={`/post/${post.slug}`} className='mt-3 block'>
-                    <Button color='blue' pill size='xs'>
-                      Read More
-                    </Button>
-                  </Link>
-                </div>
-              </Card>
+              <PostCard key={post._id} post={post}/>
             ))}
         </div>
       </div>
