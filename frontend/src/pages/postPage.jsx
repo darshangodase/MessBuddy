@@ -1,8 +1,10 @@
-import { Button, Spinner, Card } from 'flowbite-react';
+import { Button } from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import CommentSection from '../components/commentsection';
 import PostCard from '../components/PostCard';
+import{ HashLoader} from 'react-spinners';
+
 
 export default function PostPage() {
   const { postSlug } = useParams();
@@ -89,8 +91,8 @@ export default function PostPage() {
   if (loading)
     return (
       <div className='flex justify-center items-center min-h-screen'>
-        <Spinner size='xl' />
-      </div>
+        <HashLoader color="#35c9e1" />
+        </div>
     );
 
   return (
