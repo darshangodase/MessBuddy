@@ -38,7 +38,7 @@ export default function Search() {
       if (urlParams.get('category') === 'uncategorized') {
         urlParams.delete('category');
       }
-      urlParams.set('limit', 10); // Set the limit to 10 posts
+      urlParams.set('limit',9); // Set the limit to 10 posts
       const searchQuery = urlParams.toString();
       const res = await fetch(`/api/post/getposts?${searchQuery}`);
       if (!res.ok) {
@@ -49,7 +49,7 @@ export default function Search() {
         const data = await res.json();
         setPosts(data.posts);
         setLoading(false);
-        if (data.posts.length === 10) {
+        if (data.posts.length ===9) {
           setShowMore(true);
         } else {
           setShowMore(false);
@@ -92,7 +92,7 @@ export default function Search() {
     const startIndex = numberOfPosts;
     const urlParams = new URLSearchParams(location.search);
     urlParams.set('startIndex', startIndex);
-    urlParams.set('limit', 10); // Set the limit to 10 posts
+    urlParams.set('limit',9); // Set the limit to 10 posts
     if (sidebarData.category === 'uncategorized') {
       urlParams.delete('category');
     }
@@ -104,7 +104,7 @@ export default function Search() {
     if (res.ok) {
       const data = await res.json();
       setPosts([...posts, ...data.posts]);
-      if (data.posts.length === 10) {
+      if (data.posts.length === 9) {
         setShowMore(true);
       } else {
         setShowMore(false);
@@ -153,11 +153,12 @@ export default function Search() {
           </Button>
         </form>
       </div>
+
       <div className='w-full'>
         <h1 className='text-center text-3xl font-semibold sm:border-b border-gray-500 p-3 mt-5'>
           Posts Results
         </h1>
-        <div className='p-7 flex flex-wrap gap-4'>
+        <div className="p-7 flex flex-wrap gap-4 justify-center'">
           {!loading && posts.length === 0 && (
             <p className='text-xl text-gray-500'>No posts found.</p>
           )}
