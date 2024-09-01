@@ -54,7 +54,7 @@ export default function Comment({ comment, onLike, onEdit, onDelete }) {
         <img
           className='w-10 h-10 rounded-full bg-gray-200'
           src={user.profilePicture}
-          alt={user.username}
+          alt={user.userName}
         />
       </div>
       <div className='flex-1'>
