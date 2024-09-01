@@ -48,6 +48,7 @@ export default function Comment({ comment, onLike, onEdit, onDelete }) {
       console.log(error.message);
     }
   };
+  
   return (
     <div className='flex p-4 border-b dark:border-gray-600 text-sm'>
       <div className='flex-shrink-0 mr-3'>

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { test, updateUser,deleteuser,signout,getUser} = require('../controllers/user_controller');
+const { updateUser,deleteuser,signout,getUser} = require('../controllers/user_controller');
 const verifytoken = require('../utils/verifyuser');
 
 
