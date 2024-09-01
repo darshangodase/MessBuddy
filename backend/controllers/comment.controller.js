@@ -101,8 +101,6 @@ const errorHandler= require('../utils/error');
 };
 
  const getcomments = async (req, res, next) => {
-//   if (!req.user.isAdmin)
-//     return next(errorHandler(403, 'You are not allowed to get all comments'));
   try {
     const startIndex = parseInt(req.query.startIndex) || 0;
     const limit = parseInt(req.query.limit) || 9;
@@ -122,7 +120,8 @@ const errorHandler= require('../utils/error');
       createdAt: { $gte: oneMonthAgo },
     });
     res.status(200).json({ comments, totalComments, lastMonthComments });
-  } catch (error) {
+  } 
+  catch (error) {
     next(error);
   }
 };

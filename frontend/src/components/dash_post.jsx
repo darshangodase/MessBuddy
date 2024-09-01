@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
+import{ HashLoader} from 'react-spinners';
+
 
 export default function DashPosts() {
   const { currentUser } = useSelector((state) => state.user);
@@ -145,8 +147,8 @@ export default function DashPosts() {
         </>
       ) : (
         <div className='flex justify-center items-center min-h-screen'>
-        <Spinner size='xl' />
-      </div>
+           <HashLoader color="#35c9e1" />
+        </div>
       )}
       <Modal
         show={showModal}

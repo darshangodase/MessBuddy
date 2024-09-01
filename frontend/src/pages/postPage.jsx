@@ -130,12 +130,12 @@ export default function PostPage() {
       </div>
 
       <div className='lg:w-2/5  lg:p-10 w-full lg:pl-5 mt-10 lg:mt-[20vh]'>
+
         <div className='mb-5 flex flex-col items-center p-2'>
           <h2 className='text-3xl font-semibold mb-8 font-serif'>Recent Blogs</h2>
           {recentPosts &&
             recentPosts.map((post) => (
               <PostCard key={post._id} post={post}/>
-                
             ))}
         </div>
 

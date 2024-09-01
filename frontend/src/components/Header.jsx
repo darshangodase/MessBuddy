@@ -88,10 +88,10 @@ function Header() {
 
         <Navbar.Collapse>
           <Navbar.Link active={path==='/'}as={'div'}>
-            <Link to="/" className="text-xl">Home</Link>
+            <Link to="/" className="text-lg">Home</Link>
           </Navbar.Link>
           <Navbar.Link active={path==='/about'}as={'div'}>
-            <Link to="/about"className="text-xl">About</Link>
+            <Link to="/about"className="text-lg">About</Link>
           </Navbar.Link>
         </Navbar.Collapse>
       </Navbar>

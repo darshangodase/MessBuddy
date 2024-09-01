@@ -16,7 +16,7 @@ export default function PostCard({ post }) {
           to={`/post/${post.slug}`}
           className='z-10 group-hover:bottom-0 absolute bottom-[-200px] left-0 right-0 border border-teal-500 text-teal-500 hover:bg-teal-500 hover:text-white transition-all duration-300 text-center py-2 rounded-md !rounded-tl-none m-2'
         >
-          Read Blog
+          Read Article
         </Link>
       </div>
     </div>
