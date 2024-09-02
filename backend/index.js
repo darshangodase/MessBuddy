@@ -6,7 +6,6 @@ const authRoute = require('./routes/auth_route');
 const postroutes = require('./routes/post_route');
 const commentsRoute = require('./routes/comment_route');
 const cookieParser = require('cookie-parser');
-const path = require('path');
 
 require('dotenv').config();
 
@@ -15,6 +14,7 @@ const PORT = process.env.PORT || 3000;
 const app = express();
 connectDB();
 
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors());
