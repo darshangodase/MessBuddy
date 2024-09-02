@@ -14,10 +14,18 @@ import UpdatePost from './pages/updatePost';
 import PostPage from './pages/postPage';
 import ScrollToTop from './components/scrollToTop';
 import Search from './pages/search';
+import AnimatedCursor from "react-animated-cursor"
 function App() {
   
   return (
        <BrowserRouter>
+        <AnimatedCursor 
+          innerSize={15}
+          outerSize={12}
+          color='9, 222, 237'
+          outerAlpha={0.6}
+          innerScale={0.5}
+          outerScale={4}/>
        <ScrollToTop/>
          <Header/>
         <Routes>

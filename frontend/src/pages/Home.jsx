@@ -52,7 +52,7 @@ export default function Home() {
              </Link>
           </div>
         ):
-        <div className='flex justify-center items-center min-h-screen'>
+        <div className='flex justify-center  min-h-screen'>
         {/* <Spinner size='xl' /> */}
         <HashLoader color="#35c9e1" />
          </div>
