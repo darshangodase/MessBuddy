@@ -24,7 +24,7 @@ function Dashboard() {
       <div className="flex-1 flex justify-center items-center overflow-x-auto">
         {tab === 'profile' && <Dashboardprofile />}
         {tab === 'posts' && <Dashposts />}
-        {/* {tab === 'dash' && <Dash_component />} */}
+        {tab === 'dash' && <Dash_component />}
 
       </div>
     </div>

@@ -1,10 +1,9 @@
-import { Modal, Table, Button,Spinner } from 'flowbite-react';
+import { Modal, Table, Button, Spinner } from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
-import{ HashLoader} from 'react-spinners';
-
+import { HashLoader } from 'react-spinners';
 
 export default function DashPosts() {
   const { currentUser } = useSelector((state) => state.user);
@@ -12,7 +11,8 @@ export default function DashPosts() {
   const [showMore, setShowMore] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [postIdToDelete, setPostIdToDelete] = useState('');
-  
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -26,9 +26,11 @@ export default function DashPosts() {
         }
       } catch (error) {
         console.log(error.message);
+      } finally {
+        setLoading(false);
       }
     };
-      fetchPosts();
+    fetchPosts();
   }, [currentUser._id]);
 
   const handleShowMore = async () => {
@@ -73,7 +75,11 @@ export default function DashPosts() {
 
   return (
     <div className='h-full w-full max-w-full overflow-x-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500'>
-      {userPosts.length > 0 ? (
+      {loading ? (
+        <div className='flex justify-center items-center min-h-screen'>
+          <HashLoader color="#35c9e1" />
+        </div>
+      ) : userPosts.length > 0 ? (
         <>
           <Table hoverable className='shadow-md w-full'>
             <Table.Head>
@@ -147,7 +153,7 @@ export default function DashPosts() {
         </>
       ) : (
         <div className='flex justify-center items-center min-h-screen'>
-           <HashLoader color="#35c9e1" />
+          <p className='text-xl text-gray-500'>No posts yet.</p>
         </div>
       )}
       <Modal

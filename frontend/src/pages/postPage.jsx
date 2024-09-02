@@ -96,7 +96,7 @@ export default function PostPage() {
     );
 
   return (
-    <main className='p-4 flex flex-col lg:flex-row gap-5 mx-auto min-h-screen max-w-full overflow-x-hidden'>
+    <main className='px-10 flex flex-col lg:flex-row gap-2 mx-auto min-h-screen max-w-full overflow-x-hidden'>
       <div className='lg:w-3/5 w-full'>
         <h1 className='text-3xl mt-10 p-3 text-center font-serif max-w-5xl mx-auto lg:text-4xl'>
           {post && post.title}
@@ -131,7 +131,7 @@ export default function PostPage() {
         {post && <CommentSection postId={post._id} />}
       </div>
 
-      <div className='lg:w-2/5  lg:p-10 w-full lg:pl-5 mt-10 lg:mt-[20vh]'>
+      <div className='lg:w-2/5  lg:p-10 w-full lg:pl-3 mt-10 lg:mt-[20vh]'>
 
         <div className='mb-5 flex flex-col items-center p-2'>
           <h2 className='text-3xl font-semibold mb-8 font-serif'>Recent Blogs</h2>
