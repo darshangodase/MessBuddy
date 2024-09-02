@@ -40,7 +40,7 @@ export default function Search() {
       }
       urlParams.set("limit", 9); // Set the limit to 10 posts
       const searchQuery = urlParams.toString();
-      const res = await fetch(`/api/post/getposts?${searchQuery}`);
+      const res = await fetch(`https://blogbreeze-2.onrender.com/api/post/getposts?${searchQuery}`);
       if (!res.ok) {
         setLoading(false);
         return;
@@ -97,7 +97,7 @@ export default function Search() {
       urlParams.delete("category");
     }
     const searchQuery = urlParams.toString();
-    const res = await fetch(`/api/post/getposts?${searchQuery}`);
+    const res = await fetch(`https://blogbreeze-2.onrender.com/api/post/getposts?${searchQuery}`);
     if (!res.ok) {
       return;
     }

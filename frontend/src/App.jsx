@@ -14,7 +14,6 @@ import UpdatePost from './pages/updatePost';
 import PostPage from './pages/postPage';
 import ScrollToTop from './components/scrollToTop';
 import Search from './pages/search';
-import AnimatedCursor from "react-animated-cursor"
 function App() {
   
   return (

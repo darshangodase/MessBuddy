@@ -12,12 +12,8 @@ require('dotenv').config();
 
 const PORT = process.env.PORT || 3000;
 
-const ___dirname = path.resolve();
 const app = express();
-connectDB().catch((err) => {
-  console.error('Failed to connect to the database', err);
-  process.exit(1);
-});
+connectDB();
 
 app.use(express.json());
 app.use(cookieParser());
@@ -30,13 +26,8 @@ app.use('/api/auth', authRoute);
 app.use('/api/post', postroutes);
 app.use('/api/comment', commentsRoute);
 
-app.use(express.static(path.join(___dirname, '/frontend/dist')));
 
-app.get('*', (req, res) => {
-  res.sendFile(path.join(___dirname, 'frontend', 'dist', 'index.html'));
-});
 
-// Error handling middleware
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
   const message = err.message || 'Internal Server Error';
