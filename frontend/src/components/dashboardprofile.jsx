@@ -87,7 +87,7 @@ function Dashboardprofile() {
     dispatch(updateStart());
 
     try {
-      const res = await fetch(`https://blogbreeze-2.onrender.com/api/user/update/${currentUser._id}`, {
+      const res = await fetch(`https://blogbreeze-nj8u.onrender.com/api/user/update/${currentUser._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -112,7 +112,7 @@ function Dashboardprofile() {
     setshowmodel(false);
     try {
       dispatch(deleteUserStart());
-      const res = await fetch(`https://blogbreeze-2.onrender.com/api/user/delete/${currentUser._id}`, {
+      const res = await fetch(`https://blogbreeze-nj8u.onrender.com/api/user/delete/${currentUser._id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -133,7 +133,7 @@ function Dashboardprofile() {
 
   const handlesignout = async () => {
     try {
-      const res = await fetch(`https://blogbreeze-2.onrender.com/api/user/signout`, {
+      const res = await fetch(`https://blogbreeze-nj8u.onrender.com/api/user/signout`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' }
       });

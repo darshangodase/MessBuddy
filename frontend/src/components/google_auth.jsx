@@ -18,7 +18,7 @@ function GoogleAuth() {
     try {
       dispatch(signInStart());
       const result = await signInWithPopup(auth, provider);
-      const res = await fetch('https://blogbreeze-2.onrender.com/api/auth/google', {
+      const res = await fetch('https://blogbreeze-nj8u.onrender.com/api/auth/google', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

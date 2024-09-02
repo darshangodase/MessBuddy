@@ -11,7 +11,7 @@ export default function Home() {
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const res = await fetch('https://blogbreeze-2.onrender.com/api/post/getposts');
+      const res = await fetch('https://blogbreeze-nj8u.onrender.com/api/post/getposts');
       const data = await res.json();
       setPosts(data.posts);
       setLoading(false);
