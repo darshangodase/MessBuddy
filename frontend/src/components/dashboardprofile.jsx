@@ -35,6 +35,7 @@ function Dashboardprofile() {
       uploadImage();
     }
   }, [imagefile]);
+  
 
   const uploadImage = async () => {
     setimageuploading(true);
@@ -89,7 +90,7 @@ function Dashboardprofile() {
     try {
       console.log(currentUser._id);
       
-      const res = await fetch(`https://blogbreeze-nj8u.onrender.com/api/user/update/${currentUser._id}`, {
+      const res = await fetch(`http://localhost:3000/api/user/update/${currentUser._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
