@@ -1,23 +1,27 @@
-const jwt=require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 
-const verifytoken =(req,res,next) => {
-      const token =req.cookies.access_token;
-    
-      
-      if(!token) 
-        {
-        return res.status(401).json({ success: false, message: 'Invalid User' });
+const verifyToken = async (req, res, next) => {
+  const token = req.cookies.access_token;
+
+  if (!token) {
+    return res.status(401).json({ success: false, message: 'No token provided, authorization denied.' });
+  }
+
+  try {
+    const decoded = await new Promise((resolve, reject) => {
+      jwt.verify(token, process.env.JWT_SECRET_KEY, (err, decoded) => {
+        if (err) {
+          return reject(err);
         }
-        
-        
-      jwt.verify(token,process.env.JWT_SECRET_KEY,(err,user)=>{
-             if(err) 
-                {
-                   return res.status(403).json({ success: false, message: 'Invalid user.' });
-                }
-             req.user=user;
-             next();
+        resolve(decoded);
       });
-}
+    });
 
-module.exports = verifytoken;
+    req.user = decoded;
+    next();
+  } catch (err) {
+    return res.status(403).json({ success: false, message: 'Token is not valid.' });
+  }
+};
+
+module.exports = verifyToken;

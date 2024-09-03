@@ -11,7 +11,6 @@ export default function Search() {
     category: "uncategorized",
   });
 
-  console.log(sidebarData);
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showMore, setShowMore] = useState(false);
@@ -40,7 +39,7 @@ export default function Search() {
       }
       urlParams.set("limit", 9); // Set the limit to 10 posts
       const searchQuery = urlParams.toString();
-      const res = await fetch(`/api/post/getposts?${searchQuery}`);
+      const res = await fetch(`https://blogbreeze-nj8u.onrender.com/api/post/getposts?${searchQuery}`);
       if (!res.ok) {
         setLoading(false);
         return;
@@ -97,7 +96,7 @@ export default function Search() {
       urlParams.delete("category");
     }
     const searchQuery = urlParams.toString();
-    const res = await fetch(`/api/post/getposts?${searchQuery}`);
+    const res = await fetch(`https://blogbreeze-nj8u.onrender.com/api/post/getposts?${searchQuery}`);
     if (!res.ok) {
       return;
     }

@@ -62,7 +62,7 @@ export default function updatePost() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch(`/api/post/create`, {
+      const res = await fetch(`https://blogbreeze-nj8u.onrender.com/api/post/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

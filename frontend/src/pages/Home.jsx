@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import PostCard from '../components/PostCard';
-import { Button, Spinner } from 'flowbite-react';
+import { Button } from 'flowbite-react';
 import{ HashLoader} from 'react-spinners';
 
 
@@ -11,7 +11,7 @@ export default function Home() {
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const res = await fetch(`/api/post/getposts`);
+      const res = await fetch(`https://blogbreeze-nj8u.onrender.com/api/post/getposts`);
       const data = await res.json();
       setPosts(data.posts);
       setLoading(false);
