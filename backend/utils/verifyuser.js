@@ -2,11 +2,13 @@ const jwt=require('jsonwebtoken');
 
 const verifytoken =(req,res,next) => {
       const token =req.cookies.access_token;
+
       
       if(!token) 
         {
-        return res.status(401).json({ success: false, message: 'Invalid User' });
+        return res.status(401).json({ success: false, message: 'Invalid mkdUser' });
         }
+        
         
       jwt.verify(token,process.env.JWT_SECRET_KEY,(err,user)=>{
              if(err) 

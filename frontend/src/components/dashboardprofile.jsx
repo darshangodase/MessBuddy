@@ -10,7 +10,7 @@ import { HiOutlineExclamationCircle } from 'react-icons/hi';
 import { Link } from 'react-router-dom';
 
 function Dashboardprofile() {
-  const { currentUser, error, isFetching } = useSelector((state) => state.user);
+  const { currentUser, isFetching } = useSelector((state) => state.user);
   const filepickref = useRef();
   const dispatch = useDispatch();
   const [imagefile, setimagefile] = useState(null);
@@ -85,8 +85,10 @@ function Dashboardprofile() {
       return;
     }
     dispatch(updateStart());
-
+  
     try {
+      console.log(currentUser._id);
+      
       const res = await fetch(`https://blogbreeze-nj8u.onrender.com/api/user/update/${currentUser._id}`, {
         method: 'PUT',
         headers: {
