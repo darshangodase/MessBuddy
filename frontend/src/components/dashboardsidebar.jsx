@@ -22,7 +22,7 @@ function Dashboardsidebar() {
 
   const handleSignout = async () => {
     try {
-      const res = await fetch(`${process.env.BASE_URL}/api/user/signout`, {
+      const res = await fetch(`/api/user/signout`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
       });

@@ -1,4 +1,4 @@
-import { Alert, Button, Modal, TextInput, Textarea } from 'flowbite-react';
+import { Alert, Button, Modal, Textarea } from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
@@ -20,7 +20,7 @@ export default function CommentSection({ postId }) {
       return;
     }
     try {
-      const res = await fetch(`${process.env.BASE_URL}/api/comment/create`, {
+      const res = await fetch(`/api/comment/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -45,7 +45,7 @@ export default function CommentSection({ postId }) {
   useEffect(() => {
     const getComments = async () => {
       try {
-        const res = await fetch(`${process.env.BASE_URL}/api/comment/getPostComments/${postId}`);
+        const res = await fetch(`/api/comment/getPostComments/${postId}`);
         if (res.ok) {
           const data = await res.json();
           setComments(data);
@@ -63,7 +63,7 @@ export default function CommentSection({ postId }) {
         navigate('/signin');
         return;
       }
-      const res = await fetch(`${process.env.BASE_URL}/api/comment/likeComment/${commentId}`, {
+      const res = await fetch(`/api/comment/likeComment/${commentId}`, {
         method: 'PUT',
       });
       if (res.ok) {
@@ -100,7 +100,7 @@ export default function CommentSection({ postId }) {
         navigate('/signin');
         return;
       }
-      const res = await fetch(`${process.env.BASE_URL}/api/comment/deleteComment/${commentId}`, {
+      const res = await fetch(`/api/comment/deleteComment/${commentId}`, {
         method: 'DELETE',
       });
       if (res.ok) {

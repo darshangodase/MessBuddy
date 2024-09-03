@@ -44,13 +44,13 @@ function SignUp() {
     try {
       seterrorMessage(null);
       setloading(true);
-      const res = await fetch(`${process.env.BASE_URL}/api/auth/signup`, {
+      const res = await fetch(`/api/auth/signup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formdata),
       });
       const data = await res.json();
-
+      
       if (data.success === false) {
         setloading(false);
         seterrorMessage('User Already Exists');

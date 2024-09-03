@@ -35,7 +35,7 @@ function Dashboardprofile() {
       uploadImage();
     }
   }, [imagefile]);
-  
+
 
   const uploadImage = async () => {
     setimageuploading(true);
@@ -69,7 +69,7 @@ function Dashboardprofile() {
   };
 
   const handlechange = (e) => {
-    setformdata({ ...formdata, [e.target.id]: e.target.value.trim() });
+    setformdata({...formdata, [e.target.id]: e.target.value.trim() });
   };
 
   const handlesubmit = async (e) => {
@@ -90,7 +90,7 @@ function Dashboardprofile() {
     try {
       console.log(currentUser._id);
       
-      const res = await fetch(`http://localhost:3000/api/user/update/${currentUser._id}`, {
+      const res = await fetch(`/api/user/update/${currentUser._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -115,12 +115,13 @@ function Dashboardprofile() {
     setshowmodel(false);
     try {
       dispatch(deleteUserStart());
-      const res = await fetch(`https://blogbreeze-nj8u.onrender.com/api/user/delete/${currentUser._id}`, {
+      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
         },
       });
+      
       const data = await res.json();
       if (res.ok) {
         dispatch(deleteUserSuccess(data));
@@ -136,7 +137,7 @@ function Dashboardprofile() {
 
   const handlesignout = async () => {
     try {
-      const res = await fetch(`https://blogbreeze-nj8u.onrender.com/api/user/signout`, {
+      const res = await fetch(`/api/user/signout`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' }
       });
