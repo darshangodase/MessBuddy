@@ -16,19 +16,27 @@ connectDB();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({
-  origin: 'https://blogbreeze-app.netlify.app/', 
-  credentials: true,
-}));
 
+app.use(
+  cors({
+    origin: 'https://blogbreeze-app.netlify.app', // Corrected quotation marks
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'], // Corrected quotation marks
+    allowedHeaders: [
+      'Origin', // Corrected quotation marks
+      'Content-Type', // Corrected quotation marks
+      'Accept', // Corrected quotation marks
+      'Authorization', // Corrected quotation marks
+      'X-Requested-With', // Corrected quotation marks
+    ],
+  })
+);
 
 // Routes
 app.use('/api/user', userRoutes);
 app.use('/api/auth', authRoute);
 app.use('/api/post', postroutes);
 app.use('/api/comment', commentsRoute);
-
-
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
