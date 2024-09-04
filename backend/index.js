@@ -24,7 +24,6 @@ app.use(
   })
 );
 
-// Routes
 app.use('/api/user', userRoutes);
 app.use('/api/auth', authRoute);
 app.use('/api/post', postroutes);
