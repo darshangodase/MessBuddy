@@ -46,6 +46,7 @@ function SignUp() {
       setloading(true);
       const res = await fetch(`https://blogbreeze-nj8u.onrender.com/api/auth/signup`, {
         method: 'POST',
+        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formdata),
       });

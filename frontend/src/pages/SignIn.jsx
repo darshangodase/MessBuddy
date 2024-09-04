@@ -32,6 +32,7 @@ function SignIn() {
       dispatch(signInStart());
       const res = await fetch(`https://blogbreeze-nj8u.onrender.com/api/auth/signin`, {
         method: 'POST',
+        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formdata),
       });

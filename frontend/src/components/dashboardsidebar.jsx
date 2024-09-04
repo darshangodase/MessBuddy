@@ -24,6 +24,7 @@ function Dashboardsidebar() {
     try {
       const res = await fetch(`https://blogbreeze-nj8u.onrender.com/api/user/signout`, {
         method: "POST",
+        credentials: 'include',
         headers: { "Content-Type": "application/json" },
       });
       const data = await res.json();

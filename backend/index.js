@@ -19,16 +19,8 @@ app.use(cookieParser());
 
 app.use(
   cors({
-    origin:'https://blogbreeze-app.netlify.app', // Corrected quotation marks
+    origin:'https://blogbreeze-app.netlify.app', 
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'], // Corrected quotation marks
-    allowedHeaders: [
-      'Origin', // Corrected quotation marks
-      'Content-Type', // Corrected quotation marks
-      'Accept', // Corrected quotation marks
-      'Authorization', // Corrected quotation marks
-      'X-Requested-With', // Corrected quotation marks
-    ],
   })
 );
 

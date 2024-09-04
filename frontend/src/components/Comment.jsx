@@ -33,6 +33,7 @@ export default function Comment({ comment, onLike, onEdit, onDelete }) {
     try {
       const res = await fetch(`https://blogbreeze-nj8u.onrender.com/api/comment/editComment/${comment._id}`, {
         method: 'PUT',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },

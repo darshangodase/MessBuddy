@@ -20,6 +20,7 @@ function GoogleAuth() {
       const result = await signInWithPopup(auth, provider);
       const res = await fetch(`https://blogbreeze-nj8u.onrender.com/api/auth/google`, {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },

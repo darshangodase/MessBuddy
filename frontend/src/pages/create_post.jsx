@@ -64,6 +64,7 @@ export default function updatePost() {
     try {
       const res = await fetch(`https://blogbreeze-nj8u.onrender.com/api/post/create`, {
         method: "POST",
+        credentials: 'include',
         headers: {
           "Content-Type": "application/json",
         },

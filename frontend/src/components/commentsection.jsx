@@ -22,6 +22,7 @@ export default function CommentSection({ postId }) {
     try {
       const res = await fetch(`https://blogbreeze-nj8u.onrender.com/api/comment/create`, {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -65,6 +66,8 @@ export default function CommentSection({ postId }) {
       }
       const res = await fetch(`https://blogbreeze-nj8u.onrender.com/api/comment/likeComment/${commentId}`, {
         method: 'PUT',
+        credentials: 'include',
+
       });
       if (res.ok) {
         const data = await res.json();
@@ -101,7 +104,10 @@ export default function CommentSection({ postId }) {
         return;
       }
       const res = await fetch(`https://blogbreeze-nj8u.onrender.com/api/comment/deleteComment/${commentId}`, {
+
         method: 'DELETE',
+        credentials: 'include',
+
       });
       if (res.ok) {
         const data = await res.json();

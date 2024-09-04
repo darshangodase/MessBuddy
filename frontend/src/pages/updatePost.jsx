@@ -96,6 +96,7 @@ export default function UpdatePost() {
       const res = await fetch(`https://blogbreeze-nj8u.onrender.com/api/post/updatepost/${formData._id}/${currentUser._id}`,
         {
           method: "PUT",
+          credentials: 'include',
           headers: {
             "Content-Type": "application/json",
           },
