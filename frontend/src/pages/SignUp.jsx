@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Alert, Button, Label, Spinner, TextInput } from 'flowbite-react';
-import Oauth from '../components/google_auth';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearError } from '../redux/user/userSlice';
 
@@ -44,7 +43,7 @@ function SignUp() {
     try {
       seterrorMessage(null);
       setloading(true);
-      const res = await fetch(`https://blogbreeze-nj8u.onrender.com/api/auth/signup`, {
+      const res = await fetch(`http://localhost:3000/api/auth/signup`, {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
@@ -52,11 +51,10 @@ function SignUp() {
       });
       const data = await res.json();
       
+      setloading(false);
       if (data.success === false) {
-        setloading(false);
         seterrorMessage('User Already Exists');
       } else {
-        setloading(false);
         seterrorMessage('User Sign Up Successful');
         navigate('/signin');
       }
@@ -72,7 +70,7 @@ function SignUp() {
         <div className="flex-1">
           <Link to="/" className="text-3xl font-bold dark:text-white">
             <span className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 px-2 py-1 rounded-md text-white">
-              BlogBreeze
+            MessBuddy
             </span>
           </Link>
           <p className="font-semibold text-md mt-6">
@@ -99,7 +97,6 @@ function SignUp() {
                 loading ? (<><Spinner size='sm' /><span className='ml-2'>Loading...</span></>) : "Sign Up"
               }
             </Button>
-            <Oauth />
           </form>
 
           <div className="flex gap-2 mt-5">

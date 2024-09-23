@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Alert, Button, Label, Spinner, TextInput } from 'flowbite-react';
 import { signInSuccess, signInStart, signInFailure, clearError } from '../redux/user/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import Oauth from '../components/google_auth';
 
 function SignIn() {
   const [formdata, setformdata] = useState({});
@@ -23,14 +22,13 @@ function SignIn() {
     e.preventDefault();
     const { username, password } = formdata;
 
-    // Basic validation
     if (!username || !password) {
       return dispatch(signInFailure('All fields are required'));
     }
     
     try {
       dispatch(signInStart());
-      const res = await fetch(`https://blogbreeze-nj8u.onrender.com/api/auth/signin`, {
+      const res = await fetch(`http://localhost:3000/api/auth/signin`, {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
@@ -54,7 +52,7 @@ function SignIn() {
         <div className="flex-1">
           <Link to="/" className="text-3xl font-bold dark:text-white">
             <span className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 px-2 py-1 rounded-md text-white">
-              BlogBreeze
+            MessBuddy
             </span>
           </Link>
           <p className="font-semibold text-md mt-6">
@@ -82,7 +80,6 @@ function SignIn() {
                 'Sign In'
               )}
             </Button>
-            <Oauth/>
           </form>
           <div className="flex gap-2 mt-5">
             <span className="text-md">Don't Have an account?</span>

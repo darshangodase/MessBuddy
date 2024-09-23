@@ -1,20 +1,18 @@
-import { Avatar, Button, Dropdown, Navbar, TextInput } from "flowbite-react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { AiOutlineSearch, AiOutlinePlus } from "react-icons/ai";
+import { Avatar, Button, Dropdown, Navbar } from "flowbite-react";
+import { Link, useLocation } from "react-router-dom";
+import { AiOutlinePlus } from 'react-icons/ai'; // Import the icon
 import { FaMoon, FaSun } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import { toggleTheme } from "../redux/theme/themeSlice";
 import { signoutsuccess } from "../redux/user/userSlice";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 function Header() {
-  const path = useLocation().pathname;
-  const location = useLocation();
-  const navigate = useNavigate();
+  const path=useLocation().pathname;
+  const location=useLocation();
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
   const { theme } = useSelector((state) => state.theme);
-  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
@@ -24,17 +22,10 @@ function Header() {
     }
   }, [location.search]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const urlParams = new URLSearchParams(location.search);
-    urlParams.set("searchTerm", searchTerm);
-    const searchQuery = urlParams.toString();
-    navigate(`/search?${searchQuery}`);
-  };
 
   const handleSignOut = async () => {
     try {
-      const res = await fetch(`https://blogbreeze-nj8u.onrender.com/api/user/signout`, {
+      const res = await fetch(`http://localhost:3000/api/user/signout`, {
         method: "POST",
         credentials: 'include',
         headers: { "Content-Type": "application/json" },
@@ -58,24 +49,10 @@ function Header() {
           className="self-center whitespace-nowrap text-sm sm:text-xl font-semibold dark:text-white"
         >
           <span className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 px-2 py-1 rounded-md text-white">
-            BlogBreeze
+          MessBuddy
           </span>
         </Link>
 
-        <form onSubmit={handleSubmit}>
-          <TextInput
-            type="text"
-            placeholder="Search..."
-            rightIcon={AiOutlineSearch}
-            className="hidden lg:inline"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </form>
-
-        {/* <Button className="w-12 h-10 lg:hidden" color="gray" pill>
-          <AiOutlineSearch />
-        </Button> */}
 
         <div className="flex gap-5 md:order-2">
           <Button
@@ -138,19 +115,6 @@ function Header() {
             </Link>
           </Navbar.Link>
 
-          {currentUser && (
-            <Navbar.Link
-              className="hidden sm:block "
-              active={path === "/create-post"}
-              as={"div"}
-            >
-              <Link to="/create-post">
-                <Button type="submit" gradientDuoTone="purpleToPink" outline>
-                  Create Post
-                </Button>
-              </Link>
-            </Navbar.Link>
-          )}
         </Navbar.Collapse>
       </Navbar>
 

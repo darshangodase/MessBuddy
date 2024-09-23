@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import Dashboardsidebar from '../components/dashboardsidebar';
-import Dashboardprofile from '../components/dashboardprofile';
-import Dashposts from '../components/dash_post';
-import Dash_component from '../components/dash_component';
 function Dashboard() {
   const location = useLocation();
   const [tab, settab] = useState();
@@ -22,10 +19,7 @@ function Dashboard() {
         <Dashboardsidebar />
       </div>
       <div className="flex-1 flex justify-center items-center overflow-x-auto">
-        {tab === 'profile' && <Dashboardprofile />}
-        {tab === 'posts' && <Dashposts />}
-        {tab === 'dash' && <Dash_component />}
-
+        {/* {tab === 'profile' && <Dashboardprofile />} */}
       </div>
     </div>
   );
