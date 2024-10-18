@@ -9,9 +9,16 @@ import Dashboard from './pages/Dashboard';
 import Header from './components/Header';
 import Footer from './components/footer';
 import ScrollToTop from './components/scrollToTop';
+import toast, { Toaster } from 'react-hot-toast';
+
 function App() {
   
   return (
+    <>
+      
+       <div className="">
+             <Toaster position="top-center" />  
+       </div>
        <BrowserRouter>
        <ScrollToTop/>
          <Header/>
@@ -20,14 +27,13 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUP />} />
-
-
           <Route element={<PrivateRoute/>} >
           <Route path="/dashboard" element={<Dashboard />} />
           </Route>
         </Routes>
         <Footer/>
        </BrowserRouter>
+       </>
   )
 } 
 

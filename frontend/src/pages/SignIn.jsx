@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Alert, Button, Label, Spinner, TextInput } from 'flowbite-react';
 import { signInSuccess, signInStart, signInFailure, clearError } from '../redux/user/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import toast from 'react-hot-toast';
 
 function SignIn() {
   const [formdata, setformdata] = useState({});
@@ -46,6 +47,12 @@ function SignIn() {
     }
   };
 
+  useEffect(() => {
+    if (errorMessage) {
+      toast.error(errorMessage);
+    }
+  }, [errorMessage]);
+
   return (
     <div className='min-h-screen mt-20'>
       <div className="flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5">
@@ -56,7 +63,7 @@ function SignIn() {
             </span>
           </Link>
           <p className="font-semibold text-md mt-6">
-            This is a blog app. You can Sign In with your Username and Password.
+            This is a mess management app. You can Sign In with your Username and Password.
           </p>
         </div>
         <div className="flex-1">
@@ -85,11 +92,6 @@ function SignIn() {
             <span className="text-md">Don't Have an account?</span>
             <Link to='/signup' className='text-blue-500 font-medium'>Sign Up</Link>
           </div>
-          {errorMessage && (
-            <Alert className='mt-5 text-black font-semibold text-md' color='failure'>
-              {errorMessage}
-            </Alert>
-          )}
           <div className="mt-5">
            
           </div>
