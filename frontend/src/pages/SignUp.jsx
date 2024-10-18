@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Alert, Button, Label, Spinner, TextInput } from 'flowbite-react';
+import { Button, Label, Spinner, TextInput } from 'flowbite-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearError } from '../redux/user/userSlice';
+import toast from 'react-hot-toast';
 
 function SignUp() {
   const [formdata, setformdata] = useState({});
@@ -15,6 +16,12 @@ function SignUp() {
   useEffect(() => {
     dispatch(clearError());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (errorMessage || authError) {
+      toast.error(errorMessage || authError);
+    }
+  }, [errorMessage, authError]);
 
   const handleChange = (e) => {
     setformdata({ ...formdata, [e.target.id]: e.target.value.trim() });
@@ -103,13 +110,6 @@ function SignUp() {
             <span className="text-md">Have an account?</span>
             <Link to='/signin' className='text-blue-500 font-medium'>Sign In</Link>
           </div>
-
-          {(errorMessage || authError) && (
-            <Alert className='mt-5 text-black font-semibold text-md' color='failure'>
-              {errorMessage || authError}
-            </Alert>
-          )}
-
         </div>
       </div>
     </div>
