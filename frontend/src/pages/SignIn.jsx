@@ -45,11 +45,11 @@ function SignIn() {
     try {
       dispatch(signInStart());
       const URL = `${import.meta.env.VITE_BACKEND_URL}/api/auth/signin`;
-      const res = await axios.post(URL, formdata);
+      const res = await axios.post(URL, formdata, { withCredentials: true });
       if (res.data.success === false) {
         return dispatch(signInFailure('Invalid credentials'));
       }
-      dispatch(signInSuccess(res.data));
+      dispatch(signInSuccess(res.data.user));
       toast.success('Sign In Successfully');
       navigate('/');
     } catch (error) {

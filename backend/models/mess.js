@@ -1,11 +1,6 @@
 const mongoose = require('mongoose');
 
 const messSchema = new mongoose.Schema({
-  Mess_ID: {
-    type: Number,
-    required: true,
-    unique: true,
-  },
   Mess_Name: {
     type: String,
     required: true,
@@ -31,17 +26,9 @@ const messSchema = new mongoose.Schema({
     type: String,
     default: '',
   },
-  Menu: {
-    type: [String],
-    default: [],
-  },
   Ratings: {
     type: Number,
     default: 0,
-  },
-  Reviews: {
-    type: [String],
-    default: [],
   },
 }, { timestamps: true });
 

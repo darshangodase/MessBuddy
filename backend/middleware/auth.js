@@ -1,9 +1,9 @@
 const jwt = require('jsonwebtoken');
-const User = require('../models/user');
 const errorhandler = require('../utils/error');
+const User = require('../models/user');
 
 const verifyToken = (req, res, next) => {
-  const token = req.cookies.access_token;
+  const token = req.headers.authorization?.split(' ')[1];
   if (!token) {
     return next(errorhandler(401, 'Access Denied'));
   }
@@ -13,7 +13,7 @@ const verifyToken = (req, res, next) => {
     req.user = verified;
     next();
   } catch (error) {
-    next(errorhandler(400, 'Invalid Token'));
+    next(errorhandler(400, error.message));
   }
 };
 

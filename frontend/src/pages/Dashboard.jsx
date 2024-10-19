@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import Dashboardsidebar from '../components/Dashboardsidebar';
+import Dashboardsidebar from '../components/dashboardsidebar';
 import MessForm from '../components/MessForm';
-import MessList from '../components/MessList';
+import Menu from '../components/Menu';
 
 function Dashboard() {
   const location = useLocation();
@@ -22,8 +22,8 @@ function Dashboard() {
         <Dashboardsidebar />
       </div>
       <div className="flex-1 flex justify-center items-center overflow-x-auto">
-        {tab === 'add-mess' && <MessForm />}
-        {tab === 'manage-mess' && <MessList />}
+        {tab === 'profile' && <MessForm />}
+        {tab === 'menu' && <Menu />}
       </div>
     </div>
   );

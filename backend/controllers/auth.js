@@ -33,7 +33,6 @@ const signup = async (req, res, next) => {
       .cookie('access_token', token, { httpOnly: true, sameSite: 'None', secure: true })
       .json({ success: true, message: 'User created successfully', user: { username, email, login_role } });
   } catch (error) {
-    console.error('Signup error:', error); // Log the error for debugging
     next(errorhandler(500, 'Internal Server Error'));
   }
 };
@@ -60,11 +59,11 @@ const signin = async (req, res, next) => {
     res
       .status(200)
       .cookie('access_token', token, { httpOnly: true, sameSite: 'None', secure: true })
-      .json(rest);
+      .json({ success: true, user: rest, token });
   } catch (error) {
-    console.error('Signin error:', error); // Log the error for debugging
     next(errorhandler(500, 'Internal Server Error'));
   }
 };
 
 module.exports = { signup, signin };
+
