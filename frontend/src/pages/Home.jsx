@@ -22,7 +22,7 @@ export default function Home() {
     <div>
       <section className="flex flex-col justify-center items-center  text-center px-4 py-8">
         <h1 className=" mt-9 font-serif text-4xl font-semibold mb-4 lg:text-5xl hover:text-teal-400">
-        Seamless Meals, Smarter Choices
+          Seamless Meals, Smarter Choices
         </h1>
         <p className="text-md mb-6 max-w-4xl ">
           Discover menus, insights, and updates that make your mess and canteen
@@ -41,7 +41,7 @@ export default function Home() {
             className="mt-4 mb-3"
             outline
           >
-            View All Mess Menus
+            View All Mess Menus g
           </Button>
         </Link>
       </section>
