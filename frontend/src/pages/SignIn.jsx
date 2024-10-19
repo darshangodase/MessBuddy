@@ -4,6 +4,7 @@ import { Button, Label, Spinner, TextInput } from 'flowbite-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { signInSuccess, signInStart, signInFailure, clearError } from '../redux/user/userSlice';
 import toast from 'react-hot-toast';
+import axios from 'axios';
 
 function SignIn() {
   const [formdata, setformdata] = useState({});
@@ -37,25 +38,14 @@ function SignIn() {
       return dispatch(signInFailure('All fields are required'));
     }
     
-    const URL=`${import.meta.env.VITE_BACKEND_URL}/api/auth/signin`
-        const res=await axios({
-          url:URL,
-          withCredentials:true
-        })
     try {
       dispatch(signInStart());
-      const res = await fetch(`http://localhost:3000/api/auth/signin`, {
-        method: 'POST',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formdata),
-      });
-      const data = await res.json();
-
-      if (!res.ok) {
+      const URL = `${import.meta.env.VITE_BACKEND_URL}/api/auth/signin`;
+      const res = await axios.post(URL, formdata);
+      if (res.data.success === false) {
         return dispatch(signInFailure('Invalid credentials'));
       }
-      dispatch(signInSuccess(data));
+      dispatch(signInSuccess(res.data));
       navigate('/');
     } catch (error) {
       dispatch(signInFailure('Failed to Sign In'));
