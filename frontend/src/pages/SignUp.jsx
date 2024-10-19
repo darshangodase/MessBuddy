@@ -15,12 +15,17 @@ function SignUp() {
 
   useEffect(() => {
     dispatch(clearError());
+
+    return () => {
+      dispatch(clearError());
+    };
   }, [dispatch]);
 
   useEffect(() => {
     if (errorMessage || authError) {
       toast.error(errorMessage || authError);
     }
+    
   }, [errorMessage, authError]);
 
   const handleChange = (e) => {

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Alert, Button, Label, Spinner, TextInput } from 'flowbite-react';
-import { signInSuccess, signInStart, signInFailure, clearError } from '../redux/user/userSlice';
+import { Button, Label, Spinner, TextInput } from 'flowbite-react';
 import { useDispatch, useSelector } from 'react-redux';
+import { signInSuccess, signInStart, signInFailure, clearError } from '../redux/user/userSlice';
 import toast from 'react-hot-toast';
 
 function SignIn() {
@@ -13,7 +13,17 @@ function SignIn() {
 
   useEffect(() => {
     dispatch(clearError());
+    return () => {
+      dispatch(clearError());
+      toast.dismiss();
+    };
   }, [dispatch]);
+
+  useEffect(() => {
+    if (errorMessage) {
+      toast.error(errorMessage);
+    }
+  }, [errorMessage]);
 
   const handleChange = (e) => {
     setformdata({ ...formdata, [e.target.id]: e.target.value.trim() });
@@ -27,6 +37,11 @@ function SignIn() {
       return dispatch(signInFailure('All fields are required'));
     }
     
+    const URL=`${import.meta.env.VITE_BACKEND_URL}/api/auth/signin`
+        const res=await axios({
+          url:URL,
+          withCredentials:true
+        })
     try {
       dispatch(signInStart());
       const res = await fetch(`http://localhost:3000/api/auth/signin`, {
@@ -46,12 +61,6 @@ function SignIn() {
       dispatch(signInFailure('Failed to Sign In'));
     }
   };
-
-  useEffect(() => {
-    if (errorMessage) {
-      toast.error(errorMessage);
-    }
-  }, [errorMessage]);
 
   return (
     <div className='min-h-screen mt-20'>
@@ -91,9 +100,6 @@ function SignIn() {
           <div className="flex gap-2 mt-5">
             <span className="text-md">Don't Have an account?</span>
             <Link to='/signup' className='text-blue-500 font-medium'>Sign Up</Link>
-          </div>
-          <div className="mt-5">
-           
           </div>
         </div>
       </div>
