@@ -14,6 +14,7 @@ const userSchema = new mongoose.Schema({
   Login_Role: {
     type: String,
     required: true,
+    enum: ['User', 'Mess Owner'],
   },
   password: {
     type: String,
