@@ -41,7 +41,7 @@ export default function Home() {
             className="mt-4 mb-3"
             outline
           >
-            View All Mess Menus
+            View All Mess Menus g
           </Button>
         </Link>
       </section>
