@@ -67,7 +67,7 @@ function SignUp() {
       if (res.data.success === false) {
         seterrorMessage('User Already Exists');
       } else {
-        seterrorMessage('User Sign Up Successful');
+        toast.success('User Sign Up Successful');
         navigate('/signin');
       }
     } catch (error) {
@@ -106,7 +106,7 @@ function SignUp() {
             </div>
             <div>
               <Label value="Login Role" className="" />
-              <div className="flex gap-4">
+              <div className="flex gap-4 mt-4">
                 <Radio id="user" name="login_role" value="User" onChange={handleRoleChange} />
                 <Label htmlFor="user">User</Label>
                 <Radio id="mess_owner" name="login_role" value="Mess Owner" onChange={handleRoleChange} />
