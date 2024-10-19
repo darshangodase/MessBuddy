@@ -34,6 +34,8 @@ export default function Home() {
           here to enhance your dining experience. MessBuddy is designed to keep
           you informed, engaged, and connected with your dining community.{" "}
         </p>
+        
+
         <Link to="/search">
           <Button
             type="submit"
@@ -69,7 +71,7 @@ export default function Home() {
             </Link>
           </div>
         ) : (
-          <div className="flex justify-center  min-h-screen">
+          <div className="flex justify-center  min-h-screen"> 
             {/* <Spinner size='xl' /> */}
             <HashLoader color="#35c9e1" />
           </div>

@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { clearError } from '../redux/user/userSlice';
 import toast from 'react-hot-toast';
 
+
 function SignUp() {
   const [formdata, setformdata] = useState({});
   const [errorMessage, seterrorMessage] = useState(null);
@@ -55,16 +56,10 @@ function SignUp() {
     try {
       seterrorMessage(null);
       setloading(true);
-      const res = await fetch(`http://localhost:3000/api/auth/signup`, {
-        method: 'POST',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formdata),
-      });
-      const data = await res.json();
+      const res = await axios.post(URL,formdata)
       
       setloading(false);
-      if (data.success === false) {
+      if (res.success === false) {
         seterrorMessage('User Already Exists');
       } else {
         seterrorMessage('User Sign Up Successful');
