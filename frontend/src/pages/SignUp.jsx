@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Button, Label, Spinner, TextInput } from 'flowbite-react';
+import { Button, Label, Spinner, TextInput, Radio } from 'flowbite-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearError } from '../redux/user/userSlice';
 import toast from 'react-hot-toast';
-
 
 function SignUp() {
   const [formdata, setformdata] = useState({});
@@ -19,6 +18,7 @@ function SignUp() {
 
     return () => {
       dispatch(clearError());
+      toast.dismiss();
     };
   }, [dispatch]);
 
@@ -26,19 +26,22 @@ function SignUp() {
     if (errorMessage || authError) {
       toast.error(errorMessage || authError);
     }
-    
   }, [errorMessage, authError]);
 
   const handleChange = (e) => {
     setformdata({ ...formdata, [e.target.id]: e.target.value.trim() });
   };
 
+  const handleRoleChange = (e) => {
+    setformdata({ ...formdata, login_role: e.target.value });
+  };
+
   const handlesubmit = async (e) => {
     e.preventDefault();
 
-    const { username, email, password } = formdata;
+    const { username, email, password, login_role } = formdata;
 
-    if (!username || !email || !password) {
+    if (!username || !email || !password || !login_role) {
       setloading(false);
       return seterrorMessage('All fields are required');
     }
@@ -56,10 +59,16 @@ function SignUp() {
     try {
       seterrorMessage(null);
       setloading(true);
-      const res = await axios.post(URL,formdata)
+      const res = await fetch(`http://localhost:3000/api/auth/signup`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formdata),
+      });
+      const data = await res.json();
       
       setloading(false);
-      if (res.success === false) {
+      if (data.success === false) {
         seterrorMessage('User Already Exists');
       } else {
         seterrorMessage('User Sign Up Successful');
@@ -81,7 +90,7 @@ function SignUp() {
             </span>
           </Link>
           <p className="font-semibold text-md mt-6">
-            This is a blog app. You can Sign up with your Username, Email, and Password.
+            This is a blog app. You can Sign up with your Username, Email, Password, and Login Role.
           </p>
         </div>
         <div className="flex-1">
@@ -98,6 +107,15 @@ function SignUp() {
             <div>
               <Label value="Password" className="" />
               <TextInput type="password" placeholder="Password" id="password" onChange={handleChange} />
+            </div>
+            <div>
+              <Label value="Login Role" className="" />
+              <div className="flex gap-4">
+                <Radio id="user" name="login_role" value="User" onChange={handleRoleChange} />
+                <Label htmlFor="user">User</Label>
+                <Radio id="mess_owner" name="login_role" value="Mess Owner" onChange={handleRoleChange} />
+                <Label htmlFor="mess_owner">Mess Owner</Label>
+              </div>
             </div>
             <Button type="submit" gradientDuoTone="purpleToPink" className="mt-4 mb-2" disabled={loading}>
               {
