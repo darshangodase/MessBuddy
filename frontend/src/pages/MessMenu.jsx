@@ -162,7 +162,7 @@ const MessMenu = () => {
           placeholder="Search menu items..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="p-2 border border-gray-300 rounded w-full md:w-1/4"
+          className="p-2 border border-gray-300 rounded w-full text-black md:w-1/4"
         />
       </div>
 
