@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { HashLoader } from "react-spinners";
-import { Card, Table } from "flowbite-react"; 
+import { Card, Table } from "flowbite-react";
 import axios from "axios";
-import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa"; 
-import { useSelector } from "react-redux"; 
+import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
 const MessMenu = () => {
   const { messId } = useParams();
   const [messDetails, setMessDetails] = useState(null);
   const [menuItems, setMenuItems] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState(""); 
-  const [rating, setRating] = useState(0); 
+  const [searchQuery, setSearchQuery] = useState("");
+  const [rating, setRating] = useState(0);
+  const { theme } = useSelector((state) => state.theme);
 
   const currentUser = useSelector((state) => state.user.currentUser);
 
@@ -68,8 +69,8 @@ const MessMenu = () => {
           `${import.meta.env.VITE_BACKEND_URL}/api/mess/read/${messId}`
         );
         setMessDetails(res.data.mess);
-        await fetchMenuItems(res.data.mess.Owner_ID, ""); 
-        await fetchRating(messId); 
+        await fetchMenuItems(res.data.mess.Owner_ID, "");
+        await fetchRating(messId);
       } catch (error) {
         console.error("Failed to fetch mess details:", error);
         setLoading(false);
@@ -81,7 +82,7 @@ const MessMenu = () => {
 
   useEffect(() => {
     if (messDetails) {
-      fetchMenuItems(messDetails.Owner_ID, searchQuery); 
+      fetchMenuItems(messDetails.Owner_ID, searchQuery);
     }
   }, [searchQuery, messDetails]);
 
@@ -93,11 +94,24 @@ const MessMenu = () => {
     return (
       <div className="flex items-center space-x-1">
         {[...Array(fullStars)].map((_, i) => (
-          <FaStar key={i} className="text-yellow-500" onClick={() => handleStarClick(i)} />
+          <FaStar
+            key={i}
+            className="text-yellow-500"
+            onClick={() => handleStarClick(i)}
+          />
         ))}
-        {halfStar && <FaStarHalfAlt className="text-yellow-500" onClick={() => handleStarClick(fullStars)} />}
+        {halfStar && (
+          <FaStarHalfAlt
+            className="text-yellow-500"
+            onClick={() => handleStarClick(fullStars)}
+          />
+        )}
         {[...Array(emptyStars)].map((_, i) => (
-          <FaRegStar key={i} className="text-yellow-500" onClick={() => handleStarClick(fullStars + (halfStar ? 1 : 0) + i)} />
+          <FaRegStar
+            key={i}
+            className="text-yellow-500"
+            onClick={() => handleStarClick(fullStars + (halfStar ? 1 : 0) + i)}
+          />
         ))}
       </div>
     );
@@ -127,8 +141,8 @@ const MessMenu = () => {
 
   return (
     <div className="p-8 min-h-screen w-full flex flex-col justify-center">
-      <Card className=" md:w-3/4 shadow-lg transition-transform transform hover:scale-105 hover:shadow-2xl mb-5 duration-300 ease-in-out mx-auto">
-        <h1 className="text-4xl font-bold mb-3 text-center">
+<Card className={`${theme === "dark" ? "bg-gray-800" : "bg-gradient-to-r from-green-100 via-blue-100 to-purple-100"} md:w-3/4 shadow-lg transition-transform transform hover:scale-105 hover:shadow-2xl mb-5 duration-300 ease-in-out mx-auto`}>
+<h1 className="text-4xl font-bold mb-3 text-center">
           {messDetails.Mess_Name}
         </h1>
         <p className="text-lg">Address : {messDetails.Address}</p>

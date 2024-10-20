@@ -23,7 +23,7 @@ function DashboardSidebar() {
 
   const handleSignout = async () => {
     try {
-      const res = await axios.post(`http://localhost:3000/api/user/signout`, {}, {
+      const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/user/signout`, {}, {
         withCredentials: true,
         headers: { "Content-Type": "application/json" },
       });
@@ -40,7 +40,7 @@ function DashboardSidebar() {
   const handleDeleteAccount = async () => {
     if (window.confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
       try {
-        const res = await axios.delete(`http://localhost:3000/api/user/delete-account/${currentUser._id}`, {
+        const res = await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/user/delete-account/${currentUser._id}`, {
           headers: {
             Authorization: `Bearer ${currentUser.token}`,
           },

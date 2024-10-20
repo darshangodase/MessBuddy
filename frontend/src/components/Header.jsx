@@ -34,7 +34,7 @@ function Header() {
 
   const handleSignOut = async () => {
     try {
-      const res = await fetch(`http://localhost:3000/api/user/signout`, {
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/user/signout`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
