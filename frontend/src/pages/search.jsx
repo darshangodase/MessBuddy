@@ -81,7 +81,7 @@ export default function Search() {
         <h1 className="text-center text-3xl font-semibold sm:border-b border-gray-500 p-3 mt-5">
           Mess Results
         </h1>
-        <div className="p-8 flex flex-wrap gap-4 justify-evenly">
+        <div className=" p-11 flex flex-wrap gap-4 justify-center ">
           {!loading && messes.length === 0 && (
             <p className="text-xl text-gray-500">No messes found.</p>
           )}
@@ -91,7 +91,7 @@ export default function Search() {
             </div>
           )}
           {!loading && (
-            <div className=" h-full w-full flex gap-6 flex-wrap justify-around">
+            <div className=" h-full w-full flex gap-6 flex-wrap md:justify-between ">
               {messes.map((mess) => (
                 <MenuCard key={mess._id} menu={mess} />
               ))}

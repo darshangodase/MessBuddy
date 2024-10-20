@@ -73,6 +73,17 @@ const getMess = async (req, res, next) => {
     next(errorhandler(500, 'Internal Server Error'));
   }
 };
+const readMess = async (req, res, next) => {
+  try {
+    const mess = await Mess.findOne({ _id: req.params.id });
+    if (!mess) {
+      return res.status(404).json({ success: false, message: 'Mess not found' });
+    }
+    res.status(200).json({ success: true, mess });
+  } catch (error) {
+    next(errorhandler(500, 'Internal Server Error'));
+  }
+};
 
 const deleteMess = async (req, res, next) => {
   try {
@@ -85,6 +96,41 @@ const deleteMess = async (req, res, next) => {
     next(errorhandler(500, 'Internal Server Error'));
   }
 };
+const getRating = async (req, res, next) => {
+  try {
+    const mess = await Mess.findById(req.params.id);
+    if (!mess) {
+      return res.status(404).json({ success: false, message: 'Mess not found' });
+    }
+    const averageRating = mess.Ratings.length > 0
+      ? mess.Ratings.reduce((acc, rating) => acc + rating, 0) / mess.Ratings.length
+      : 0;
+    res.status(200).json({ success: true, rating: averageRating });
+  } catch (error) {
+    next(errorhandler(500, 'Internal Server Error'));
+  }
+};
+
+const updateRating = async (req, res, next) => {
+  const { rating } = req.body;
+  const {id,userId} = req.params; 
+  try {
+    const mess = await Mess.findById(req.params.id);
+    if (!mess) {
+      return res.status(404).json({ success: false, message: 'Mess not found' });
+    }
+    if (mess.RatedBy.includes(userId)) {
+      return res.status(400).json({ success: false, message: 'User has already rated this mess' });
+    }
+    mess.Ratings.push(rating);
+    mess.RatedBy.push(userId);
+    await mess.save();
+    const averageRating = mess.Ratings.reduce((acc, rating) => acc + rating, 0) / mess.Ratings.length;
+    res.status(200).json({ success: true, message: 'Rating updated successfully', rating: averageRating });
+  } catch (error) {
+    next(errorhandler(500, 'Internal Server Error'));
+  }
+}
 
 module.exports = {
   createMess,
@@ -92,4 +138,7 @@ module.exports = {
   getMess,
   updateMess,
   deleteMess,
+  readMess,
+  getRating,
+  updateRating,
 };

@@ -7,6 +7,7 @@ import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
 import Dashboard from './pages/Dashboard';
 import Search from './pages/search';
+import MessMenu from './pages/MessMenu';
 import Header from './components/Header';
 import Footer from './components/footer';
 import ScrollToTop from './components/scrollToTop';
@@ -27,6 +28,7 @@ function App() {
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/search" element={<Search />} />
+          <Route path="/mess/:messId" element={<MessMenu />} />
           <Route element={<PrivateRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
           </Route>

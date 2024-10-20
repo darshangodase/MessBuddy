@@ -27,8 +27,12 @@ export default function Home() {
   }, []);
 
   const topMesses = messes
-    .sort((a, b) => b.Ratings - a.Ratings) 
-    .slice(0, 4); 
+    .sort((a, b) => {
+      const avgRatingA = a.Ratings.length > 0 ? a.Ratings.reduce((acc, rating) => acc + rating, 0) / a.Ratings.length : 0;
+      const avgRatingB = b.Ratings.length > 0 ? b.Ratings.reduce((acc, rating) => acc + rating, 0) / b.Ratings.length : 0;
+      return avgRatingB - avgRatingA;
+    })
+    .slice(0, 4);
 
   return (
     <div>
@@ -45,14 +49,12 @@ export default function Home() {
             community.
           </p>
           <div className="flex justify-center">
-            {" "}
             <Link to="/search">
               <Button
                 type="submit"
                 gradientDuoTone="purpleToPink"
                 className="mt-4 mb-3"
                 outline
-                
               >
                 View All Mess Menus
               </Button>

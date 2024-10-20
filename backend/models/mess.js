@@ -32,13 +32,17 @@ const messSchema = new mongoose.Schema({
     default: '',
   },
   Ratings: {
-    type: Number,
-    default: 0,
+    type: [Number],
+    default: [],
   },
-  UserID: {  // Add this field
+  RatedBy: {
+    type: [mongoose.Schema.Types.ObjectId], 
+    default: [],
+  },
+  UserID: { 
     type: Number,
     required: true,
-    unique: true,  // Ensure it's unique if needed
+    unique: true,  
   },
 }, { timestamps: true });
 
