@@ -91,7 +91,7 @@ export default function Search() {
             </div>
           )}
           {!loading && (
-            <div className=" h-full w-full flex gap-6 flex-wrap md:justify-between ">
+            <div className=" h-full w-full flex gap-6 flex-wrap md:justify-start">
               {messes.map((mess) => (
                 <MenuCard key={mess._id} menu={mess} />
               ))}

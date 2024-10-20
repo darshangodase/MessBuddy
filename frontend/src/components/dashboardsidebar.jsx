@@ -79,11 +79,11 @@ function DashboardSidebar() {
             </Sidebar.Item>
           </Link>
 
-          <Sidebar.Item icon={HiArrowSmRight} onClick={handleSignout}>
+          <Sidebar.Item icon={HiArrowSmRight} onClick={handleSignout} className="cursor-pointer">
             Sign Out
           </Sidebar.Item>
 
-          <Sidebar.Item icon={HiTrash} onClick={handleDeleteAccount}>
+          <Sidebar.Item icon={HiTrash} onClick={handleDeleteAccount}className="cursor-pointer">
             Delete Account
           </Sidebar.Item>
         </Sidebar.ItemGroup>
