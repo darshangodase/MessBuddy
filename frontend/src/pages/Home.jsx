@@ -26,14 +26,12 @@ export default function Home() {
     fetchMesses();
   }, []);
 
-  // Sort by ratings and slice to get top 4 messes
   const topMesses = messes
-    .sort((a, b) => b.Ratings - a.Ratings) // Sort using the Ratings property
-    .slice(0, 4); // Get the top 4 messes
+    .sort((a, b) => b.Ratings - a.Ratings) 
+    .slice(0, 4); 
 
   return (
     <div>
-      {/* Hero Section */}
       <section className="flex flex-col lg:flex-row justify-between items-center text-center lg:text-left px-4 py-8">
         <div className="flex-1">
           <h1 className="mt-9 font-serif text-3xl font-semibold mb-4 lg:text-4xl hover:text-teal-400 text-center">
@@ -48,13 +46,13 @@ export default function Home() {
           </p>
           <div className="flex justify-center">
             {" "}
-            {/* Center the button */}
             <Link to="/search">
               <Button
                 type="submit"
                 gradientDuoTone="purpleToPink"
                 className="mt-4 mb-3"
                 outline
+                
               >
                 View All Mess Menus
               </Button>
@@ -70,7 +68,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Recent Menus Section */}
       <div className="w-full p-3 flex flex-col items-center gap-3 py-7">
         {loading ? (
           <div className="flex justify-center min-h-screen">

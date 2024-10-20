@@ -1,17 +1,17 @@
 import { Button, Select, TextInput } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import PostCard from "../components/PostCard";
+import MenuCard from "../components/MenuCard"; // Import the MenuCard component
 import { HashLoader } from "react-spinners";
 
 export default function Search() {
   const [sidebarData, setSidebarData] = useState({
     searchTerm: "",
     sort: "desc",
-    category: "uncategorized",
+    category: "all",
   });
 
-  const [posts, setPosts] = useState([]);
+  const [messes, setMesses] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showMore, setShowMore] = useState(false);
 
@@ -28,19 +28,19 @@ export default function Search() {
         ...sidebarData,
         searchTerm: searchTermFromUrl || "",
         sort: sortFromUrl || "desc",
-        category: categoryFromUrl || "uncategorized",
+        category: categoryFromUrl || "all",
       });
     }
 
-    const fetchPosts = async () => {
+    const fetchMesses = async () => {
       setLoading(true);
-      if (urlParams.get("category") === "uncategorized") {
+      if (urlParams.get("category") === "all") {
         urlParams.delete("category");
       }
-      urlParams.set("limit", 9); // Set the limit to 10 posts
+      urlParams.set("limit", 9); // Set the limit to 9 messes
       const searchQuery = urlParams.toString();
       const res = await fetch(
-        `https://blogbreeze-nj8u.onrender.com/api/post/getposts?${searchQuery}`
+        `${import.meta.env.VITE_BACKEND_URL}/api/mess?${searchQuery}`
       );
       if (!res.ok) {
         setLoading(false);
@@ -48,16 +48,16 @@ export default function Search() {
       }
       if (res.ok) {
         const data = await res.json();
-        setPosts(data.posts);
+        setMesses(data.messes);
         setLoading(false);
-        if (data.posts.length === 9) {
+        if (data.messes.length === 9) {
           setShowMore(true);
         } else {
           setShowMore(false);
         }
       }
     };
-    fetchPosts();
+    fetchMesses();
   }, [location.search]);
 
   const handleChange = (e) => {
@@ -69,7 +69,7 @@ export default function Search() {
       setSidebarData({ ...sidebarData, sort: order });
     }
     if (e.target.id === "category") {
-      const category = e.target.value || "uncategorized";
+      const category = e.target.value || "all";
       setSidebarData({ ...sidebarData, category });
     }
   };
@@ -79,7 +79,7 @@ export default function Search() {
     const urlParams = new URLSearchParams(location.search);
     urlParams.set("searchTerm", sidebarData.searchTerm);
     urlParams.set("sort", sidebarData.sort);
-    if (sidebarData.category === "uncategorized") {
+    if (sidebarData.category === "all") {
       urlParams.delete("category");
     } else {
       urlParams.set("category", sidebarData.category);
@@ -89,25 +89,25 @@ export default function Search() {
   };
 
   const handleShowMore = async () => {
-    const numberOfPosts = posts.length;
-    const startIndex = numberOfPosts;
+    const numberOfMesses = messes.length;
+    const startIndex = numberOfMesses;
     const urlParams = new URLSearchParams(location.search);
     urlParams.set("startIndex", startIndex);
     urlParams.set("limit", 9);
-    if (sidebarData.category === "uncategorized") {
+    if (sidebarData.category === "all") {
       urlParams.delete("category");
     }
     const searchQuery = urlParams.toString();
     const res = await fetch(
-      `https://blogbreeze-nj8u.onrender.com/api/post/getposts?${searchQuery}`
+      `${import.meta.env.VITE_BACKEND_URL}/api/mess?${searchQuery}`
     );
     if (!res.ok) {
       return;
     }
     if (res.ok) {
       const data = await res.json();
-      setPosts([...posts, ...data.posts]);
-      if (data.posts.length === 9) {
+      setMesses([...messes, ...data.messes]);
+      if (data.messes.length === 9) {
         setShowMore(true);
       } else {
         setShowMore(false);
@@ -145,137 +145,10 @@ export default function Search() {
               value={sidebarData.category}
               id="category"
             >
-              <option value="uncategorized">Select a category</option>
-              <option value="AI">Artificial Intelligence</option>
-              <option value="Angular">Angular</option>
-              <option value="Ansible">Ansible</option>
-              <option value="AntDesign">Ant Design</option>
-              <option value="AR">Augmented Reality</option>
-              <option value="AWS">AWS</option>
-              <option value="Azure">Azure</option>
-              <option value="BabylonJs">Babylon.js</option>
-              <option value="Bash">Bash</option>
-              <option value="Blockchain">Blockchain</option>
-              <option value="Bootstrap">Bootstrap</option>
-              <option value="Bulma">Bulma</option>
-              <option value="C++">C++</option>
-              <option value="Capacitor">Capacitor</option>
-              <option value="ChartJs">Chart.js</option>
-              <option value="Chef">Chef</option>
-              <option value="Chai">Chai</option>
-              <option value="CI/CD">CI/CD</option>
-              <option value="Clojure">Clojure</option>
-              <option value="ContinuousDelivery">Continuous Delivery</option>
-              <option value="ContinuousIntegration">
-                Continuous Integrationn
-              </option>
-              <option value="CSS">CSS</option>
-              <option value="Cypress">Cypress</option>
-              <option value="D3Js">D3.js</option>
-              <option value="DataScience">Data Science</option>
-              <option value="DevOps">DevOps</option>
-              <option value="DevSecOps">DevSecOps</option>
-              <option value="DigitalOcean">DigitalOcean</option>
-              <option value="Django">Django</option>
-              <option value="Docker">Docker</option>
-              <option value="EdgeComputing">Edge Computing</option>
-              <option value="Electron">Electron</option>
-              <option value="Elasticsearch">Elasticsearch</option>
-              <option value="EthicalHacking">Ethical Hacking</option>
-              <option value="ExpressJs">Express.js</option>
-              <option value="Firebase">Firebase</option>
-              <option value="Flask">Flask</option>
-              <option value="Foundation">Foundation</option>
-              <option value="F#">F#</option>
-              <option value="GatsbyJs">Gatsby.js</option>
-              <option value="GameDevelopment">Game Development</option>
-              <option value="Git">Git</option>
-              <option value="GoLang">GoLang</option>
-              <option value="GraphQL">GraphQL</option>
-              <option value="Grunt">Grunt</option>
-              <option value="Gulp">Gulp</option>
-              <option value="Haskell">Haskell</option>
-              <option value="Heroku">Heroku</option>
-              <option value="HTML">HTML</option>
-              <option value="HybridCloud">Hybrid Cloud</option>
-              <option value="Ionic">Ionic</option>
-              <option value="IoT">IoT</option>
-              <option value="JAMstack">JAMstack</option>
-              <option value="JavaScript">JavaScript</option>
-              <option value="Jenkins">Jenkins</option>
-              <option value="Jest">Jest</option>
-              <option value="jQuery">jQuery</option>
-              <option value="Julia">Julia</option>
-              <option value="Kafka">Kafka</option>
-              <option value="Kotlin">Kotlin</option>
-              <option value="Kubernetes">Kubernetes</option>
-              <option value="Laravel">Laravel</option>
-              <option value="Linode">Linode</option>
-              <option value="MachineLearning">Machine Learning</option>
-              <option value="MATLAB">MATLAB</option>
-              <option value="MaterialUI">Material UI</option>
-              <option value="Metaverse">Metaverse</option>
-              <option value="Microservices">Microservices</option>
-              <option value="MongoDB">MongoDB</option>
-              <option value="Mocha">Mocha</option>
-              <option value="MySQL">MySQL</option>
-              <option value="Netlify">Netlify</option>
-              <option value="NextJs">Next.js</option>
-              <option value="NightwatchJs">Nightwatch.js</option>
-              <option value="NodeJs">Node.js</option>
-              <option value="NumPy">NumPy</option>
-              <option value="ObjectiveC">Objective-C</option>
-              <option value="OpenCV">OpenCV</option>
-              <option value="OpenShift">OpenShift</option>
-              <option value="Parcel">Parcel</option>
-              <option value="Pandas">Pandas</option>
-              <option value="Perl">Perl</option>
-              <option value="PHP">PHP</option>
-              <option value="PostgreSQL">PostgreSQL</option>
-              <option value="Postman">Postman</option>
-              <option value="PowerShell">PowerShell</option>
-              <option value="Puppet">Puppet</option>
-              <option value="PyTorch">PyTorch</option>
-              <option value="Python">Python</option>
-              <option value="QuantumComputing">Quantum Computing</option>
-              <option value="ReactJs">React.js</option>
-              <option value="ReactNative">React Native</option>
-              <option value="Redis">Redis</option>
-              <option value="Ruby">Ruby</option>
-              <option value="RubyOnRails">Ruby on Rails</option>
-              <option value="Rust">Rust</option>
-              <option value="Scala">Scala</option>
-              <option value="Security">Security</option>
-              <option value="Selenium">Selenium</option>
-              <option value="SemanticUI">Semantic UI</option>
-              <option value="ServerlessArchitecture">
-                Serverless Architecture
-              </option>
-              <option value="SiteReliabilityEngineering">
-                Site Reliability Engineering (SRE)
-              </option>
-              <option value="Solidity">Solidity</option>
-              <option value="Storybook">Storybook</option>
-              <option value="Svelte">Svelte</option>
-              <option value="Swift">Swift</option>
-              <option value="TailwindCSS">Tailwind CSS</option>
-              <option value="Tauri">Tauri</option>
-              <option value="TensorFlow">TensorFlow</option>
-              <option value="TestCafe">TestCafe</option>
-              <option value="ThreeJs">Three.js</option>
-              <option value="TypeScript">TypeScript</option>
-              <option value="Unity">Unity</option>
-              <option value="UnrealEngine">Unreal Engine</option>
-              <option value="Vagrant">Vagrant</option>
-              <option value="Vercel">Vercel</option>
-              <option value="Verilog">Verilog</option>
-              <option value="VHDL">VHDL</option>
-              <option value="VirtualReality">Virtual Reality</option>
-              <option value="VueJs">Vue.js</option>
-              <option value="WebSockets">WebSockets</option>
-              <option value="Webpack">Webpack</option>
-              <option value="Zsh">Zsh</option>
-              <option value="5G">5G</option>
+              <option value="all">Select a category</option>
+              <option value="Veg">Veg</option>
+              <option value="Non-Veg">Non-Veg</option>
+              <option value="Mixed">Mixed</option>
             </Select>
           </div>
           <Button type="submit" outline gradientDuoTone="purpleToPink">
@@ -286,11 +159,11 @@ export default function Search() {
 
       <div className="w-full">
         <h1 className="text-center text-3xl font-semibold sm:border-b border-gray-500 p-3 mt-5">
-          Posts Results
+          Mess Results
         </h1>
         <div className="p-7 flex flex-wrap gap-4 justify-center'">
-          {!loading && posts.length === 0 && (
-            <p className="text-xl text-gray-500">No posts found.</p>
+          {!loading && messes.length === 0 && (
+            <p className="text-xl text-gray-500">No messes found.</p>
           )}
           {loading && (
             <div className="h-[80vh] w-full flex justify-center items-center">
@@ -298,8 +171,8 @@ export default function Search() {
             </div>
           )}
           {!loading &&
-            posts &&
-            posts.map((post) => <PostCard key={post._id} post={post} />)}
+            messes &&
+            messes.map((mess) => <MenuCard key={mess._id} menu={mess} />)}
         </div>
         {showMore && (
           <div className="flex justify-center p-7">

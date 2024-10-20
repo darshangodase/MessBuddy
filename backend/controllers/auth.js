@@ -54,7 +54,6 @@ const signup = async (req, res, next) => {
     
       try {
         await newMess.save();
-        console.log('Mess created successfully:');
       } catch (error) {
         console.error('Error creating mess:');
        
