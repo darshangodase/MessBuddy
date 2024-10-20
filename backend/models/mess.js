@@ -35,6 +35,11 @@ const messSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  UserID: {  // Add this field
+    type: Number,
+    required: true,
+    unique: true,  // Ensure it's unique if needed
+  },
 }, { timestamps: true });
 
 const Mess = mongoose.model('Mess', messSchema);

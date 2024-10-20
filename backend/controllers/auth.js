@@ -39,7 +39,8 @@ const signup = async (req, res, next) => {
 
     if (login_role === 'Mess Owner') {
       const randomSuffix = Math.floor(Math.random() * 1000);
-      const messName = `Mess${randomSuffix}`;
+      const messName = `Mess${randomSuffix}`; 
+      
       const newMess = new Mess({
         Mess_ID: Date.now(),
         Mess_Name: messName,
@@ -48,9 +49,16 @@ const signup = async (req, res, next) => {
         Address: '',
         Owner_ID: newUser._id, 
         Description: '',
+        UserID: Date.now(), 
       });
-
-      await newMess.save();
+    
+      try {
+        await newMess.save();
+        console.log('Mess created successfully:');
+      } catch (error) {
+        console.error('Error creating mess:');
+       
+      }
     }
 
     const token = jwt.sign({ id: newUser._id, role: newUser.Login_Role }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
