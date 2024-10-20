@@ -4,7 +4,7 @@ const errorhandler = require('../utils/error');
 const createMess = async (req, res, next) => {
   const { Mess_Name, Mobile_No, Capacity, Address, Description } = req.body;
   const Owner_ID = req.params.ownerId;
-   
+
   try {
     const newMess = new Mess({
       Mess_ID: Date.now(),
@@ -22,12 +22,13 @@ const createMess = async (req, res, next) => {
     next(errorhandler(500, 'Internal Server Error'));
   }
 };
+
 const updateMess = async (req, res, next) => {
   const { Mess_Name, Mobile_No, Capacity, Address, Description } = req.body;
   const Owner_ID = req.params.ownerId;
   try {
     const updatedMess = await Mess.findOneAndUpdate(
-      {Owner_ID },
+      { Owner_ID },
       { Mess_Name, Mobile_No, Capacity, Address, Description },
       { new: true }
     );
@@ -41,9 +42,21 @@ const updateMess = async (req, res, next) => {
 };
 
 const getAllMess = async (req, res, next) => {
+  
+  const { searchTerm } = req.query;
+  
   try {
-    const messes = await Mess.find();
-    res.status(200).json({ success: true, messes:messes });
+    const filter = searchTerm
+      ? { Mess_Name: { $regex: searchTerm, $options: 'i' } }
+      : {};
+    const messes = await Mess.find(filter);
+    if (messes.length === 0) {
+      return res.status(404).json({ success: false, message: 'No messes found' });
+    }
+    res.status(200).json({
+      success: true,
+      messes,
+    });
   } catch (error) {
     next(errorhandler(500, 'Internal Server Error'));
   }
@@ -61,11 +74,9 @@ const getMess = async (req, res, next) => {
   }
 };
 
-
-
 const deleteMess = async (req, res, next) => {
   try {
-    const deletedMess = await Mess.findOneAndDelete({Owner_ID: req.params.id });
+    const deletedMess = await Mess.findOneAndDelete({ Owner_ID: req.params.id });
     if (!deletedMess) {
       return res.status(404).json({ success: false, message: 'Mess not found' });
     }
