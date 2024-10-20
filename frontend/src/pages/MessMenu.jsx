@@ -127,7 +127,7 @@ const MessMenu = () => {
 
   return (
     <div className="p-8 min-h-screen w-full flex flex-col justify-center">
-      <Card className=" w-3/4 shadow-lg transition-transform transform hover:scale-105 hover:shadow-2xl mb-5 duration-300 ease-in-out mx-auto">
+      <Card className=" md:w-3/4 shadow-lg transition-transform transform hover:scale-105 hover:shadow-2xl mb-5 duration-300 ease-in-out mx-auto">
         <h1 className="text-4xl font-bold mb-3 text-center">
           {messDetails.Mess_Name}
         </h1>
