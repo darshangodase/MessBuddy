@@ -114,20 +114,6 @@ function Header() {
           </Navbar.Link>
         </Navbar.Collapse>
       </Navbar>
-
-      {currentUser &&
-        (path === "/" ||
-          path === "/search" ||
-          /^\/post\/[^/]+$/.test(path)) && (
-          <Link to="/create-post">
-            <Button
-              className="z-10 fixed bottom-12 right-3 md:hidden bg-blue-600 text-white rounded-full w-16 h-16 flex items-center justify-center shadow-lg"
-              style={{ backdropFilter: "blur(10px)" }}
-            >
-              <AiOutlinePlus className="w-6 h-6" />
-            </Button>
-          </Link>
-        )}
     </>
   );
 }
