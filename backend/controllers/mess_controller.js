@@ -43,7 +43,7 @@ const updateMess = async (req, res, next) => {
 const getAllMess = async (req, res, next) => {
   try {
     const messes = await Mess.find();
-    res.status(200).json({ success: true, messes });
+    res.status(200).json({ success: true, messes:messes });
   } catch (error) {
     next(errorhandler(500, 'Internal Server Error'));
   }

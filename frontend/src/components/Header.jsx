@@ -1,6 +1,6 @@
 import { Avatar, Button, Dropdown, Navbar } from "flowbite-react";
 import { Link, useLocation } from "react-router-dom";
-import { AiOutlinePlus } from 'react-icons/ai'; // Import the icon
+import { AiOutlinePlus } from "react-icons/ai"; // Import the icon
 import { FaMoon, FaSun } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import { toggleTheme } from "../redux/theme/themeSlice";
@@ -8,8 +8,8 @@ import { signoutsuccess } from "../redux/user/userSlice";
 import { useEffect } from "react";
 
 function Header() {
-  const path=useLocation().pathname;
-  const location=useLocation();
+  const path = useLocation().pathname;
+  const location = useLocation();
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
   const { theme } = useSelector((state) => state.theme);
@@ -22,12 +22,11 @@ function Header() {
     }
   }, [location.search]);
 
-
   const handleSignOut = async () => {
     try {
       const res = await fetch(`http://localhost:3000/api/user/signout`, {
         method: "POST",
-        credentials: 'include',
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
       });
       const data = await res.json();
@@ -48,11 +47,10 @@ function Header() {
           to="/"
           className="self-center whitespace-nowrap text-sm sm:text-xl font-semibold dark:text-white"
         >
-          <span className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 px-2 py-1 rounded-md text-white">
-          MessBuddy
+          <span className="bg-gradient-to-r from-green-400 via-blue-500 to-teal-500 px-2 py-1 rounded-md text-white">
+            MessBuddy
           </span>
         </Link>
-
 
         <div className="flex gap-5 md:order-2">
           <Button
@@ -114,7 +112,6 @@ function Header() {
               About
             </Link>
           </Navbar.Link>
-
         </Navbar.Collapse>
       </Navbar>
 

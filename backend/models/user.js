@@ -20,9 +20,9 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  profilePicture: {
-    type: String,
-    default: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQ_vCbjnN80sd95r6zxqgEQdy8ZM5Kg3RU0g&s",
+  UserID: {
+    type: Number,
+    required: true,
   },
 }, { timestamps: true });
 
