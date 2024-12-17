@@ -194,7 +194,7 @@ function Menu() {
             </div>
             <div>
               <Label htmlFor="Description" value="Description" />
-              <Textarea id="Description" placeholder="Description" value={formdata.Description} onChange={handleChange} required />
+              <Textarea id="Description" placeholder="Description" value={formdata.Description} onChange={handleChange} required  className='resize-none'/>
             </div>
             <div>
               <Label htmlFor="Price" value="Price" />

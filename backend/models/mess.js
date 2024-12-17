@@ -36,13 +36,17 @@ const messSchema = new mongoose.Schema({
     default: [],
   },
   RatedBy: {
-    type: [mongoose.Schema.Types.ObjectId], 
+    type: [mongoose.Schema.Types.ObjectId],
     default: [],
   },
-  UserID: { 
+  UserID: {
     type: Number,
     required: true,
-    unique: true,  
+    unique: true,
+  },
+  Image: {
+    type: String,
+    default:"http://res.cloudinary.com/dq3ro4o3c/image/upload/v1734445757/gngcgm82wwo5t0desu0w.jpg", 
   },
 }, { timestamps: true });
 

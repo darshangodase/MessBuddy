@@ -2,12 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { FaStar, FaStarHalfAlt, FaRegStar } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom'; 
 import axios from 'axios';
-import imageofmess from '../assets/images/mesbud.jpeg';
 
 const MenuCard = ({ menu }) => {
   const navigate = useNavigate(); 
   const [rating, setRating] = useState(0); // State to store the rating
-
+  
   useEffect(() => {
     const fetchRating = async () => {
       try {
@@ -38,14 +37,14 @@ const MenuCard = ({ menu }) => {
       </div>
     );
   };
-
+ 
   const handleShowMenu = () => {
     navigate(`/mess/${menu._id}`); // Navigate to the MessMenu page
   };
 
   return (
     <div className="max-w-sm rounded-lg overflow-hidden shadow-lg transform transition-transform hover:scale-105 hover:shadow-xl cursor-pointer">
-      <img src={imageofmess} alt={menu.Mess_Name} className="w-72 h-36 object-cover" />
+      <img src={menu.Image} alt={menu.Mess_Name} className="w-72 h-36 object-cover" />
       <div className="p-4 bg-white">
         <h3 className="text-2xl font-bold text-gray-800">{menu.Mess_Name}</h3>
         <div className="flex items-center justify-between mt-2">

@@ -2,7 +2,7 @@ const Mess = require('../models/mess');
 const errorhandler = require('../utils/error');
 
 const createMess = async (req, res, next) => {
-  const { Mess_Name, Mobile_No, Capacity, Address, Description } = req.body;
+  const { Mess_Name, Mobile_No, Capacity, Address, Description ,Image} = req.body;
   const Owner_ID = req.params.ownerId;
 
   try {
@@ -14,6 +14,7 @@ const createMess = async (req, res, next) => {
       Address,
       Owner_ID,
       Description,
+      Image,
     });
 
     await newMess.save();
@@ -24,12 +25,12 @@ const createMess = async (req, res, next) => {
 };
 
 const updateMess = async (req, res, next) => {
-  const { Mess_Name, Mobile_No, Capacity, Address, Description } = req.body;
+  const { Mess_Name, Mobile_No, Capacity, Address, Description ,Image} = req.body;
   const Owner_ID = req.params.ownerId;
   try {
     const updatedMess = await Mess.findOneAndUpdate(
       { Owner_ID },
-      { Mess_Name, Mobile_No, Capacity, Address, Description },
+      { Mess_Name, Mobile_No, Capacity, Address, Description, Image},
       { new: true }
     );
     if (!updatedMess) {

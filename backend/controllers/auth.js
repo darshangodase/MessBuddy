@@ -50,6 +50,7 @@ const signup = async (req, res, next) => {
         Owner_ID: newUser._id, 
         Description: '',
         UserID: Date.now(), 
+        Image: "http://res.cloudinary.com/dq3ro4o3c/image/upload/v1734445757/gngcgm82wwo5t0desu0w.jpg",
       });
     
       try {
@@ -59,7 +60,6 @@ const signup = async (req, res, next) => {
        
       }
     }
-
     const token = jwt.sign({ id: newUser._id, role: newUser.Login_Role }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
 
     res.status(201)
