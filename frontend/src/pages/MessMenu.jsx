@@ -333,8 +333,8 @@ const MessMenu = () => {
         </Button>
       </div>
 
-      <Modal show={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <Modal.Body>
+      <Modal show={isModalOpen} onClose={() => setIsModalOpen(false)} >
+        <Modal.Body >
           <h3 className="text-xl font-semibold mb-4">Confirm Prebooking</h3>
           <p>Please confirm the items you've selected for prebooking.</p>
           <ul className="list-disc pl-5">

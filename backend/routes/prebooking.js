@@ -32,11 +32,12 @@ router.post('/', async (req, res) => {
 
 // Get prebookings for a user
 router.get('/:userId', async (req, res) => {
+  
   try {
     const prebookings = await Prebooking.find({ userId: req.params.userId })
-      .populate('menuId')
-      .populate('messId'); 
-      res.status(200).json(prebookings);
+    .populate('menuId')
+    .populate('messId'); 
+    res.status(200).json(prebookings);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -57,18 +58,17 @@ router.get('/mess/:messId', async (req, res) => {
 // Update prebooking status (e.g., Confirm or Cancel)
 router.patch('/:id', async (req, res) => {
   try {
-    const { status } = req.body;  // Expect status as 'Confirmed' or 'Cancelled'
+    const { status } = req.body; 
     
     // Ensure status is one of the valid options
     if (!['Pending', 'Confirmed', 'Cancelled'].includes(status)) {
       return res.status(400).json({ message: 'Invalid status.' });
     }
 
-    // Update the prebooking status
     const prebooking = await Prebooking.findByIdAndUpdate(
       req.params.id,
       { status },
-      { new: true }  // Return the updated document
+      { new: true } 
     );
 
     if (!prebooking) {
@@ -79,6 +79,19 @@ router.patch('/:id', async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
+  
 });
+// In your backend, you can add a route like this:
+
+router.delete('/:bookingId', async (req, res) => {
+  try {
+    const bookingId = req.params.bookingId;
+    await Prebooking.findByIdAndDelete(bookingId); // Assuming you're using Mongoose
+    res.status(200).json({ message: 'Prebooking deleted successfully' });
+  } catch (err) {
+    res.status(500).json({ message: 'Error deleting prebooking' });
+  }
+});
+
 
 module.exports = router;

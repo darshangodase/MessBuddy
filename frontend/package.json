@@ -10,6 +10,7 @@
     "build": "vite build"
   },
   "dependencies": {
+    "@headlessui/react": "^2.2.0",
     "@heroicons/react": "^2.1.5",
     "@reduxjs/toolkit": "^2.2.7",
     "axios": "^1.7.7",
@@ -23,7 +24,7 @@
     "react-circular-progressbar": "^2.1.0",
     "react-dom": "^18.3.1",
     "react-hot-toast": "^2.4.1",
-    "react-icons": "^5.3.0",
+    "react-icons": "^5.4.0",
     "react-quill": "^2.0.0",
     "react-rating-stars-component": "^2.2.0",
     "react-redux": "^9.1.2",

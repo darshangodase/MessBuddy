@@ -140,7 +140,7 @@ function MessForm() {
      <div className="text-lg">
       <div>
         <Label htmlFor="Mess_Name" value="Mess Name" className="text-base" />
-        <TextInput id="Mess_Name" type="text" placeholder="Mess Name" value={formdata.Mess_Name} onChange={handleChange} required />
+        <TextInput id="Mess_Name" type="text" placeholder="Mess Name" value={formdata.Mess_Name} onChange={handleChange} required  />
       </div>
       <div>
         <Label htmlFor="Mobile_No" value="Mobile Number" className="text-base"/>
@@ -159,7 +159,6 @@ function MessForm() {
         <Textarea id="Description" placeholder="Description" value={formdata.Description} onChange={handleChange} className="resize-none" />
       </div>
 
-      {/* Submit Button */}
       <div className="mt-4 flex items-center justify-center">
       <Button type="submit" disabled={loading || uploadLoading} className=''>
         {loading ? (
