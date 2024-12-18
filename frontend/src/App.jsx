@@ -11,6 +11,8 @@ import MessMenu from './pages/MessMenu';
 import Header from './components/Header';
 import Footer from './components/footer';
 import ScrollToTop from './components/scrollToTop';
+import PrebookingForm from './components/PrebookingForm';
+
 import toast, { Toaster } from 'react-hot-toast';
 
 function App() {
@@ -30,6 +32,7 @@ function App() {
           <Route path="/search" element={<Search />} />
           <Route path="/mess/:messId" element={<MessMenu />} />
           <Route element={<PrivateRoute />}>
+            <Route path="/prebooking" element={<PrebookingForm />} />
             <Route path="/dashboard" element={<Dashboard />} />
           </Route>
         </Routes>

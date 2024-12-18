@@ -131,6 +131,11 @@ function Header() {
               About
             </Link>
           </Navbar.Link>
+          <Navbar.Link className="mt-2" active={path === "/prebooking"} as={"div"}>
+            <Link to="/prebooking" className="text-lg">
+            Prebooking
+            </Link>
+          </Navbar.Link>
         </Navbar.Collapse>
       </Navbar>
     </>

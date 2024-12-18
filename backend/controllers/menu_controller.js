@@ -34,6 +34,17 @@ const getAllMenus = async (req, res, next) => {
   }
 };
 
+// Completion for getAllMenuse method
+const getAllMenuse = async (req, res, next) => {
+  try {
+    const menuItems = await Menu.find({});
+    res.json({ success: true, menus: menuItems });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error', error });
+  }
+};
+
 const searchMenu = async (req, res, next) => {
   const { ownerId } = req.params;
   const { query } = req.query;
@@ -89,6 +100,7 @@ const deleteMenu = async (req, res, next) => {
 module.exports = {
   createMenu,
   getAllMenus,
+  getAllMenuse,
   searchMenu,
   updateMenu,
   deleteMenu,
