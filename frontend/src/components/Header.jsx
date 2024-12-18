@@ -103,6 +103,10 @@ function Header() {
                 <Dropdown.Item>Profile</Dropdown.Item>
               </Link>
               <Dropdown.Divider />
+              <Link to={"/prebookings"}>
+                <Dropdown.Item>Prebookings</Dropdown.Item>
+              </Link>
+              <Dropdown.Divider />
               <Dropdown.Item onClick={() => dispatch(toggleTheme())}>
                 {theme === "light" ? "Dark Mode" : "Light Mode"}
               </Dropdown.Item>

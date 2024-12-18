@@ -6,6 +6,7 @@ import axios from "axios";
 import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
+import { useNavigate } from 'react-router-dom';
 
 const MessMenu = () => {
   const { messId } = useParams();
@@ -19,6 +20,7 @@ const MessMenu = () => {
   const [totalAmount, setTotalAmount] = useState(0);
   const { theme } = useSelector((state) => state.theme);
   const currentUser = useSelector((state) => state.user.currentUser);
+  const navigate = useNavigate();
 
   const fetchMenuItems = async (ownerId, query) => {
     try {
@@ -92,15 +94,21 @@ const MessMenu = () => {
     );
   };
 
+  const userId = currentUser?._id;
   const handlePrebook = async () => {
+    if(!userId)
+    {
+      toast.error('You need to log in to your account to proceed with prebooking.');
+    }
     if (selectedItems.length === 0) {
       toast.error("Please select at least one item to prebook.");
       return;
     }
-
-    // Calculate the total amount for the prebooking (you can adjust this logic)
     const total = selectedItems.reduce(
-      (sum, item) => sum + item.quantity * menuItems.find(menu => menu._id === item.menuId)?.Price,
+      (sum, item) =>
+        sum +
+        item.quantity *
+          menuItems.find((menu) => menu._id === item.menuId)?.Price,
       0
     );
 
@@ -108,10 +116,31 @@ const MessMenu = () => {
     setIsModalOpen(true); // Open the modal after setting the total amount
   };
 
-  const handlePayment = async () => {
-    // Payment logic here
-    // You can call Razorpay or your payment gateway here
-    console.log("Proceeding to payment with amount: ₹", totalAmount);
+  const handleConfirmPrebooking = async () => {
+    const date = new Date().toISOString().split("T")[0]; 
+    const time = new Date().toLocaleTimeString("en-GB", { timeZone: "Asia/Kolkata" }); // IST Time
+    
+    try {
+      for (let item of selectedItems) {
+        const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/prebooking`, {
+          menuId: item.menuId,
+          messId: messId,
+          userId: currentUser._id,
+          date,
+          time
+        });
+        console.log("Prebooking created:", response.data);
+      }
+      
+      toast.success("Prebooking confirmed successfully!");
+      setSelectedItems([]);
+      setTotalAmount(0);
+      setIsModalOpen(false); // Close the modal after successful prebooking
+      navigate('/prebookings');
+    } catch (error) {
+      console.error("Error during prebooking:", error);
+      toast.error("Failed to confirm prebooking.");
+    }
   };
 
   useEffect(() => {
@@ -241,10 +270,7 @@ const MessMenu = () => {
               (selected) => selected.menuId === item._id
             );
             return (
-              <tr
-                key={item._id}
-                className="transition-colors"
-              >
+              <tr key={item._id} className="transition-colors">
                 <td className="px-4 py-2 font-bold">{item.Menu_Name}</td>
                 <td className="px-4 py-2">{item.Price}</td>
                 <td className="px-4 py-2">{item.Food_Type}</td>
@@ -258,7 +284,9 @@ const MessMenu = () => {
                         >
                           -
                         </button>
-                        <span className="text-md text-gray-950 dark:text-gray-400 font-bold">{selectedItem.quantity}</span>
+                        <span className="text-md text-gray-950 dark:text-gray-400 font-bold">
+                          {selectedItem.quantity}
+                        </span>
                         <button
                           onClick={() => handleQuantityChange(item._id, 1)}
                           className="bg-gray-300 text-black  px-2 py-1 rounded transition-colors font-bold text-lg"
@@ -300,7 +328,7 @@ const MessMenu = () => {
       </Table>
 
       <div className="flex justify-end mt-4">
-        <Button onClick={handlePrebook} className=" text-white">
+        <Button onClick={handlePrebook} className=" text-white" disabled={!userId || selectedItems.length === 0}>
           Prebook Meals
         </Button>
       </div>
@@ -312,18 +340,27 @@ const MessMenu = () => {
           <ul className="list-disc pl-5">
             {selectedItems.map((item) => (
               <li key={item.menuId}>
-                {menuItems.find((menu) => menu._id === item.menuId)?.Menu_Name} - {item.quantity}
+                {menuItems.find((menu) => menu._id === item.menuId)?.Menu_Name}{" "}
+                - {item.quantity}
               </li>
             ))}
           </ul>
           <div className="mt-4">
-            <p className="font-semibold text-lg">Total Amount: ₹{totalAmount}</p>
+            <p className="font-semibold text-lg">
+              Total Amount: ₹{totalAmount}
+            </p>
           </div>
           <div className="mt-4 flex justify-end">
-            <Button onClick={handlePayment} className="bg-green-500 text-white">
+            <Button
+              onClick={handleConfirmPrebooking}
+              className="bg-green-500 text-white"
+            >
               Confirm Prebook
             </Button>
-            <Button onClick={() => setIsModalOpen(false)} className="ml-2 bg-gray-500 text-white">
+            <Button
+              onClick={() => setIsModalOpen(false)}
+              className="ml-2 bg-gray-500 text-white"
+            >
               Cancel
             </Button>
           </div>

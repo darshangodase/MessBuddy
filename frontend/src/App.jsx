@@ -12,6 +12,8 @@ import Header from './components/Header';
 import Footer from './components/footer';
 import ScrollToTop from './components/scrollToTop';
 import PrebookingForm from './components/PrebookingForm';
+import PrebookingsPage from './pages/PrebookingPage';
+
 
 import toast, { Toaster } from 'react-hot-toast';
 
@@ -31,8 +33,9 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/search" element={<Search />} />
           <Route path="/mess/:messId" element={<MessMenu />} />
+          <Route path="/prebooking" element={<PrebookingForm />} />
+          <Route path="/prebookings" element={<PrebookingsPage />} />
           <Route element={<PrivateRoute />}>
-            <Route path="/prebooking" element={<PrebookingForm />} />
             <Route path="/dashboard" element={<Dashboard />} />
           </Route>
         </Routes>

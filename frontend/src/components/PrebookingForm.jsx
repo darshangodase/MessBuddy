@@ -73,11 +73,11 @@ const PrebookingForm = () => {
     }
 
     const userId = currentUser?._id;
-    if (!userId) {
-      toast.error('User is not logged in!');
-      return;
+    if(!userId)
+    {
+      navigate('/');
     }
-
+  
     try {
       const prebookingData = {
         menuId: selectedMenu,
@@ -91,7 +91,7 @@ const PrebookingForm = () => {
       toast.success('Prebooking created successfully!');
       navigate('/prebookings');
     } catch (err) {
-      toast.error('Error creating prebooking!');
+      toast.error('Error in creating prebooking!');
     }
   };
 
