@@ -65,7 +65,7 @@ export default function Home() {
           ) / res.data.messes.length;
         setStats({
           totalMesses: res.data.messes.length,
-          mealsPreBooked: 97, 
+          mealsPreBooked: 112, 
           avgRating: `${avgRating.toFixed(1)}/5`,
         });
       } catch (error) {
@@ -102,11 +102,11 @@ export default function Home() {
     .slice(0, 4);
 
   return (
-    <div>
+    <div className="w-full">
       {/* Hero Section */}
-      <section className="h-[91vh] relative flex flex-col lg:flex-row justify-center items-center text-center lg:text-left px-4 py-8">
+      <section className="h-[91vh] w-full relative flex flex-col lg:flex-row justify-center items-center text-center lg:text-left px-4 py-8 max-w-screen overflow-hidden">
         <div
-          className="absolute inset-0 bg-cover bg-center"
+          className="absolute inset-0 bg-cover bg-center overflow-hidden"
           style={{
             backgroundImage: `url(${heroImage})`,
             backgroundSize: "cover",
@@ -143,7 +143,7 @@ export default function Home() {
       </section>
 
       {/* Top-Rated Messes */}
-      <section className="w-full p-3 flex flex-col items-center gap-3 py-7">
+      <section className="w-full p-3 flex flex-col items-center gap-3 py-7 max-w-screen overflow-hidden">
         {loading ? (
           <div className="flex justify-center min-h-screen">
             <HashLoader color="#35c9e1" />
@@ -168,7 +168,7 @@ export default function Home() {
 
       {/* Features Section */}
       {/* Features Section */}
-      <section className=" py-10 px-5 rounded-lg text-black dark:text-white">
+      <section className=" py-10 px-5 rounded-lg text-black dark:text-white max-w-screen overflow-hidden">
         <div className="text-center mb-8">
           <h2 className="font-serif text-3xl font-semibold text-center">
             Why Choose MessBuddy?
@@ -211,6 +211,7 @@ export default function Home() {
       </section>
       {/* Testimonial Section */}
       {/* Dynamic Stats Section */}
+      <section className=" max-w-screen overflow-hidden">
       <motion.section
         className="flex justify-around py-6 bg-gradient-to-r from-purple-500 to-pink-500 mt-10 text-white"
         initial="hidden"
@@ -244,6 +245,7 @@ export default function Home() {
           </motion.div>
         ))}
       </motion.section>
+      </section>
 
       <section className=" py-16 px-8">
         <div className="text-center mb-12">
