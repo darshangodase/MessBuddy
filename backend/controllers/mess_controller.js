@@ -74,6 +74,7 @@ const getMess = async (req, res, next) => {
     next(errorhandler(500, 'Internal Server Error'));
   }
 };
+
 const readMess = async (req, res, next) => {
   try {
     const mess = await Mess.findOne({ _id: req.params.id });

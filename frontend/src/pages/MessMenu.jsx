@@ -127,15 +127,15 @@ const MessMenu = () => {
           messId: messId,
           userId: currentUser._id,
           date,
+          quantity: item.quantity,
           time
         });
-        console.log("Prebooking created:", response.data);
       }
       
       toast.success("Prebooking confirmed successfully!");
       setSelectedItems([]);
       setTotalAmount(0);
-      setIsModalOpen(false); // Close the modal after successful prebooking
+      setIsModalOpen(false); 
       navigate('/prebookings');
     } catch (error) {
       console.error("Error during prebooking:", error);
@@ -221,7 +221,7 @@ const MessMenu = () => {
   );
 
   return (
-    <div className="p-8 min-h-screen w-full overflow-x-auto flex flex-col justify-center">
+    <div className="p-8 min-h-screen w-full overflow-x-auto scrollbar-none flex flex-col justify-center">
       <Card
         className={`${
           theme === "dark"

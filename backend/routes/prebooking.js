@@ -8,7 +8,7 @@ const User = require('../models/user');
 
 // Create a new prebooking
 router.post('/', async (req, res) => {
-  const { menuId, messId, userId, date, time } = req.body;
+  const { menuId, messId, userId, date, time,quantity } = req.body;
 
   try {
     const prebooking = new Prebooking({
@@ -17,6 +17,7 @@ router.post('/', async (req, res) => {
       userId,
       date,
       time,
+      quantity,
       status: "Pending", // Default status for new prebooking
     });
 

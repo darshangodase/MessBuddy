@@ -6,6 +6,9 @@ import axios from 'axios';
 import { Sidebar } from 'flowbite-react';
 import { HiUser, HiArrowSmRight, HiTrash } from 'react-icons/hi';
 import toast from 'react-hot-toast';
+import { CgMenuBoxed } from "react-icons/cg";
+import { IoMdBookmarks } from "react-icons/io";
+
 
 function DashboardSidebar() {
   const location = useLocation();
@@ -73,9 +76,17 @@ function DashboardSidebar() {
           <Link to="/dashboard?tab=menu">
             <Sidebar.Item
               active={tab === "menu"}
-              icon={HiUser}
+              icon={CgMenuBoxed}
               as="div">
               Menu
+            </Sidebar.Item>
+          </Link>
+          <Link to="/dashboard?tab=Prebookings">
+            <Sidebar.Item
+              active={tab === "Prebookings"}
+              icon={IoMdBookmarks}
+              as="div">
+              Prebookings
             </Sidebar.Item>
           </Link>
 

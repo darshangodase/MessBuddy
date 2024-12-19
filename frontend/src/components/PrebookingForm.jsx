@@ -13,6 +13,7 @@ const PrebookingForm = () => {
   const [selectedMess, setSelectedMess] = useState('');
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
+  const [selectedQuantity, setSelectedQuantity] = useState(1); // New state for quantity
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const currentUser = useSelector((state) => state.user.currentUser);
@@ -62,8 +63,13 @@ const PrebookingForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!selectedMenu || !selectedMess || !selectedDate || !selectedTime) {
+    if (!selectedMenu || !selectedMess || !selectedDate || !selectedTime || !selectedQuantity) {
       toast.error('All fields are required!');
+      return;
+    }
+
+    if (selectedQuantity <= 0) {
+      toast.error('Quantity must be greater than 0.');
       return;
     }
 
@@ -73,11 +79,11 @@ const PrebookingForm = () => {
     }
 
     const userId = currentUser?._id;
-    if(!userId)
-    {
+    if (!userId) {
       navigate('/');
+      return;
     }
-  
+
     try {
       const prebookingData = {
         menuId: selectedMenu,
@@ -85,6 +91,7 @@ const PrebookingForm = () => {
         userId,
         date: selectedDate,
         time: selectedTime,
+        quantity: selectedQuantity, // Include quantity
       };
 
       await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/prebooking`, prebookingData);
@@ -111,7 +118,7 @@ const PrebookingForm = () => {
               </label>
               <select
                 id="mess"
-                className="w-full px-3 py-2 border rounded dark:dark:bg-[#1E1E2F]"
+                className="w-full px-3 py-2 border rounded dark:bg-[#1E1E2F]"
                 value={selectedMess}
                 onChange={(e) => setSelectedMess(e.target.value)}
               >
@@ -166,6 +173,20 @@ const PrebookingForm = () => {
                 className="w-full px-3 py-2 border rounded dark:bg-[#1E1E2F]"
                 value={selectedTime}
                 onChange={(e) => setSelectedTime(e.target.value)}
+              />
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-lg font-medium" htmlFor="quantity">
+                Quantity
+              </label>
+              <input
+                type="number"
+                id="quantity"
+                min="1"
+                className="w-full px-3 py-2 border rounded dark:bg-[#1E1E2F]"
+                value={selectedQuantity}
+                onChange={(e) => setSelectedQuantity(Number(e.target.value))}
               />
             </div>
 

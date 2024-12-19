@@ -15,9 +15,6 @@ const PrebookingsPage = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [bookingToDelete, setBookingToDelete] = useState(null);
 
-  const [showCancelModal, setShowCancelModal] = useState(false);
-  const [bookingToCancel, setBookingToCancel] = useState(null);
-
   const currentUser = useSelector((state) => state.user.currentUser);
 
   useEffect(() => {
@@ -58,26 +55,6 @@ const PrebookingsPage = () => {
     }
   };
 
-  const handleCancelBooking = async () => {
-    if (!bookingToCancel) return;
-    try {
-      const response = await axios.patch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/prebooking/${bookingToCancel}`,
-        { status: 'Cancelled' }
-      );
-      toast.success('Prebooking cancelled successfully.');
-      setPrebookings((prev) =>
-        prev.map((b) => (b._id === bookingToCancel ? { ...b, status: 'Cancelled' } : b))
-      );
-      setFilteredBookings((prev) =>
-        prev.map((b) => (b._id === bookingToCancel ? { ...b, status: 'Cancelled' } : b))
-      );
-      setShowCancelModal(false);
-    } catch (err) {
-      toast.error('Failed to cancel prebooking.');
-    }
-  };
-
   const handleFilterChange = (key, value) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
   };
@@ -107,7 +84,7 @@ const PrebookingsPage = () => {
 
   const renderPaginationItems = () => {
     const pageNumbers = [];
-    const maxVisiblePages = 5; // Limit the number of visible page numbers
+    const maxVisiblePages = 5;
     const halfVisible = Math.floor(maxVisiblePages / 2);
 
     if (totalPages <= maxVisiblePages) {
@@ -202,13 +179,15 @@ const PrebookingsPage = () => {
                   key={booking._id}
                   className="p-4 border border-gray-200 rounded-lg shadow-sm bg-white dark:bg-gray-800 relative hover:shadow-lg transition"
                 >
-                  <FaTrash
-                    className="absolute top-4 right-4 cursor-pointer"
-                    onClick={() => {
-                      setShowDeleteModal(true);
-                      setBookingToDelete(booking._id);
-                    }}
-                  />
+                  {(booking.status !== 'Confirmed' && (
+                    <FaTrash
+                      className="absolute top-4 right-4 cursor-pointer"
+                      onClick={() => {
+                        setShowDeleteModal(true);
+                        setBookingToDelete(booking._id);
+                      }}
+                    />
+                  ))}
                   <h3 className="text-xl font-bold">{booking.menuId?.Menu_Name || 'Unknown Menu'}</h3>
                   <p className="dark:text-gray-400 mt-1">
                     Mess: <span className="font-semibold text-md">{booking.messId?.Mess_Name || 'Unknown Mess'}</span>
@@ -218,6 +197,9 @@ const PrebookingsPage = () => {
                   </p>
                   <p className="dark:text-gray-400 mt-1">
                     Time: <span className="font-semibold text-md">{booking.time}</span>
+                  </p>
+                  <p className="dark:text-gray-400 mt-1">
+                    Quantity: <span className="font-semibold text-md">{booking.quantity || 1}</span>
                   </p>
                   <p
                     className={`mt-2 font-semibold ${
@@ -230,19 +212,6 @@ const PrebookingsPage = () => {
                   >
                     Status: {booking.status}
                   </p>
-                  <div className="mt-3 flex justify-end gap-3">
-                    {(booking.status === 'Confirmed' || booking.status === 'Pending') && (
-                      <button
-                        className="px-4 py-2 bg-red-500 text-white rounded-md"
-                        onClick={() => {
-                          setShowCancelModal(true);
-                          setBookingToCancel(booking._id);
-                        }}
-                      >
-                        Cancel
-                      </button>
-                    )}
-                  </div>
                 </li>
               ))}
             </ul>
@@ -253,8 +222,8 @@ const PrebookingsPage = () => {
             <div className="mt-6 w-full flex items-center justify-center flex-wrap gap-2">
               {currentPage > 1 && (
                 <button
-                className="px-3 py-1 bg-gray-600 rounded-lg text-white dark:text-white"
-                onClick={() => handlePageChange(currentPage - 1)}
+                  className="px-3 py-1 bg-gray-600 rounded-lg text-white dark:text-white"
+                  onClick={() => handlePageChange(currentPage - 1)}
                 >
                   &lt;
                 </button>
@@ -265,52 +234,31 @@ const PrebookingsPage = () => {
                   className="px-3 py-1 bg-gray-600 rounded-lg text-white dark:text-white"
                   onClick={() => handlePageChange(currentPage + 1)}
                 >
-                 &gt;
+                  &gt;
                 </button>
               )}
             </div>
           )}
         </div>
       )}
+
+      {/* Delete Modal */}
       {showDeleteModal && (
-        <div className="fixed inset-0 bg-gray-500 bg-opacity-20 flex justify-center items-center z-50 m-6">
-          <div className="bg-white p-6 rounded-lg w-96 shadow-lg">
-            <h3 className="text-xl font-semibold text-center dark:text-black">Are you sure you want to delete this prebooking?</h3>
-            <div className="flex justify-between gap-4 mt-4">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-lg shadow-lg dark:bg-gray-800">
+            <p className="text-lg mb-4">Are you sure you want to delete this prebooking?</p>
+            <div className="flex justify-end space-x-4">
               <button
-                className="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded"
                 onClick={() => setShowDeleteModal(false)}
+                className="px-4 py-2 bg-gray-300 rounded-lg text-black hover:bg-gray-400"
               >
                 Cancel
               </button>
               <button
-                className="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded"
                 onClick={handleDeleteBooking}
+                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
               >
                 Delete
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Cancel Confirmation Modal */}
-      {showCancelModal && (
-        <div className="fixed inset-0 bg-gray-500 bg-opacity-20 flex justify-center items-center z-50 m-6">
-          <div className="bg-white p-6 rounded-lg w-96 shadow-lg">
-            <h3 className="text-xl font-semibold text-center dark:text-black">Are you sure you want to cancel this prebooking?</h3>
-            <div className="flex justify-between gap-4 mt-4">
-              <button
-                className="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded"
-                onClick={() => setShowCancelModal(false)}
-              >
-                No
-              </button>
-              <button
-                className="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded"
-                onClick={handleCancelBooking}
-              >
-                Yes
               </button>
             </div>
           </div>

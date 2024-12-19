@@ -8,6 +8,6 @@ router.get('/', getAllMess);
 router.get('/:id', getMess);
 router.get('/read/:id', readMess);
 router.delete('/delete/:id', deleteMess);
-router.get('/rating/:id', getRating); // Add route for fetching rating
-router.put('/rating/:id/:userId', updateRating); // Add route for updating rating with userId
+router.get('/rating/:id', getRating); 
+router.put('/rating/:id/:userId', updateRating); 
 module.exports = router;
