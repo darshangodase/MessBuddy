@@ -52,7 +52,7 @@ const MenuCard = ({ menu }) => {
           <span className="text-gray-700 text-sm">{rating.toFixed(1)} / 5</span>
         </div>
         <button
-          className="mt-4 w-full py-2 px-4 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition duration-300"
+          className="mt-4 w-full py-2 px-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold rounded-lg hover:bg-indigo-700 transition duration-300"
           onClick={handleShowMenu} // Handle button click
         >
           Show Today's Menu
