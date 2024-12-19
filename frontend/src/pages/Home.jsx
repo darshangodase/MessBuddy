@@ -17,6 +17,17 @@ export default function Home() {
     mealsPreBooked: 0,
     avgRating: "0/5",
   });
+  const headingVariants = {
+    hidden: { opacity: 0, y: -100 }, // Start above with opacity 0
+    visible: {
+      opacity: 1,
+      y: 0, // Moves to its original position
+      transition: {
+        duration: 1, // Animation duration
+        type: "easeIn", // Adds a spring-like bounce
+      },
+    },
+  };
 
   const circleVariants = {
     hidden: { opacity: 0, x: 50, y: 50 },
@@ -27,7 +38,7 @@ export default function Home() {
       transition: {
         duration: 1,
         delay: index * 0.3,
-        type: "spring",
+        type: "easeIn",
       },
     }),
   };
@@ -54,7 +65,7 @@ export default function Home() {
           ) / res.data.messes.length;
         setStats({
           totalMesses: res.data.messes.length,
-          mealsPreBooked: 1200, // Example static value
+          mealsPreBooked: 97, 
           avgRating: `${avgRating.toFixed(1)}/5`,
         });
       } catch (error) {
@@ -104,9 +115,14 @@ export default function Home() {
         ></div>
         <div className="absolute inset-0 bg-gray-700 opacity-70"></div>
         <div className="relative z-10 flex justify-center flex-col items-center text-white">
-          <h1 className="mt-9 font-serif text-3xl font-semibold mb-4 lg:text-5xl text-red-500 text-center">
+          <motion.h1
+            className="mt-9 font-serif text-3xl font-semibold mb-4 md:text-5xl text-red-400 text-center"
+            variants={headingVariants}
+            initial="hidden"
+            animate="visible"
+          >
             Seamless Meals, Smarter Choices
-          </h1>
+          </motion.h1>
           <p className="text-xl mb-6 max-w-4xl text-center">
             Discover and explore mess menus, pre-book meals effortlessly, and
             stay connected with your dining community. Simplify canteen
@@ -219,7 +235,7 @@ export default function Home() {
                     ? parseFloat(stat.value)
                     : stat.value
                 }
-                duration={2}
+                duration={6}
                 decimals={stat.label === "Average Rating" ? 1 : 0}
               />
               {stat.label === "Average Rating" && "/5"}
@@ -261,7 +277,7 @@ export default function Home() {
           ].map((testimonial, index) => (
             <div
               key={index}
-              className="flex flex-col items-center justify-between p-8 bg-white text-black rounded-lg shadow-lg h-68 sm:h-80 w-64 sm:w-80"
+              className="flex flex-col items-center justify-between p-8 dark:bg-gray-700 border dark:text-white border-black text-black rounded-xl shadow-lg h-68 sm:h-80 w-64 sm:w-80"
             >
               <div className="text-center">
                 <h4 className=" text-lg sm:text-2xl font-bold">

@@ -57,7 +57,7 @@ function Header() {
           to="/"
           className="self-center whitespace-nowrap text-sm sm:text-xl font-semibold dark:text-white"
         >
-          <span className="bg-gradient-to-r from-green-400 via-blue-500 to-teal-500 px-2 py-1 rounded-md text-white">
+          <span className="bg-gradient-to-r from-purple-500 to-pink-500 px-2 py-1 rounded-md text-white">
             MessBuddy
           </span>
         </Link>
@@ -115,7 +115,7 @@ function Header() {
             </Dropdown>
           ) : (
             <Link to="/signin">
-              <Button gradientDuoTone="purpleToBlue" outline>
+              <Button gradientDuoTone="purpleToPink" outline>
                 Sign In
               </Button>
             </Link>

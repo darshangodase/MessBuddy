@@ -6,14 +6,14 @@ import { BsLinkedin, BsInstagram, BsGithub } from "react-icons/bs";
 function footer() {
   return (
     <div>
-      <Footer container className="border border-t-8 border-teal-500">
+      <Footer container className="border border-t-8 border-pink-300">
         <div className="">
           <div className="">
             <Link
               to="/"
               className="self-center whitespace-nowrap text-sm sm:text-xl font-semibold dark:text-white"
             >
-              <span className="bg-gradient-to-r from-green-400 via-blue-500 to-teal-500 px-2 py-1 rounded-md text-white">
+              <span className="bg-gradient-to-r from-purple-500 to-pink-500 px-2 py-1 rounded-md text-white">
                 MessBuddy
               </span>
             </Link>
