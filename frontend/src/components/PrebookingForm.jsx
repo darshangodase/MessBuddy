@@ -80,6 +80,7 @@ const PrebookingForm = () => {
 
     const userId = currentUser?._id;
     if (!userId) {
+      toast.error('You need to sign in to your account to proceed with prebooking.');
       navigate('/');
       return;
     }
@@ -109,7 +110,8 @@ const PrebookingForm = () => {
           <HashLoader color="#35c9e1" />
         </div>
       ) : (
-        <div className="p-8 max-w-sm mb-20 bg-white dark:bg-gray-800 shadow-lg rounded-lg mt-20 mx-auto">
+        <div className="flex w-full justify-center items-center p-6">
+        <div className="p-8 mb-20 w-96 dark:bg-gray-800 shadow-lg rounded-lg mt-20 mx-auto bg-white">
           <h2 className="text-2xl font-semibold mb-4 text-center">Prebook a Meal</h2>
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
@@ -198,8 +200,10 @@ const PrebookingForm = () => {
             </button>
           </form>
         </div>
+        </div>
       )}
     </div>
+    
   );
 };
 

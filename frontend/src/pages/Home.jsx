@@ -7,11 +7,16 @@ import axios from "axios";
 import heroImage from "../assets/images/hero.jpg";
 import { motion } from "framer-motion";
 import CountUp from "react-countup";
+import Header from "../components/Header";
+import { LuCirclePlus,LuCircleMinus } from "react-icons/lu";
+
 
 export default function Home() {
+  const [activeIndex, setActiveIndex] = useState(null); 
+  const [isHeaderTransparent, setIsHeaderTransparent] = useState(true);
   const [messes, setMesses] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [bookings, setBookings] = useState([]); // For upcoming bookings
+  const [booklength, setBooklength] = useState(0);
   const [stats, setStats] = useState({
     totalMesses: 0,
     mealsPreBooked: 0,
@@ -44,6 +49,35 @@ export default function Home() {
   };
 
   useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 80) {
+        setIsHeaderTransparent(false);
+      } else {
+        setIsHeaderTransparent(true);
+      }
+    };
+
+    // Attach the scroll event listener
+    window.addEventListener("scroll", handleScroll);
+
+    // Cleanup the event listener on component unmount
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    const fetchBookings = async () => {
+      try {
+        const res = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/api/prebooking`
+        );
+        setBooklength(res.data.prebooking.length);
+      } catch (error) {
+        console.error("Failed to fetch bookings:", error);
+      }
+    };
+
     const fetchMesses = async () => {
       try {
         const res = await axios.get(
@@ -52,7 +86,6 @@ export default function Home() {
         setMesses(res.data.messes);
         setLoading(false);
 
-        // Compute dynamic stats
         const avgRating =
           res.data.messes.reduce(
             (acc, mess) =>
@@ -65,7 +98,7 @@ export default function Home() {
           ) / res.data.messes.length;
         setStats({
           totalMesses: res.data.messes.length,
-          mealsPreBooked: 112, 
+          mealsPreBooked: booklength,
           avgRating: `${avgRating.toFixed(1)}/5`,
         });
       } catch (error) {
@@ -74,20 +107,9 @@ export default function Home() {
       }
     };
 
-    const fetchBookings = async () => {
-      try {
-        const res = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/api/bookings`
-        );
-        setBookings(res.data.bookings);
-      } catch (error) {
-        console.error("Failed to fetch bookings:", error);
-      }
-    };
-
     fetchMesses();
     fetchBookings();
-  }, []);
+  }, [booklength]);
 
   const topMesses = messes
     .sort((a, b) => {
@@ -101,10 +123,38 @@ export default function Home() {
     })
     .slice(0, 4);
 
+    const faqs = [
+      {
+        question: "What is MessBuddy?",
+        answer:
+          "MessBuddy is an innovative platform designed to enhance dining experiences by allowing users to explore mess menus, pre-book meals, and discover highly rated dining options.",
+      },
+      {
+        question: "How does the pre-booking feature work?",
+        answer:
+          "Simply browse the available menu items, select your preferred meal, and confirm your booking. Your meal will be reserved and ready when you arrive.",
+      },
+      {
+        question: "Can mess owners update menus in real time?",
+        answer:
+          "Yes, mess owners can easily update menus in real time through their dedicated dashboard, ensuring diners always see the latest options.",
+      },
+      {
+        question: "Is MessBuddy free to use?",
+        answer:
+          "Yes! MessBuddy offers free access to its features, including menu browsing and meal pre-booking.",
+      },
+    ];
+  
+    const toggleAnswer = (index) => {
+      setActiveIndex(activeIndex === index ? null : index); 
+    };
+
   return (
     <div className="w-full">
+      <Header transparent={isHeaderTransparent} />
       {/* Hero Section */}
-      <section className="h-[91vh] w-full relative flex flex-col lg:flex-row justify-center items-center text-center lg:text-left px-4 py-8 max-w-screen overflow-hidden">
+      <section className="h-[100vh] w-full relative flex flex-col lg:flex-row justify-center items-center text-center lg:text-left px-4 py-8 max-w-screen overflow-hidden mb-10">
         <div
           className="absolute inset-0 bg-cover bg-center overflow-hidden"
           style={{
@@ -116,7 +166,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-gray-700 opacity-70"></div>
         <div className="relative z-10 flex justify-center flex-col items-center text-white">
           <motion.h1
-            className="mt-9 font-serif text-3xl font-semibold mb-4 md:text-5xl text-red-400 text-center"
+            className="mt-9 font-serif text-3xl font-black mb-4 md:text-5xl text-red-400 text-center"
             variants={headingVariants}
             initial="hidden"
             animate="visible"
@@ -149,10 +199,14 @@ export default function Home() {
             <HashLoader color="#35c9e1" />
           </div>
         ) : topMesses && topMesses.length > 0 ? (
-          <div className="flex flex-col gap-6 items-center">
+          <div className="flex flex-col  items-center text-black dark:text-white">
             <h2 className="font-serif text-3xl font-semibold text-center">
               Best Rated Messes
             </h2>
+            <p className="text-lg text-center max-w-3xl mt-2 mb-10 font-serif">
+              Explore the top messes offering great meals and trusted ratings
+              from the community.
+            </p>
             <div className="flex flex-wrap justify-center gap-14">
               {topMesses.map((mess) => (
                 <MenuCard key={mess._id} menu={mess} />
@@ -167,87 +221,89 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      {/* Features Section */}
-      <section className=" py-10 px-5 rounded-lg text-black dark:text-white max-w-screen overflow-hidden">
+      <section className="bg-white dark:bg-[#1E1E2F] py-10 px-6 rounded-lg max-w-screen overflow-hidden mt-12 " >
         <div className="text-center mb-8">
-          <h2 className="font-serif text-3xl font-semibold text-center">
+          <h2 className="text-black dark:text-white text-3xl font-semibold font-serif">
             Why Choose MessBuddy?
           </h2>
-          <p className="text-lg mt-2">
+          <h1 className="text-black dark:text-white text-lg mt-2 font-serif">
             Our platform is designed to make your dining experience seamless and
             enjoyable.
-          </p>
+          </h1>
         </div>
-        <div className="flex flex-wrap gap-4 justify-evenly px-2 ">
+        <div className="flex flex-wrap justify-center gap-10 max-w-7xl mx-auto mb-10">
           {[
             {
               title: "Real-Time Menu Updates",
               description:
-                "Stay informed with the latest menu updates from your favorite messes.",
-              gradient: "bg-gradient-to-r from-purple-500 to-pink-500",
+                "Access live updates of your favorite mess menus anytime, ensuring you're always informed about available dishes. Avoid the hassle of outdated or unavailable menu options with our real-time system.",
+              icon: "🍴", // Replace with your desired icon
             },
             {
               title: "Pre-Booking Made Easy",
               description:
-                "Reserve meals in advance and never worry about availability.",
-              gradient: "bg-gradient-to-r from-purple-500 to-pink-500",
+                "Effortlessly reserve your meals in advance to save time and guarantee availability. Our intuitive pre-booking feature lets you plan your meals ahead, making dining stress-free and efficient.",
+              icon: "📅", // Replace with your desired icon
             },
             {
               title: "Top-Rated Recommendations",
               description:
-                "Explore the best-rated messes in your area, backed by community reviews.",
-              gradient: "bg-gradient-to-r from-purple-500 to-pink-500",
+                "Explore the highest-rated messes in your area, backed by genuine reviews from real users. Discover quality dining options and make informed choices with the help of community feedback.",
+              icon: "⭐", // Replace with your desired icon
             },
           ].map((feature, index) => (
             <div
               key={index}
-              className={`text-white p-4 rounded-lg shadow-lg text-center w-96 ${feature.gradient}`}
+              className="bg-white dark:bg-gray-700  flex flex-col items-center text-center p-6 border rounded-lg shadow-md transform transition-transform hover:scale-105 hover:shadow-xl cursor-pointer  w-full sm:w-80"
             >
-              <h3 className="text-xl font-bold mb-2">{feature.title}</h3>
-              <p className="text-sm">{feature.description}</p>
+              <div className="text-gray-900 dark:text-white text-3xl mb-4">{feature.icon}</div>
+              <h3 className="text-gray-700 dark:text-white text-lg font-semibold">
+                {feature.title}
+              </h3>
+              <p className="text-gray-500 dark:text-white mt-2 text-justify">{feature.description}</p>
             </div>
           ))}
         </div>
       </section>
-      {/* Testimonial Section */}
+    
       {/* Dynamic Stats Section */}
-      <section className=" max-w-screen overflow-hidden">
-      <motion.section
-        className="flex justify-around py-6 bg-gradient-to-r from-purple-500 to-pink-500 mt-10 text-white"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.5 }}
-      >
-        {[
-          { label: "Total Messes", value: stats.totalMesses },
-          { label: "Meals Pre-Booked", value: stats.mealsPreBooked },
-          { label: "Average Rating", value: stats.avgRating },
-        ].map((stat, index) => (
-          <motion.div
-            key={index}
-            className="text-center"
-            custom={index}
-            variants={circleVariants}
-          >
-            <h3 className=" text-lg sm:text-3xl font-bold">
-              <CountUp
-                end={
-                  typeof stat.value === "string"
-                    ? parseFloat(stat.value)
-                    : stat.value
-                }
-                duration={6}
-                decimals={stat.label === "Average Rating" ? 1 : 0}
-              />
-              {stat.label === "Average Rating" && "/5"}
-            </h3>
-            <p className="text-sm ">{stat.label}</p>
-          </motion.div>
-        ))}
-      </motion.section>
+      <section className=" max-w-screen overflow-hidden mb-10 font-serif">
+        <motion.section
+          className="flex justify-around py-6 bg-gradient-to-r from-purple-500 to-pink-500 mt-10 text-white"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.5 }}
+        >
+          {[
+            { label: "Total Messes", value: stats.totalMesses },
+            { label: "Meals Pre-Booked", value: stats.mealsPreBooked },
+            { label: "Average Rating", value: stats.avgRating },
+          ].map((stat, index) => (
+            <motion.div
+              key={index}
+              className="text-center"
+              custom={index}
+              variants={circleVariants}
+            >
+              <h3 className=" text-lg sm:text-3xl font-bold">
+                <CountUp
+                  end={
+                    typeof stat.value === "string"
+                      ? parseFloat(stat.value)
+                      : stat.value
+                  }
+                  duration={6}
+                  decimals={stat.label === "Average Rating" ? 1 : 0}
+                />
+                {stat.label === "Average Rating" && "/5"}
+              </h3>
+              <p className="text-sm mt-1">{stat.label}</p>
+            </motion.div>
+          ))}
+        </motion.section>
       </section>
 
-      <section className=" py-16 px-8">
+      <section className=" py-16 px-8 bg-white dark:bg-[#1E1E2F]">
         <div className="text-center mb-12">
           <h2 className="font-serif text-3xl font-semibold text-center">
             What Our Users Say
@@ -296,6 +352,41 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+
+      {/* FAQ Section */}
+      <section className="py-12 px-6 bg-gray-100 dark:bg-[#1E1E2F] ">
+      <div className="max-w-6xl mx-auto text-center">
+        <h2 className="font-serif text-3xl font-semibold text-black dark:text-white mb-6 ">
+          Frequently Asked Questions
+        </h2>
+        <p className="text-gray-700 dark:text-gray-300 text-lg mb-10 max-w-4xl mx-auto font-serif">
+          Have questions? Find answers to the most commonly asked questions
+          about MessBuddy and its features below.
+        </p>
+        <div className="space-y-4 max-w-2xl mx-auto">
+          {faqs.map((faq, index) => (
+            <div
+              key={index}
+              className="border-b-2 border-black dark:border-gray-700  relative "
+            >
+              <button
+                onClick={() => toggleAnswer(index)}
+                className="w-full text-left p-4 flex justify-between items-center text-gray-900 dark:text-gray-100"
+              >
+                <span className="text-lg font-medium">{faq.question}</span>
+                <span className=" absolute right-0 b h-6 w-6">{activeIndex === index ? <LuCircleMinus className="h-full w-full"/>: <LuCirclePlus className="h-full w-full"/>}</span>
+              </button>
+              {activeIndex === index && (
+                <div className="p-2 text-gray-700 dark:text-gray-300 text-base ml-4 text-justify">
+                  {faq.answer}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
     </div>
   );
 }
