@@ -1,18 +1,18 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import MenuCard from "../components/MenuCard";
 import { Button } from "flowbite-react";
-import { HashLoader } from "react-spinners";
+import { HashLoader ,PropagateLoader} from "react-spinners";
 import axios from "axios";
 import heroImage from "../assets/images/hero.jpg";
 import { motion } from "framer-motion";
 import CountUp from "react-countup";
 import Header from "../components/Header";
-import { LuCirclePlus,LuCircleMinus } from "react-icons/lu";
-
+import { LuCirclePlus, LuCircleMinus } from "react-icons/lu";
 
 export default function Home() {
-  const [activeIndex, setActiveIndex] = useState(null); 
+  const location = useLocation();
+  const [activeIndex, setActiveIndex] = useState(null);
   const [isHeaderTransparent, setIsHeaderTransparent] = useState(true);
   const [messes, setMesses] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -47,6 +47,15 @@ export default function Home() {
       },
     }),
   };
+
+  useEffect(() => {
+    if (location.hash) {
+      const element = document.querySelector(location.hash);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+  }, [location]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -123,32 +132,32 @@ export default function Home() {
     })
     .slice(0, 4);
 
-    const faqs = [
-      {
-        question: "What is MessBuddy?",
-        answer:
-          "MessBuddy is an innovative platform designed to enhance dining experiences by allowing users to explore mess menus, pre-book meals, and discover highly rated dining options.",
-      },
-      {
-        question: "How does the pre-booking feature work?",
-        answer:
-          "Simply browse the available menu items, select your preferred meal, and confirm your booking. Your meal will be reserved and ready when you arrive.",
-      },
-      {
-        question: "Can mess owners update menus in real time?",
-        answer:
-          "Yes, mess owners can easily update menus in real time through their dedicated dashboard, ensuring diners always see the latest options.",
-      },
-      {
-        question: "Is MessBuddy free to use?",
-        answer:
-          "Yes! MessBuddy offers free access to its features, including menu browsing and meal pre-booking.",
-      },
-    ];
-  
-    const toggleAnswer = (index) => {
-      setActiveIndex(activeIndex === index ? null : index); 
-    };
+  const faqs = [
+    {
+      question: "What is MessBuddy?",
+      answer:
+        "MessBuddy is an innovative platform designed to enhance dining experiences by allowing users to explore mess menus, pre-book meals, and discover highly rated dining options.",
+    },
+    {
+      question: "How does the pre-booking feature work?",
+      answer:
+        "Simply browse the available menu items, select your preferred meal, and confirm your booking. Your meal will be reserved and ready when you arrive.",
+    },
+    {
+      question: "Can mess owners update menus in real time?",
+      answer:
+        "Yes, mess owners can easily update menus in real time through their dedicated dashboard, ensuring diners always see the latest options.",
+    },
+    {
+      question: "Is MessBuddy free to use?",
+      answer:
+        "Yes! MessBuddy offers free access to its features, including menu browsing and meal pre-booking.",
+    },
+  ];
+
+  const toggleAnswer = (index) => {
+    setActiveIndex(activeIndex === index ? null : index);
+  };
 
   return (
     <div className="w-full">
@@ -193,35 +202,39 @@ export default function Home() {
       </section>
 
       {/* Top-Rated Messes */}
-      <section className="w-full p-3 flex flex-col items-center gap-3 py-7 max-w-screen overflow-hidden">
-        {loading ? (
-          <div className="flex justify-center min-h-screen">
-            <HashLoader color="#35c9e1" />
-          </div>
-        ) : topMesses && topMesses.length > 0 ? (
-          <div className="flex flex-col  items-center text-black dark:text-white">
-            <h2 className="font-serif text-3xl font-semibold text-center">
+      <section
+        id="topratedmess"
+        className="w-full p-3 flex flex-col items-center gap-1 py-2 max-w-screen overflow-hidden"
+      >
+        <h2 className=" dark:text-white text-black font-serif text-3xl font-semibold text-center">
               Best Rated Messes
             </h2>
-            <p className="text-lg text-center max-w-3xl mt-2 mb-10 font-serif">
+            <p className="dark:text-white text-black text-lg text-center max-w-3xl mt-2 mb-10 font-serif">
               Explore the top messes offering great meals and trusted ratings
               from the community.
             </p>
-            <div className="flex flex-wrap justify-center gap-14">
+        {loading ? (
+          <div className="flex justify-center  items-center min-h-[50vh]">
+            <PropagateLoader color="#35c9e1" />
+          </div>
+        ) : topMesses && topMesses.length > 0 ? (
+          <div className="flex flex-col  items-center text-black dark:text-white">
+            
+            <div className="flex flex-wrap justify-center gap-14 mb-10">
               {topMesses.map((mess) => (
                 <MenuCard key={mess._id} menu={mess} />
               ))}
             </div>
           </div>
         ) : (
-          <div className="flex justify-center min-h-screen">
-            <p>No menus available</p>
+          <div className="flex justify-center items-center min-h-[50vh]">
+            <p>No messes available</p>
           </div>
         )}
       </section>
 
       {/* Features Section */}
-      <section className="bg-white dark:bg-[#1E1E2F] py-10 px-6 rounded-lg max-w-screen overflow-hidden mt-12 " >
+      <section className="bg-white dark:bg-[#1E1E2F] py-10 px-6 rounded-lg max-w-screen overflow-hidden mt-12 ">
         <div className="text-center mb-8">
           <h2 className="text-black dark:text-white text-3xl font-semibold font-serif">
             Why Choose MessBuddy?
@@ -231,43 +244,66 @@ export default function Home() {
             enjoyable.
           </h1>
         </div>
-        <div className="flex flex-wrap justify-center gap-10 max-w-7xl mx-auto mb-10">
+        <div className="flex flex-wrap justify-center gap-10 max-w-7xl mx-auto mb-12">
           {[
             {
               title: "Real-Time Menu Updates",
               description:
                 "Access live updates of your favorite mess menus anytime, ensuring you're always informed about available dishes. Avoid the hassle of outdated or unavailable menu options with our real-time system.",
-              icon: "🍴", // Replace with your desired icon
+              icon: "🍴",
+              link: "/search",
             },
             {
               title: "Pre-Booking Made Easy",
               description:
                 "Effortlessly reserve your meals in advance to save time and guarantee availability. Our intuitive pre-booking feature lets you plan your meals ahead, making dining stress-free and efficient.",
-              icon: "📅", // Replace with your desired icon
+              icon: "📅",
+              link: "/prebooking",
             },
             {
               title: "Top-Rated Recommendations",
               description:
                 "Explore the highest-rated messes in your area, backed by genuine reviews from real users. Discover quality dining options and make informed choices with the help of community feedback.",
-              icon: "⭐", // Replace with your desired icon
+              icon: "⭐",
+              link: "#topratedmess",
             },
           ].map((feature, index) => (
             <div
               key={index}
               className="bg-white dark:bg-gray-700  flex flex-col items-center text-center p-6 border rounded-lg shadow-md transform transition-transform hover:scale-105 hover:shadow-xl cursor-pointer  w-full sm:w-80"
             >
-              <div className="text-gray-900 dark:text-white text-3xl mb-4">{feature.icon}</div>
+              <div className="text-gray-900 dark:text-white text-3xl mb-4">
+                {feature.icon}
+              </div>
               <h3 className="text-gray-700 dark:text-white text-lg font-semibold">
                 {feature.title}
               </h3>
-              <p className="text-gray-500 dark:text-white mt-2 text-justify">{feature.description}</p>
+              <p className="text-gray-500 dark:text-white mt-2 text-justify">
+                {feature.description}
+              </p>
+              <Link
+                to="/"
+                onClick={(e) => {
+                  e.preventDefault(); // Prevent navigation since we're handling it manually
+                  const targetElement = document.getElementById("topratedmess");
+                  if (targetElement) {
+                    targetElement.scrollIntoView({
+                      behavior: "smooth",
+                      block: "start",
+                    });
+                  }
+                }}
+                className="absolute bottom-4 right-4 text-blue-500  text-md font-semibold"
+              >
+                Click Here
+              </Link>
             </div>
           ))}
         </div>
       </section>
-    
+
       {/* Dynamic Stats Section */}
-      <section className=" max-w-screen overflow-hidden mb-10 font-serif">
+      <section className=" max-w-screen overflow-hidden mb-10 font-sans">
         <motion.section
           className="flex justify-around py-6 bg-gradient-to-r from-purple-500 to-pink-500 mt-10 text-white"
           initial="hidden"
@@ -353,40 +389,45 @@ export default function Home() {
         </div>
       </section>
 
-
       {/* FAQ Section */}
       <section className="py-12 px-6 bg-gray-100 dark:bg-[#1E1E2F] ">
-      <div className="max-w-6xl mx-auto text-center">
-        <h2 className="font-serif text-3xl font-semibold text-black dark:text-white mb-6 ">
-          Frequently Asked Questions
-        </h2>
-        <p className="text-gray-700 dark:text-gray-300 text-lg mb-10 max-w-4xl mx-auto font-serif">
-          Have questions? Find answers to the most commonly asked questions
-          about MessBuddy and its features below.
-        </p>
-        <div className="space-y-4 max-w-2xl mx-auto">
-          {faqs.map((faq, index) => (
-            <div
-              key={index}
-              className="border-b-2 border-black dark:border-gray-700  relative "
-            >
-              <button
-                onClick={() => toggleAnswer(index)}
-                className="w-full text-left p-4 flex justify-between items-center text-gray-900 dark:text-gray-100"
+        <div className="max-w-6xl mx-auto text-center">
+          <h2 className="font-serif text-3xl font-semibold text-black dark:text-white mb-6 ">
+            Frequently Asked Questions
+          </h2>
+          <p className="text-gray-700 dark:text-gray-300 text-lg mb-10 max-w-4xl mx-auto font-serif">
+            Have questions? Find answers to the most commonly asked questions
+            about MessBuddy and its features below.
+          </p>
+          <div className="space-y-4 max-w-2xl mx-auto">
+            {faqs.map((faq, index) => (
+              <div
+                key={index}
+                className="border-b-2 border-black dark:border-gray-700  relative "
               >
-                <span className="text-lg font-medium">{faq.question}</span>
-                <span className=" absolute right-0 b h-6 w-6">{activeIndex === index ? <LuCircleMinus className="h-full w-full"/>: <LuCirclePlus className="h-full w-full"/>}</span>
-              </button>
-              {activeIndex === index && (
-                <div className="p-2 text-gray-700 dark:text-gray-300 text-base ml-4 text-justify">
-                  {faq.answer}
-                </div>
-              )}
-            </div>
-          ))}
+                <button
+                  onClick={() => toggleAnswer(index)}
+                  className="w-full text-left p-4 flex justify-between items-center text-gray-900 dark:text-gray-100"
+                >
+                  <span className="text-lg font-medium">{faq.question}</span>
+                  <span className=" absolute right-0 b h-6 w-6">
+                    {activeIndex === index ? (
+                      <LuCircleMinus className="h-full w-full" />
+                    ) : (
+                      <LuCirclePlus className="h-full w-full" />
+                    )}
+                  </span>
+                </button>
+                {activeIndex === index && (
+                  <div className="p-2 text-gray-700 dark:text-gray-300 text-base ml-4 text-justify">
+                    {faq.answer}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
     </div>
   );
 }
