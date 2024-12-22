@@ -2,7 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import MenuCard from "../components/MenuCard";
 import { Button } from "flowbite-react";
-import { HashLoader ,PropagateLoader} from "react-spinners";
+import { HashLoader, PropagateLoader } from "react-spinners";
 import axios from "axios";
 import heroImage from "../assets/images/hero.jpg";
 import { motion } from "framer-motion";
@@ -22,31 +22,6 @@ export default function Home() {
     mealsPreBooked: 0,
     avgRating: "0/5",
   });
-  const headingVariants = {
-    hidden: { opacity: 0, y: -100 }, // Start above with opacity 0
-    visible: {
-      opacity: 1,
-      y: 0, // Moves to its original position
-      transition: {
-        duration: 1, // Animation duration
-        type: "easeIn", // Adds a spring-like bounce
-      },
-    },
-  };
-
-  const circleVariants = {
-    hidden: { opacity: 0, x: 50, y: 50 },
-    visible: (index) => ({
-      opacity: 1,
-      x: 0,
-      y: 0,
-      transition: {
-        duration: 1,
-        delay: index * 0.3,
-        type: "easeIn",
-      },
-    }),
-  };
 
   useEffect(() => {
     if (location.hash) {
@@ -175,10 +150,28 @@ export default function Home() {
         <div className="absolute inset-0 bg-gray-700 opacity-70"></div>
         <div className="relative z-10 flex justify-center flex-col items-center text-white">
           <motion.h1
-            className="mt-9 font-serif text-3xl font-black mb-4 md:text-5xl text-red-400 text-center"
-            variants={headingVariants}
-            initial="hidden"
-            animate="visible"
+            className="mt-9 font-serif text-3xl font-black mb-4 md:text-5xl text-center"
+            initial={{ opacity: 0, scale: 1 }} // Scale-up and fade-in effect
+            animate={{
+              opacity: 1,
+              scale: 1,
+              y: [0, -15, 0, 10, 0], // Floating effect
+              color: ["#f87171", "#fb923c", "#facc15", "#f87171"],
+            }}
+            transition={{
+              duration: 1,
+              ease: "easeOut",
+              y: {
+                duration: 3,
+                repeat: Infinity,
+                ease: "easeInOut",
+              },
+              color: {
+                duration: 7, // Color transition duration
+                repeat: Infinity, // Continuous color cycling
+                ease: "linear",
+              },
+            }}
           >
             Seamless Meals, Smarter Choices
           </motion.h1>
@@ -207,19 +200,18 @@ export default function Home() {
         className="w-full p-3 flex flex-col items-center gap-1 py-2 max-w-screen overflow-hidden"
       >
         <h2 className=" dark:text-white text-black font-serif text-3xl font-semibold text-center">
-              Best Rated Messes
-            </h2>
-            <p className="dark:text-white text-black text-lg text-center max-w-3xl mt-2 mb-10 font-serif">
-              Explore the top messes offering great meals and trusted ratings
-              from the community.
-            </p>
+          Best Rated Messes
+        </h2>
+        <p className="dark:text-white text-black text-lg text-center max-w-3xl mt-2 mb-10 font-serif">
+          Explore the top messes offering great meals and trusted ratings from
+          the community.
+        </p>
         {loading ? (
           <div className="flex justify-center  items-center min-h-[50vh]">
             <PropagateLoader color="#35c9e1" />
           </div>
         ) : topMesses && topMesses.length > 0 ? (
           <div className="flex flex-col  items-center text-black dark:text-white">
-            
             <div className="flex flex-wrap justify-center gap-14 mb-10">
               {topMesses.map((mess) => (
                 <MenuCard key={mess._id} menu={mess} />
@@ -265,7 +257,7 @@ export default function Home() {
               description:
                 "Explore the highest-rated messes in your area, backed by genuine reviews from real users. Discover quality dining options and make informed choices with the help of community feedback.",
               icon: "⭐",
-              link: "#topratedmess",
+              link: "/",
             },
           ].map((feature, index) => (
             <div
@@ -281,35 +273,64 @@ export default function Home() {
               <p className="text-gray-500 dark:text-white mt-2 text-justify">
                 {feature.description}
               </p>
-              <Link
-                to="/"
-                onClick={(e) => {
-                  e.preventDefault(); // Prevent navigation since we're handling it manually
-                  const targetElement = document.getElementById("topratedmess");
-                  if (targetElement) {
-                    targetElement.scrollIntoView({
-                      behavior: "smooth",
-                      block: "start",
-                    });
-                  }
+              <motion.div
+                className="absolute bottom-4 right-4"
+                whileTap={{
+                  scale: 1,
+                  rotate: -10,
+                  transition: { type: "spring", stiffness: 300 },
                 }}
-                className="absolute bottom-4 right-4 text-blue-500  text-md font-semibold"
               >
-                Click Here
-              </Link>
+                <Link
+                  to={feature.link}
+                  onClick={(e) => {
+                    const targetElement =
+                      document.getElementById("topratedmess");
+                    if (targetElement) {
+                      targetElement.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start",
+                      });
+                    }
+                  }}
+                  className="text-blue-500 text-md font-semibold"
+                >
+                  Click Here
+                </Link>
+              </motion.div>
             </div>
           ))}
         </div>
       </section>
 
       {/* Dynamic Stats Section */}
-      <section className=" max-w-screen overflow-hidden mb-10 font-sans">
+
+      <section className="max-w-screen overflow-hidden mb-10 font-sans">
         <motion.section
-          className="flex justify-around py-6 bg-gradient-to-r from-purple-500 to-pink-500 mt-10 text-white"
+          className="relative flex justify-around py-6 bg-gradient-to-r from-purple-500 to-pink-500 mt-10 text-white overflow-hidden"
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.5 }}
+          variants={{
+            visible: { transition: { staggerChildren: 0.2 } },
+            hidden: {},
+          }}
         >
+          {/* Floating Background Effect */}
+          <motion.div
+            className="absolute inset-0 bg-gradient-to-r from-purple-400 via-pink-300 to-purple-400 opacity-40 blur-lg"
+            animate={{
+              scale: [1, 1.05, 1],
+              x: [-10, 10, -10],
+              y: [-10, 10, -10],
+            }}
+            transition={{
+              repeat: Infinity,
+              repeatType: "reverse",
+              duration: 10,
+            }}
+          />
+
           {[
             { label: "Total Messes", value: stats.totalMesses },
             { label: "Meals Pre-Booked", value: stats.mealsPreBooked },
@@ -317,21 +338,48 @@ export default function Home() {
           ].map((stat, index) => (
             <motion.div
               key={index}
-              className="text-center"
+              className="relative text-center"
               custom={index}
-              variants={circleVariants}
+              variants={{
+                hidden: (i) => ({
+                  opacity: 0,
+                  x: i === 0 ? -50 : i === 1 ? 0 : 50,
+                }),
+                visible: { opacity: 1, x: 0, transition: { duration: 0.6 } },
+              }}
+              whileHover={{
+                scale: 1.05,
+                transition: { duration: 0.3 },
+              }}
+              animate={{
+                y: [0, -7, 0],
+                transition: {
+                  repeat: Infinity,
+                  repeatType: "reverse",
+                  duration: 2,
+                },
+              }}
             >
-              <h3 className=" text-lg sm:text-3xl font-bold">
-                <CountUp
-                  end={
-                    typeof stat.value === "string"
-                      ? parseFloat(stat.value)
-                      : stat.value
-                  }
-                  duration={6}
-                  decimals={stat.label === "Average Rating" ? 1 : 0}
-                />
-                {stat.label === "Average Rating" && "/5"}
+              <h3 className="text-lg sm:text-3xl font-bold">
+                <motion.div
+                  animate={{ scale: [1, 1.2, 1] }}
+                  transition={{
+                    duration: 0.3,
+                    times: [0.8, 1],
+                    delay: 2.5,
+                  }}
+                >
+                  <CountUp
+                    end={
+                      typeof stat.value === "string"
+                        ? parseFloat(stat.value)
+                        : stat.value
+                    }
+                    duration={6}
+                    decimals={stat.label === "Average Rating" ? 1 : 0}
+                  />
+                  {stat.label === "Average Rating" && "/5"}
+                </motion.div>
               </h3>
               <p className="text-sm mt-1">{stat.label}</p>
             </motion.div>
