@@ -9,7 +9,7 @@ const prebookingRoutes = require('./routes/prebooking');
 const FeedbackRoute = require('./routes/feedback_route');
 const cookieParser = require('cookie-parser');
 
-
+// added
 require('dotenv').config();
 const PORT = process.env.PORT || 5000;
 const app = express();
@@ -18,8 +18,7 @@ connectDB();
 
 // https://messbuddy-app.netlify.app
 // http://localhost:5173
-
-app.use(cors({ origin: 'http://localhost:5173', credentials: true })); 
+app.use(cors({ origin: 'https://messbuddy-app.netlify.app', credentials: true })); 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());

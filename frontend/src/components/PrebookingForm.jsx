@@ -111,7 +111,7 @@ const PrebookingForm = () => {
         </div>
       ) : (
         <div className="flex w-full justify-center items-center p-6">
-        <div className="p-8 mb-20 w-96 dark:bg-gray-800 shadow-lg rounded-lg mt-20 mx-auto bg-white">
+        <div className="p-8 mb-20 w-96 dark:bg-gray-800 shadow-lg rounded-lg mt-10 mx-auto bg-white ">
           <h2 className="text-2xl font-semibold mb-4 text-center">Prebook a Meal</h2>
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
