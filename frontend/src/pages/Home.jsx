@@ -208,7 +208,7 @@ export default function Home() {
         <h2 className=" dark:text-white text-black font-serif text-3xl font-semibold text-center">
           Best Rated Messes
         </h2>
-        <p className="dark:text-white text-black text-lg text-center max-w-3xl mt-2 mb-10 font-serif">
+        <p className="dark:text-gray-300 text-black text-lg text-center max-w-3xl mt-2 mb-10 font-serif">
           Explore the top messes offering great meals and trusted ratings from
           the community.
         </p>
@@ -238,7 +238,7 @@ export default function Home() {
           <h2 className="text-black dark:text-white text-3xl font-semibold font-serif">
             Why Choose MessBuddy?
           </h2>
-          <h1 className="text-black dark:text-white text-lg mt-2 font-serif">
+          <h1 className="text-black dark:text-gray-300 text-lg mt-2 font-serif">
             Our platform is designed to make your dining experience seamless and
             enjoyable.
           </h1>
@@ -269,7 +269,7 @@ export default function Home() {
           ].map((feature, index) => (
             <div
               key={index}
-              className="bg-white dark:bg-gray-900  flex flex-col items-center text-center p-6 border rounded-lg shadow-md transform transition-transform hover:scale-105 hover:shadow-xl cursor-pointer  w-full sm:w-80"
+              className="bg-white dark:bg-gray-900  flex flex-col items-center text-center p-6 border rounded-lg shadow-md transform transition-transform hover:scale-105 hover:shadow-xl cursor-pointer  w-full sm:w-80 m-4"
             >
               <div className="text-gray-900 dark:text-white text-3xl mb-4">
                 {feature.icon}
@@ -453,7 +453,7 @@ export default function Home() {
           <h2 className="font-serif text-3xl font-semibold text-black dark:text-white mb-6 ">
             Frequently Asked Questions
           </h2>
-          <p className="text-gray-700 dark:text-gray-300 text-lg mb-10 max-w-4xl mx-auto font-serif">
+          <p className="text-black dark:text-gray-300 text-lg mb-10 max-w-4xl mx-auto font-serif">
             Have questions? Find answers to the most commonly asked questions
             about MessBuddy and its features below.
           </p>
