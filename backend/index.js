@@ -9,7 +9,7 @@ const prebookingRoutes = require('./routes/prebooking');
 const FeedbackRoute = require('./routes/feedback_route');
 const cookieParser = require('cookie-parser');
 
-// added
+
 require('dotenv').config();
 const PORT = process.env.PORT || 5000;
 const app = express();

@@ -33,5 +33,23 @@ const deleteUserAccount = async (req, res, next) => {
     next(errorhandler(500, 'Internal Server Error'));
   }
 };
+const getUser = async (req, res, next) => {
+  const userId = req.params.userId;
 
-  module.exports = { signout ,deleteUserAccount};
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return next(errorhandler(404, 'User not found'));
+    }
+
+    res.status(200).json({
+      username: user.username,
+      role: user.Login_Role,
+    });  
+  } catch (error) {
+    next(errorhandler(500, 'Internal Server Error'));
+  }
+};
+
+module.exports = { signout, deleteUserAccount, getUser };

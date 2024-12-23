@@ -56,7 +56,6 @@ function MessForm() {
     setUploadLoading(true);
     try {
       const uploadResult = await uploadFile(file);
-      console.log(uploadResult.url);
       
       setformdata((prev) => ({
         ...prev,

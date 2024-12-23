@@ -49,6 +49,7 @@ export default function Feedback() {
         `${import.meta.env.VITE_BACKEND_URL}/api/user/getuser/${userId}`
       );
       return response.data.role;
+      
     } catch (error) {
       console.error(`Error fetching role for user:`, error);
     }
@@ -85,8 +86,11 @@ export default function Feedback() {
   useEffect(() => {
     const fetchRoles = async () => {
       const roles = {};
+      
       for (const feedback of feedbacks) {
+        
         if (feedback.userID?._id && !roles[feedback.userID._id]) {
+
           const role = await fetchUserRole(feedback.userID._id);
           roles[feedback.userID._id] = role;
         }
@@ -138,7 +142,7 @@ export default function Feedback() {
         {/* Looping animation */}
         <div className="flex gap-6 animate-scroll">
           {/* Clone feedbacks to make an infinite loop */}
-          {[...feedbacks, ...feedbacks].map((feedback, index) => (
+          {[...feedbacks].map((feedback, index) => (
             <div
               key={`${feedback._id || index}`}
               className="bg-white dark:bg-gray-900 border dark:border-gray-700 rounded-lg p-4 sm:w-72 w-64 flex-shrink-0 mx-2 transform transition duration-300 hover:scale-102 hover:shadow-lg"
