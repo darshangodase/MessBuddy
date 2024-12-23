@@ -123,8 +123,8 @@ export default function Feedback() {
   }
 
   return (
-    <div className="bg-gray-50 dark:bg-gray-800 flex flex-col items-center justify-center p-6">
-      <h2 className="text-black dark:text-white font-serif text-3xl font-semibold text-center mt-10">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-800 flex flex-col items-center justify-center p-6">
+      <h2 className="text-black dark:text-white font-serif text-3xl font-semibold text-center ">
         What Our Users Say
       </h2>
       <p className="text-black dark:text-gray-300 text-lg mt-2 font-serif mb-10 text-center">
@@ -149,7 +149,7 @@ export default function Feedback() {
               </div>
 
               {/* Feedback Text */}
-              <p className="text-gray-700 dark:text-gray-300 mb-4 text-justify">
+              <p className="text-gray-700 dark:text-white mb-4 text-justify">
                 {feedback.comments}
               </p>
 

@@ -203,7 +203,7 @@ export default function Home() {
       {/* Top-Rated Messes */}
       <section
         id="topratedmess"
-        className="w-full p-3 flex flex-col items-center gap-1 py-2 max-w-screen overflow-hidden"
+        className="min-h-screen w-full p-3 flex flex-col items-center justify-center gap-1 py-2 max-w-screen overflow-hidden"
       >
         <h2 className=" dark:text-white text-black font-serif text-3xl font-semibold text-center">
           Best Rated Messes
@@ -233,7 +233,7 @@ export default function Home() {
 
 
       {/* Features Section */}
-      <section className="bg-white dark:bg-gray-800 py-10 px-6 rounded-lg max-w-screen overflow-hidden mt-12 ">
+      <section className="min-h-screen bg-white dark:bg-gray-800 py-10 px-6 rounded-lg max-w-screen overflow-hidden mt-12 ">
         <div className="text-center mb-8">
           <h2 className="text-black dark:text-white text-3xl font-semibold font-serif">
             Why Choose MessBuddy?
@@ -448,7 +448,7 @@ export default function Home() {
 
      
       {/* FAQ Section */}
-      <section className="py-12 px-6 bg-gray-100 dark:bg-[#1E1E2F] ">
+      <section className="min-h-screen py-12 px-6 bg-gray-100 dark:bg-[#1E1E2F] ">
         <div className="max-w-6xl mx-auto text-center">
           <h2 className="font-serif text-3xl font-semibold text-black dark:text-white mb-6 ">
             Frequently Asked Questions
