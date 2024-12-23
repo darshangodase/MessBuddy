@@ -109,11 +109,6 @@ function Header({ transparent = false }) {
             Prebooking
           </Link>
         </Navbar.Link>
-        <Navbar.Link className="mt-2" active={path === "/prebooking"} as={"div"}>
-          <Link to="/prebooking" className={` text-lg ${transparent ? "md:text-white" : ""}`}>
-            Support
-          </Link>
-        </Navbar.Link>
       </Navbar.Collapse>
     </Navbar>
   );

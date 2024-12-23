@@ -116,7 +116,7 @@ export default function Feedback() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-[50vh]">
+      <div className="flex justify-center items-center min-h-screen">
         <PropagateLoader color="#35c9e1" />
       </div>
     );
@@ -172,7 +172,7 @@ export default function Feedback() {
       {currentUser && (
         <button
           onClick={() => setIsModalOpen(true)}
-          className="fixed bottom-6 right-6 bg-blue-500 text-white px-4 py-2 rounded-full shadow-lgbg-blue-600 animate-bounce transition duration-300 z-10"
+          className="fixed bottom-6 left-6 bg-blue-500 text-white px-4 py-2 rounded-full shadow-lgbg-blue-600 animate-bounce transition duration-300 z-10"
         >
           Give Feedback
         </button>
