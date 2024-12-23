@@ -2,16 +2,18 @@ import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import MenuCard from "../components/MenuCard";
 import { Button } from "flowbite-react";
-import { HashLoader, PropagateLoader } from "react-spinners";
+import { PropagateLoader } from "react-spinners";
 import axios from "axios";
 import heroImage from "../assets/images/hero.jpg";
 import { motion } from "framer-motion";
 import CountUp from "react-countup";
 import Header from "../components/Header";
+import Feedback from "../components/feedback";
 import { LuCirclePlus, LuCircleMinus } from "react-icons/lu";
 
 export default function Home() {
   const location = useLocation();
+
   const [activeIndex, setActiveIndex] = useState(null);
   const [isHeaderTransparent, setIsHeaderTransparent] = useState(true);
   const [messes, setMesses] = useState([]);
@@ -40,11 +42,7 @@ export default function Home() {
         setIsHeaderTransparent(true);
       }
     };
-
-    // Attach the scroll event listener
     window.addEventListener("scroll", handleScroll);
-
-    // Cleanup the event listener on component unmount
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
@@ -107,6 +105,11 @@ export default function Home() {
     })
     .slice(0, 4);
 
+
+    const toggleAnswer = (index) => {
+      setActiveIndex(activeIndex === index ? null : index);
+    };
+
   const faqs = [
     {
       question: "What is MessBuddy?",
@@ -130,13 +133,15 @@ export default function Home() {
     },
   ];
 
-  const toggleAnswer = (index) => {
-    setActiveIndex(activeIndex === index ? null : index);
-  };
 
   return (
     <div className="w-full">
+
+
+      {/* header */}
       <Header transparent={isHeaderTransparent} />
+
+
       {/* Hero Section */}
       <section className="h-[100vh] w-full relative flex flex-col lg:flex-row justify-center items-center text-center lg:text-left px-4 py-8 max-w-screen overflow-hidden mb-10">
         <div
@@ -194,6 +199,7 @@ export default function Home() {
         </div>
       </section>
 
+
       {/* Top-Rated Messes */}
       <section
         id="topratedmess"
@@ -224,6 +230,7 @@ export default function Home() {
           </div>
         )}
       </section>
+
 
       {/* Features Section */}
       <section className="bg-white dark:bg-[#1E1E2F] py-10 px-6 rounded-lg max-w-screen overflow-hidden mt-12 ">
@@ -274,7 +281,7 @@ export default function Home() {
                 {feature.description}
               </p>
               <motion.div
-                className="absolute bottom-4 right-4"
+                className="text-right bottom-4 right-4"
                 whileTap={{
                   scale: 1,
                   rotate: -10,
@@ -303,9 +310,9 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Dynamic Stats Section */}
 
-      <section className="max-w-screen overflow-hidden mb-10 font-sans">
+      {/* Dynamic Stats Section */}
+      <section className="max-w-screen overflow-hidden mb-12 font-sans ">
         <motion.section
           className="relative flex justify-around py-6 bg-gradient-to-r from-purple-500 to-pink-500 mt-10 text-white overflow-hidden"
           initial="hidden"
@@ -316,7 +323,6 @@ export default function Home() {
             hidden: {},
           }}
         >
-          {/* Floating Background Effect */}
           <motion.div
             className="absolute inset-0 bg-gradient-to-r from-purple-400 via-pink-300 to-purple-400 opacity-40 blur-lg"
             animate={{
@@ -387,7 +393,9 @@ export default function Home() {
         </motion.section>
       </section>
 
-      <section className=" py-16 px-8 bg-white dark:bg-[#1E1E2F]">
+
+      {/* Testimonials Section */}
+      {/* <section className=" py-16 px-8 bg-white dark:bg-[#1E1E2F]">
         <div className="text-center mb-12">
           <h2 className="font-serif text-3xl font-semibold text-center">
             What Our Users Say
@@ -435,8 +443,10 @@ export default function Home() {
             </div>
           ))}
         </div>
-      </section>
+      </section> */}
+       <Feedback/>
 
+     
       {/* FAQ Section */}
       <section className="py-12 px-6 bg-gray-100 dark:bg-[#1E1E2F] ">
         <div className="max-w-6xl mx-auto text-center">
@@ -476,6 +486,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+
     </div>
   );
 }

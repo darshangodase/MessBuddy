@@ -2,9 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const Prebooking = require('../models/Prebooking');
-const Menu = require('../models/menu');  
-const Mess = require('../models/mess');  
-const User = require('../models/user'); 
+
 
 // Create a new prebooking
 router.post('/', async (req, res) => {
@@ -18,7 +16,7 @@ router.post('/', async (req, res) => {
       date,
       time,
       quantity,
-      status: "Pending", // Default status for new prebooking
+      status: "Pending", 
     });
 
     await prebooking.save();

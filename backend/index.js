@@ -6,13 +6,16 @@ const authRoute = require('./routes/auth_route');
 const messRoutes = require('./routes/mess_route');
 const menuRoutes= require('./routes/menu_route')
 const prebookingRoutes = require('./routes/prebooking');
+const FeedbackRoute = require('./routes/feedback_route');
 const cookieParser = require('cookie-parser');
+
+
 require('dotenv').config();
-
 const PORT = process.env.PORT || 5000;
-
 const app = express();
 connectDB();
+
+
 // https://messbuddy-app.netlify.app
 // http://localhost:5173
 app.use(cors({ origin: 'http://localhost:5173', credentials: true })); 
@@ -25,8 +28,7 @@ app.use('/api/user', userRoutes);
 app.use('/api/mess', messRoutes);
 app.use('/api/menu', menuRoutes);
 app.use('/api/prebooking', prebookingRoutes);
-
-
+app.use('/api/feedback',FeedbackRoute);
 
 
 
@@ -40,7 +42,6 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Start the server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
