@@ -91,7 +91,7 @@ export default function Feedback() {
       </p>
 
       {/* Feedback List */}
-      <div className="flex justify-center overflow-x-auto space-x-8 w-full scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200 dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-800 p-4">
+      <div className="flex justify-center overflow-x-auto space-x-8 w-full scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200 dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-800 p-4 mb-14">
         {feedbacks.length > 0 ? (
           feedbacks.map((feedback) => (
             <div
@@ -99,7 +99,7 @@ export default function Feedback() {
               className="bg-white dark:bg-gray-900 border dark:border-gray-700 shadow-md rounded-lg p-4 w-72 flex-shrink-0"
             >
               <div className="mb-2">{renderStars(feedback.rating)}</div>
-              <p className="text-gray-700 dark:text-gray-300 mb-4 text-justify">
+              <p className="text-gray-700 dark:text-white mb-4 text-justify">
                 {feedback.comments}
               </p>
               <p className="text-sm text-gray-500 dark:text-gray-400">

@@ -233,7 +233,7 @@ export default function Home() {
 
 
       {/* Features Section */}
-      <section className="bg-white dark:bg-[#1E1E2F] py-10 px-6 rounded-lg max-w-screen overflow-hidden mt-12 ">
+      <section className="bg-white dark:bg-gray-800 py-10 px-6 rounded-lg max-w-screen overflow-hidden mt-12 ">
         <div className="text-center mb-8">
           <h2 className="text-black dark:text-white text-3xl font-semibold font-serif">
             Why Choose MessBuddy?
@@ -269,7 +269,7 @@ export default function Home() {
           ].map((feature, index) => (
             <div
               key={index}
-              className="bg-white dark:bg-gray-700  flex flex-col items-center text-center p-6 border rounded-lg shadow-md transform transition-transform hover:scale-105 hover:shadow-xl cursor-pointer  w-full sm:w-80"
+              className="bg-white dark:bg-gray-900  flex flex-col items-center text-center p-6 border rounded-lg shadow-md transform transition-transform hover:scale-105 hover:shadow-xl cursor-pointer  w-full sm:w-80"
             >
               <div className="text-gray-900 dark:text-white text-3xl mb-4">
                 {feature.icon}
