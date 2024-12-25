@@ -120,7 +120,7 @@ export default function Feedback() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
+      <div className="flex justify-center items-center">
         <PropagateLoader color="#35c9e1" />
       </div>
     );

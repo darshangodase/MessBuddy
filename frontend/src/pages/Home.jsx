@@ -105,10 +105,9 @@ export default function Home() {
     })
     .slice(0, 4);
 
-
-    const toggleAnswer = (index) => {
-      setActiveIndex(activeIndex === index ? null : index);
-    };
+  const toggleAnswer = (index) => {
+    setActiveIndex(activeIndex === index ? null : index);
+  };
 
   const faqs = [
     {
@@ -133,14 +132,10 @@ export default function Home() {
     },
   ];
 
-
   return (
     <div className="w-full">
-
-
       {/* header */}
       <Header transparent={isHeaderTransparent} />
-
 
       {/* Hero Section */}
       <section className="h-[100vh] w-full relative flex flex-col lg:flex-row justify-center items-center text-center lg:text-left px-4 py-8 max-w-screen overflow-hidden mb-10">
@@ -199,38 +194,35 @@ export default function Home() {
         </div>
       </section>
 
-
       {/* Top-Rated Messes */}
       <section
         id="topratedmess"
-        className="min-h-screen w-full p-3 flex flex-col items-center justify-center gap-1 py-2 max-w-screen overflow-hidden"
+        className=" w-full p-3 flex flex-col items-center justify-center gap-1 py-2 max-w-screen overflow-hidden"
       >
-        <h2 className=" dark:text-white text-black font-serif text-3xl font-semibold text-center">
-          Best Rated Messes
-        </h2>
-        <p className="dark:text-gray-300 text-black text-lg text-center max-w-3xl mt-2 mb-10 font-serif">
-          Explore the top messes offering great meals and trusted ratings from
-          the community.
-        </p>
         {loading ? (
-          <div className="flex justify-center  items-center min-h-[50vh]">
+          <div className="flex justify-center  items-center min-h-[5vh]">
             <PropagateLoader color="#35c9e1" />
           </div>
-        ) : topMesses && topMesses.length > 0 ? (
-          <div className="flex flex-col  items-center text-black dark:text-white">
-            <div className="flex flex-wrap justify-center gap-14 mb-10">
-              {topMesses.map((mess) => (
-                <MenuCard key={mess._id} menu={mess} />
-              ))}
-            </div>
-          </div>
         ) : (
-          <div className="flex justify-center items-center min-h-[50vh]">
-            <p>No messes available</p>
-          </div>
+          topMesses &&
+          topMesses.length > 0 && (
+            <div className="flex flex-col  items-center justify-center text-black dark:text-white min-h-screen">
+              <h2 className=" dark:text-white text-black font-serif text-3xl font-semibold text-center">
+                Best Rated Messes
+              </h2>
+              <p className="dark:text-gray-300 text-black text-lg text-center max-w-3xl mt-2 mb-10 font-serif">
+                Explore the top messes offering great meals and trusted ratings
+                from the community.
+              </p>
+              <div className="flex flex-wrap justify-center gap-14 mb-10">
+                {topMesses.map((mess) => (
+                  <MenuCard key={mess._id} menu={mess} />
+                ))}
+              </div>
+            </div>
+          )
         )}
       </section>
-
 
       {/* Features Section */}
       <section className="min-h-screen bg-white dark:bg-gray-800 py-10 px-6 rounded-lg max-w-screen overflow-hidden mt-12 ">
@@ -309,7 +301,6 @@ export default function Home() {
           ))}
         </div>
       </section>
-
 
       {/* Dynamic Stats Section */}
       <section className="max-w-screen overflow-hidden mb-12 font-sans ">
@@ -393,7 +384,6 @@ export default function Home() {
         </motion.section>
       </section>
 
-
       {/* Testimonials Section */}
       {/* <section className=" py-16 px-8 bg-white dark:bg-[#1E1E2F]">
         <div className="text-center mb-12">
@@ -444,9 +434,8 @@ export default function Home() {
           ))}
         </div>
       </section> */}
-       <Feedback/>
+      <Feedback />
 
-     
       {/* FAQ Section */}
       <section className="min-h-screen py-12 px-6 bg-gray-100 dark:bg-[#1E1E2F] ">
         <div className="max-w-6xl mx-auto text-center">
@@ -486,8 +475,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-
     </div>
   );
 }
