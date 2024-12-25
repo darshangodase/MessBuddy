@@ -12,11 +12,11 @@ export default {
       keyframes: {
         scroll: {
           '0%': { transform: 'translateX(0)' },
-          '100%': { transform: 'translateX(-100%)' }, // Smoothly scrolls to the end of the duplicated content
+          '100%': { transform: 'translateX(-60%)' }, // Smoothly scrolls to the end of the duplicated content
         },
       },
       animation: {
-        scroll: 'scroll 70s linear infinite', // Smooth looping
+        scroll: 'scroll 30s linear infinite', // Smooth looping
       },
     },
   },
