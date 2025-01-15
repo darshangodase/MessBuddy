@@ -137,7 +137,7 @@ export default function Feedback() {
       {currentUser && (
         <button
           onClick={() => setIsModalOpen(true)}
-          className="fixed bottom-4 left-6 bg-blue-500 text-white px-4 py-2 rounded-full shadow-lg bg-blue-600 animate-bounce transition duration-300 z-10"
+          className="fixed bottom-4 left-6  text-white px-4 py-2 rounded-full shadow-lg bg-blue-600 animate-bounce transition duration-300 z-10"
         >
           Give Feedback
         </button>
