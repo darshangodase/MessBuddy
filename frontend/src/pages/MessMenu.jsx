@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { HashLoader } from "react-spinners";
-import { Card, Table, Modal, Button } from "flowbite-react";
+import { Card, Table, Modal, Button, Spinner } from "flowbite-react";
 import axios from "axios";
 import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
 import { useSelector } from "react-redux";
@@ -23,6 +22,7 @@ const MessMenu = () => {
   const { theme } = useSelector((state) => state.theme);
   const currentUser = useSelector((state) => state.user.currentUser);
   const navigate = useNavigate();
+  const [submitting, setSubmitting] = useState(false); 
 
 
   const fetchMenuItems = async (ownerId, query) => {
@@ -121,8 +121,8 @@ const MessMenu = () => {
 
   const handleConfirmPrebooking = async () => {
     const date = new Date().toISOString().split("T")[0]; 
-    const time = new Date().toLocaleTimeString("en-GB", { timeZone: "Asia/Kolkata" }); // IST Time
-    
+    const time = new Date().toLocaleTimeString("en-GB", { timeZone: "Asia/Kolkata" }); 
+    setSubmitting(true); 
     try {
       for (let item of selectedItems) {
         const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/prebooking`, {
@@ -143,6 +143,9 @@ const MessMenu = () => {
     } catch (error) {
       console.error("Error during prebooking:", error);
       toast.error("Failed to confirm prebooking.");
+    }
+    finally {
+      setSubmitting(false); 
     }
   };
 
@@ -396,39 +399,43 @@ const MessMenu = () => {
         </Button>
       </div>
 
-      <Modal show={isModalOpen} onClose={() => setIsModalOpen(false)} >
-        <Modal.Body >
-          <h3 className="text-xl font-semibold mb-4">Confirm Prebooking</h3>
-          <p>Please confirm the items you've selected for prebooking.</p>
-          <ul className="list-disc pl-5">
-            {selectedItems.map((item) => (
-              <li key={item.menuId}>
-                {menuItems.find((menu) => menu._id === item.menuId)?.Menu_Name}{" "}
-                - {item.quantity}
-              </li>
-            ))}
-          </ul>
-          <div className="mt-4">
-            <p className="font-semibold text-lg">
-              Total Amount: ₹{totalAmount}
-            </p>
-          </div>
-          <div className="mt-4 flex justify-end">
-            <Button
-              onClick={handleConfirmPrebooking}
-              className="bg-green-500 text-white"
-            >
-              Confirm Prebook
-            </Button>
-            <Button
-              onClick={() => setIsModalOpen(false)}
-              className="ml-2 bg-gray-500 text-white"
-            >
-              Cancel
-            </Button>
-          </div>
-        </Modal.Body>
-      </Modal>
+      <Modal show={isModalOpen} onClose={() => setIsModalOpen(false)}>
+      <Modal.Body>
+        <h3 className="text-xl font-semibold mb-4">Confirm Prebooking</h3>
+        <p>Please confirm the items you've selected for prebooking.</p>
+        <ul className="list-disc pl-5">
+          {selectedItems.map((item) => (
+            <li key={item.menuId}>
+              {menuItems.find((menu) => menu._id === item.menuId)?.Menu_Name}{" "}
+              - {item.quantity}
+            </li>
+          ))}
+        </ul>
+        <div className="mt-4">
+          <p className="font-semibold text-lg">Total Amount: ₹{totalAmount}</p>
+        </div>
+        <div className="mt-4 flex justify-end">
+          <Button
+            onClick={handleConfirmPrebooking}
+            className="bg-green-500 text-white"
+            disabled={submitting} // Disable button while submitting
+          >
+            {submitting ? (
+              <Spinner aria-label="Submitting" size="sm" className="" />
+            ) : (
+              'Confirm Prebook'
+            )}
+          </Button>
+          <Button
+            onClick={() => setIsModalOpen(false)}
+            className="ml-2 bg-gray-500 text-white"
+            disabled={submitting}
+          >
+            Cancel
+          </Button>
+        </div>
+      </Modal.Body>
+    </Modal>
     </div>
   );
 };

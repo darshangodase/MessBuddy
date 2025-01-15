@@ -145,9 +145,9 @@ function Menu() {
   return (
     <div className='h-full w-3/4'>
       <Button onClick={openModal} className='m-4'>Add Menu</Button>
-      {!loading ? ( // Show skeleton loader while data is loading
+      {loading ? ( // Show skeleton loader while data is loading
         <Table>
-          <Table.Head lassName='animate-pulse'>
+          <Table.Head className='animate-pulse'>
             <Table.HeadCell><Skeleton width={100}  /></Table.HeadCell>
             <Table.HeadCell><Skeleton width={200} /></Table.HeadCell>
             <Table.HeadCell><Skeleton width={50} /></Table.HeadCell>

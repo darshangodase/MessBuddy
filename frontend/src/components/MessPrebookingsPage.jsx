@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import { HashLoader } from "react-spinners";
+import { HashLoader, ClipLoader } from "react-spinners";
 import toast from "react-hot-toast";
-import { Pagination } from "flowbite-react";
-import { FaTrash } from "react-icons/fa";
-import ReactPaginate from "react-paginate";
+import ReactPaginate from "react-paginate"; // Importing react-paginate
 import Calendar from "react-calendar";
-import "react-calendar/dist/Calendar.css"; // Import Calendar CSS
+import "react-calendar/dist/Calendar.css";
+import { FaTrash } from "react-icons/fa";
+import { Modal, Button, Spinner } from "flowbite-react"; // Importing flowbite-react components
 
 const MessPrebookingsPage = () => {
   const [prebookings, setPrebookings] = useState([]);
@@ -23,11 +23,15 @@ const MessPrebookingsPage = () => {
     maxQuantity: "",
     user: "",
   });
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(0); // Changed to 0 for react-paginate
   const [itemsPerPage] = useState(5);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [showRejectModal, setShowRejectModal] = useState(false);
   const [bookingToDelete, setBookingToDelete] = useState(null);
+  const [bookingToUpdate, setBookingToUpdate] = useState(null);
   const [dateValue, setDateValue] = useState(new Date());
+  const [modalLoading, setModalLoading] = useState(false);
 
   const currentUser = useSelector((state) => state.user.currentUser);
 
@@ -64,19 +68,26 @@ const MessPrebookingsPage = () => {
   };
 
   const handleStatusUpdate = async (prebookingId, newStatus) => {
+    setModalLoading(true);
     try {
       await axios.patch(
         `${import.meta.env.VITE_BACKEND_URL}/api/prebooking/${prebookingId}`,
         { status: newStatus }
       );
-      toast.success("Prebooking status updated successfully.");
+      toast.success(
+        "Prebooking status updated successfully, and email notification sent"
+      );
       setPrebookings((prev) =>
         prev.map((b) =>
           b._id === prebookingId ? { ...b, status: newStatus } : b
         )
       );
+      setShowConfirmModal(false);
+      setShowRejectModal(false);
     } catch (err) {
       toast.error("Failed to update prebooking status.");
+    } finally {
+      setModalLoading(false);
     }
   };
 
@@ -145,14 +156,14 @@ const MessPrebookingsPage = () => {
     }
 
     setFilteredBookings(bookings);
-    setCurrentPage(1);
+    setCurrentPage(0); // Reset to first page when filters change
   }, [filters, prebookings]);
 
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
+  const handlePageChange = (selectedPage) => {
+    setCurrentPage(selectedPage.selected); // `selected` is the new page index
   };
 
-  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfLastItem = (currentPage + 1) * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = filteredBookings.slice(
     indexOfFirstItem,
@@ -160,62 +171,6 @@ const MessPrebookingsPage = () => {
   );
 
   const totalPages = Math.ceil(filteredBookings.length / itemsPerPage);
-
-  const renderPaginationItems = () => {
-    const pageNumbers = [];
-    const maxVisiblePages = 5;
-    const halfVisible = Math.floor(maxVisiblePages / 2);
-
-    if (totalPages <= maxVisiblePages) {
-      for (let i = 1; i <= totalPages; i++) {
-        pageNumbers.push(i);
-      }
-    } else {
-      if (currentPage <= halfVisible + 1) {
-        for (let i = 1; i <= maxVisiblePages; i++) {
-          pageNumbers.push(i);
-        }
-        pageNumbers.push("...");
-        pageNumbers.push(totalPages);
-      } else if (currentPage >= totalPages - halfVisible) {
-        pageNumbers.push(1);
-        pageNumbers.push("...");
-        for (let i = totalPages - maxVisiblePages + 1; i <= totalPages; i++) {
-          pageNumbers.push(i);
-        }
-      } else {
-        pageNumbers.push(1);
-        pageNumbers.push("...");
-        for (
-          let i = currentPage - halfVisible;
-          i <= currentPage + halfVisible;
-          i++
-        ) {
-          pageNumbers.push(i);
-        }
-        pageNumbers.push("...");
-        pageNumbers.push(totalPages);
-      }
-    }
-
-    return pageNumbers.map((page, index) =>
-      page === "..." ? (
-        <span key={index} className="px-2 text-gray-400">
-          ...
-        </span>
-      ) : (
-        <button
-          key={page}
-          className={`px-3 py-1 rounded-lg text-black ${
-            page === currentPage ? "bg-blue-500 text-white" : "bg-gray-400"
-          }`}
-          onClick={() => handlePageChange(page)}
-        >
-          {page}
-        </button>
-      )
-    );
-  };
 
   const handleCalendarChange = (date) => {
     setDateValue(date);
@@ -313,141 +268,160 @@ const MessPrebookingsPage = () => {
               No prebookings available.
             </p>
           ) : (
-            <div className="overflow-x-auto scrollbar-none dark:border border-black border dark:border-white  rounded-lg mt-10">
-            <table className="w-full table-auto text-left">
-              <thead className=" bg-blue-700 dark:border border-black border  rounded-lg text-white">
-                <tr>
-                  <th className="p-2 dark:border dark:border-white border-black border text-center">
-                    Menu Name
-                  </th>
-                  <th className="p-2 dark:border dark:border-white border-black border text-center">
-                    Quantity
-                  </th>
-                  <th className="p-2 dark:border dark:border-white border-black border text-center">
-                    Status
-                  </th>
-                  <th className="p-2 dark:border dark:border-white border-black border text-center">
-                    User
-                  </th>
-                  <th className="p-2 dark:border dark:border-white border-black border text-center">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="dark:border border-black border dark:border-white  rounded-lg">
-                {currentItems.map((prebooking) => (
-                  <tr key={prebooking._id}>
-                    <td className="p-2 dark:border dark:border-white border-black border text-center">
-                      {prebooking.menuId?.Menu_Name}
-                    </td>
-                    <td className="p-2 dark:border dark:border-white border-black border text-center">
-                      {prebooking.quantity}
-                    </td>
-
-                    <td
-                      className={`p-2 text-center dark:border dark:border-white border-black border ${
-                        prebooking.status === "Confirmed"
-                          ? "text-green-500"
-                          : prebooking.status === "Pending"
-                          ? "text-yellow-500"
-                          : prebooking.status === "Cancelled"
-                          ? "text-red-500"
-                          : "text-gray-500"
-                      }`}
-                    >
-                      {prebooking.status}
-                    </td>
-
-                    <td className="p-2 dark:border dark:border-white border-black border text-center">
-                      {prebooking.userId?.username}
-                    </td>
-                    <td className="p-2 dark:border dark:border-white border-black border-b text-center">
-                      {prebooking.status === "Pending" ? (
-                        <>
-                          <button
-                            className="text-green-500"
-                            onClick={() =>
-                              handleStatusUpdate(prebooking._id, "Confirmed")
-                            }
-                          >
-                            Confirm
-                          </button>
-                          <button
-                            className="text-red-500 ml-2"
-                            onClick={() =>
-                              handleStatusUpdate(prebooking._id, "Cancelled")
-                            }
-                          >
-                            Reject
-                          </button>
-                        </>
-                      ) : prebooking.status === "Cancelled" ? (
-                        <button
-                          className="text-red-500"
-                          onClick={() => {
-                            setShowDeleteModal(true);
-                            setBookingToDelete(prebooking._id);
-                          }}
-                        >
-                          <FaTrash />
-                        </button>
-                      ) : null}
-                    </td>
+            <div className="overflow-x-auto scrollbar-none rounded-lg mt-10">
+              <table className="w-full table-auto text-left">
+                <thead className="bg-blue-700 text-white">
+                  <tr>
+                    <th className="p-2 text-center">Menu Name</th>
+                    <th className="p-2 text-center">Quantity</th>
+                    <th className="p-2 text-center">Status</th>
+                    <th className="p-2 text-center">User</th>
+                    <th className="p-2 text-center">Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          )}
-         
-
-          {/* Pagination */}
-          {totalPages > 1 && (
-            <div className="mt-6 w-full flex items-center justify-center flex-wrap gap-2">
-              {currentPage > 1 && (
-                <button
-                  className="px-3 py-1 bg-gray-600 rounded-lg text-white dark:text-white"
-                  onClick={() => handlePageChange(currentPage - 1)}
-                >
-                  &lt;
-                </button>
-              )}
-              {renderPaginationItems()}
-              {currentPage < totalPages && (
-                <button
-                  className="px-3 py-1 bg-gray-600 rounded-lg text-white dark:text-white"
-                  onClick={() => handlePageChange(currentPage + 1)}
-                >
-                  &gt;
-                </button>
-              )}
+                </thead>
+                <tbody>
+                  {currentItems.map((prebooking) => (
+                    <tr key={prebooking._id} className="border-b border-gray-300">
+                      <td className="p-2 text-center">{prebooking.menuId?.Menu_Name}</td>
+                      <td className="p-2 text-center">{prebooking.quantity}</td>
+                      <td
+                        className={`p-2 text-center ${
+                          prebooking.status === "Confirmed"
+                            ? "text-green-500"
+                            : prebooking.status === "Pending"
+                            ? "text-yellow-500"
+                            : prebooking.status === "Cancelled"
+                            ? "text-red-500"
+                            : "text-gray-500"
+                        }`}
+                      >
+                        {prebooking.status}
+                      </td>
+                      <td className="p-2 text-center">{prebooking.userId?.username}</td>
+                      <td className="p-2 text-center">
+                        {prebooking.status === "Pending" ? (
+                          <>
+                            <button
+                              className="text-green-500"
+                              onClick={() => {
+                                setShowConfirmModal(true);
+                                setBookingToUpdate(prebooking._id);
+                              }}
+                            >
+                              Confirm
+                            </button>
+                            <button
+                              className="text-red-500 ml-2"
+                              onClick={() => {
+                                setShowRejectModal(true);
+                                setBookingToUpdate(prebooking._id);
+                              }}
+                            >
+                              Reject
+                            </button>
+                          </>
+                        ) : prebooking.status === "Cancelled" ? (
+                          <button
+                            className="text-red-500"
+                            onClick={() => {
+                              setShowDeleteModal(true);
+                              setBookingToDelete(prebooking._id);
+                            }}
+                          >
+                            <FaTrash />
+                          </button>
+                        ) : null}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
+          )}
+
+          {totalPages > 1 && (
+            <ReactPaginate
+              pageCount={totalPages}
+              pageRangeDisplayed={2}
+              marginPagesDisplayed={2}
+              onPageChange={handlePageChange}
+              containerClassName="pagination flex items-center justify-center gap-2 mt-6"
+              pageClassName="px-3 py-1 bg-gray-600 rounded-lg text-white dark:text-white"
+              activeClassName="bg-blue-500 text-white"
+              breakLabel="..."
+              breakClassName="px-3 py-1 bg-gray-600 rounded-lg text-white dark:text-white"
+            />
           )}
 
           {/* Delete Modal */}
-          {showDeleteModal && (
-            <div className="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 flex justify-center items-center m-4 ">
-              <div className="bg-white p-6 rounded-lg">
-                <h3 className="text-xl mb-4 text-black">
-                  Are you sure you want to delete this prebooking?
-                </h3>
-                <div className="flex justify-around">
-                  <button
-                    onClick={handleDeleteBooking}
-                    className="bg-red-500 text-white px-4 py-2 rounded-md"
-                  >
-                    Yes, Delete
-                  </button>
-                  <button
-                    onClick={() => setShowDeleteModal(false)}
-                    className="bg-gray-500 text-white px-4 py-2 rounded-md"
-                  >
-                    Cancel
-                  </button>
-                </div>
+          <Modal show={showDeleteModal} onClose={() => setShowDeleteModal(false)}>
+            <Modal.Body>
+              <h3 className="text-xl font-semibold mb-4">Delete Prebooking</h3>
+              <p>Are you sure you want to delete this prebooking?</p>
+              <div className="mt-4 flex justify-end">
+                <Button
+                  onClick={handleDeleteBooking}
+                  className="bg-red-500 text-white"
+                >
+                  Yes, Delete
+                </Button>
+                <Button
+                  onClick={() => setShowDeleteModal(false)}
+                  className="ml-2 bg-gray-500 text-white"
+                >
+                  Cancel
+                </Button>
               </div>
-            </div>
-          )}
+            </Modal.Body>
+          </Modal>
+
+          {/* Confirm Modal */}
+          <Modal show={showConfirmModal} onClose={() => setShowConfirmModal(false)}>
+            <Modal.Body>
+              <h3 className="text-xl font-semibold mb-4">Confirm Prebooking</h3>
+              <p>Are you sure you want to confirm this prebooking?</p>
+              <div className="mt-4 flex justify-end">
+                <Button
+                  onClick={() => handleStatusUpdate(bookingToUpdate, "Confirmed")}
+                  className="bg-green-500 text-white"
+                  disabled={modalLoading}
+                >
+                  {modalLoading ? <Spinner aria-label="Submitting" size="sm" /> : "Yes, Confirm"}
+                </Button>
+                <Button
+                  onClick={() => setShowConfirmModal(false)}
+                  className="ml-2 bg-gray-500 text-white"
+                  disabled={modalLoading}
+                >
+                  Cancel
+                </Button>
+              </div>
+            </Modal.Body>
+          </Modal>
+
+          {/* Reject Modal */}
+          <Modal show={showRejectModal} onClose={() => setShowRejectModal(false)}>
+            <Modal.Body>
+              <h3 className="text-xl font-semibold mb-4">Reject Prebooking</h3>
+              <p>Are you sure you want to reject this prebooking?</p>
+              <div className="mt-4 flex justify-end">
+                <Button
+                  onClick={() => handleStatusUpdate(bookingToUpdate, "Cancelled")}
+                  className="bg-red-500 text-white"
+                  disabled={modalLoading}
+                >
+                  {modalLoading ? <Spinner aria-label="Submitting" size="sm" /> : "Yes, Reject"}
+                </Button>
+                <Button
+                  onClick={() => setShowRejectModal(false)}
+                  className="ml-2 bg-gray-500 text-white"
+                  disabled={modalLoading}
+                >
+                  Cancel
+                </Button>
+              </div>
+            </Modal.Body>
+          </Modal>
         </div>
       )}
     </div>
