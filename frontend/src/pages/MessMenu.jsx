@@ -7,6 +7,8 @@ import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { useNavigate } from 'react-router-dom';
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 const MessMenu = () => {
   const { messId } = useParams();
@@ -21,6 +23,7 @@ const MessMenu = () => {
   const { theme } = useSelector((state) => state.theme);
   const currentUser = useSelector((state) => state.user.currentUser);
   const navigate = useNavigate();
+
 
   const fetchMenuItems = async (ownerId, query) => {
     try {
@@ -209,8 +212,68 @@ const MessMenu = () => {
 
   if (loading) {
     return (
-      <div className="h-[80vh] w-full flex justify-center items-center">
-        <HashLoader color="#35c9e1" />
+      <div className="p-8 min-h-screen w-full overflow-x-auto scrollbar-none flex flex-col justify-center font-rubik">
+        {/* Skeleton for Card */}
+        <Card
+          className={`${
+            theme === "dark"
+              ? "bg-gray-800"
+              : "bg-gradient-to-r from-green-100 via-blue-100 to-purple-100"
+          } md:w-3/4 w-full shadow-lg transition-transform transform hover:scale-105 hover:shadow-2xl mb-5 duration-300 ease-in-out mx-auto`}
+        >
+          <h1 className="text-4xl font-bold mb-3 text-center font-poppins">
+            <Skeleton width="80%" />
+          </h1>
+          <p className="text-lg"><Skeleton width="60%" /></p>
+          <p className="text-lg"><Skeleton width="60%" /></p>
+          <p className="text-lg"><Skeleton width="60%" /></p>
+          
+        </Card>
+    
+        {/* Skeleton for Search Input */}
+        <div className="mb-4 flex justify-end">
+          <Skeleton width="25%" height={40} />
+        </div>
+    
+        {/* Skeleton for Table */}
+        <p className="text-lg"><Skeleton width="40%" /></p>
+        <Table className="w-full text-center">
+          <thead className="bg-indigo-700 text-white ">
+            <tr className="animate-pulse">
+              <th className="px-4 py-2"><Skeleton width="80%" /></th>
+              <th className="px-4 py-2"><Skeleton width="80%" /></th>
+              <th className="px-4 py-2"><Skeleton width="80%" /></th>
+              <th className="px-4 py-2"><Skeleton width="80%" /></th>
+              <th className="px-4 py-2"><Skeleton width="80%" /></th>
+            </tr>
+          </thead>
+          <tbody>
+            {[...Array(5)].map((_, index) => (
+              <tr key={index} className="transition-colors">
+                <td className="px-4 py-2">
+                  <Skeleton width="80%" />
+                </td>
+                <td className="px-4 py-2">
+                  <Skeleton width="50%" />
+                </td>
+                <td className="px-4 py-2">
+                  <Skeleton width="60%" />
+                </td>
+                <td className="px-4 py-2">
+                  <Skeleton width="30%" />
+                </td>
+                <td className="px-4 py-2">
+                  <Skeleton width="40%" />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+    
+        {/* Skeleton for Button */}
+        <div className="flex justify-end mt-4">
+          <Skeleton width="20%" height={40} />
+        </div>
       </div>
     );
   }
