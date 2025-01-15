@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
-import { HashLoader } from 'react-spinners';
 import toast from 'react-hot-toast';
 import { FaTrash } from 'react-icons/fa';
 
@@ -30,10 +29,10 @@ const PrebookingsPage = () => {
         );
         setPrebookings(response.data);
         setFilteredBookings(response.data);
-        setLoading(false);
       } catch (err) {
-        setLoading(false);
         toast.error('Failed to fetch prebookings.');
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -43,7 +42,7 @@ const PrebookingsPage = () => {
   const handleDeleteBooking = async () => {
     if (!bookingToDelete) return;
     try {
-      const response = await axios.delete(
+      await axios.delete(
         `${import.meta.env.VITE_BACKEND_URL}/api/prebooking/${bookingToDelete}`
       );
       toast.success('Prebooking deleted successfully.');
@@ -123,7 +122,9 @@ const PrebookingsPage = () => {
       ) : (
         <button
           key={page}
-          className={`px-3 py-1 rounded-lg text-black ${page === currentPage ? 'bg-blue-500 text-white' : 'bg-gray-400'}`}
+          className={`px-3 py-1 rounded-lg text-black ${
+            page === currentPage ? 'bg-blue-500 text-white' : 'bg-gray-400'
+          }`}
           onClick={() => handlePageChange(page)}
         >
           {page}
@@ -132,131 +133,141 @@ const PrebookingsPage = () => {
     );
   };
 
+  const renderSkeleton = () => (
+    <ul className="space-y-4">
+      {Array.from({ length: itemsPerPage }).map((_, index) => (
+        <li key={index} className="p-4 py-8 border border-gray-200 rounded-lg shadow-sm bg-gray-100 dark:bg-slate-800  animate-pulse">
+          <div className="h-6 bg-gray-300 rounded w-2/4 mb-2"></div>
+          <div className="h-5 bg-gray-300 rounded w-1/3 mb-2"></div>
+          <div className="h-5 bg-gray-300 rounded w-1/4 mb-2"></div>
+          <div className="h-5 bg-gray-300 rounded w-1/5 mb-2"></div>
+          <div className="h-5 bg-gray-300 rounded w-1/5"></div>
+
+        </li>
+      ))}
+    </ul>
+  );
+
   return (
     <div className="p-8 min-h-screen font-rubik">
-      {loading ? (
-        <div className="h-[80vh] w-full flex justify-center items-center">
-          <HashLoader color="#35c9e1" />
-        </div>
-      ) : (
-        <div className="max-w-3xl mx-auto mt-10">
-          <h2 className="text-3xl font-semibold mb-6 text-center font-poppins">My Prebookings</h2>
+      <div className="max-w-3xl mx-auto mt-10">
+        <h2 className="text-3xl font-semibold mb-6 text-center font-poppins">My Prebookings</h2>
+        {loading ? (
+          renderSkeleton()
+        ) : (
+          <>
+            <div className="flex justify-between items-center mb-6 gap-2 flex-wrap ">
+              <select
+                className="p-2 border rounded-md bg-gray-100 dark:bg-slate-800"
+                value={filters.status}
+                onChange={(e) => handleFilterChange('status', e.target.value)}
+              >
+                <option value="All">All Statuses</option>
+                <option value="Confirmed">Confirmed</option>
+                <option value="Pending">Pending</option>
+                <option value="Cancelled">Cancelled</option>
+              </select>
 
-          {/* Filters */}
-          <div className="flex justify-between items-center mb-6 gap-2 flex-wrap">
-            <select
-              className="p-2 border rounded-md dark:bg-gray-800"
-              value={filters.status}
-              onChange={(e) => handleFilterChange('status', e.target.value)}
-            >
-              <option value="All">All Statuses</option>
-              <option value="Confirmed">Confirmed</option>
-              <option value="Pending">Pending</option>
-              <option value="Cancelled">Cancelled</option>
-            </select>
-
-            <select
-              className="p-2 border rounded-md dark:bg-gray-800"
-              value={filters.mess}
-              onChange={(e) => handleFilterChange('mess', e.target.value)}
-            >
-              <option value="All">All Messes</option>
-              {Array.from(new Set(prebookings.map((b) => b.messId?.Mess_Name))).map((mess) => (
-                <option key={mess} value={mess}>
-                  {mess}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Prebooking List */}
-          {filteredBookings.length === 0 ? (
-            <p className="text-center text-gray-500">No prebookings found for the selected filters.</p>
-          ) : (
-            <ul className="space-y-4">
-              {currentItems.map((booking) => (
-                <li
-                  key={booking._id}
-                  className="p-4 border border-gray-200 rounded-lg shadow-sm bg-white dark:bg-gray-800 relative hover:shadow-lg transition"
-                >
-                  {(booking.status !== 'Confirmed' && (
-                    <FaTrash
-                      className="absolute top-4 right-4 cursor-pointer"
-                      onClick={() => {
-                        setShowDeleteModal(true);
-                        setBookingToDelete(booking._id);
-                      }}
-                    />
-                  ))}
-                  <h3 className="text-xl font-bold">{booking.menuId?.Menu_Name || 'Unknown Menu'}</h3>
-                  <p className="dark:text-gray-400 mt-1">
-                    Mess: <span className="font-semibold text-md">{booking.messId?.Mess_Name || 'Unknown Mess'}</span>
-                  </p>
-                  <p className="dark:text-gray-400 mt-1">
-                    Date: <span className="font-semibold text-md">{booking.date}</span>
-                  </p>
-                  <p className="dark:text-gray-400 mt-1">
-                    Time: <span className="font-semibold text-md">{booking.time}</span>
-                  </p>
-                  <p className="dark:text-gray-400 mt-1">
-                    Quantity: <span className="font-semibold text-md">{booking.quantity || 1}</span>
-                  </p>
-                  <p
-                    className={`mt-2 font-semibold ${
-                      booking.status === 'Confirmed'
-                        ? 'text-green-400'
-                        : booking.status === 'Cancelled'
-                        ? 'text-red-600'
-                        : 'text-yellow-400'
-                    }`}
-                  >
-                    Status: {booking.status}
-                  </p>
-                </li>
-              ))}
-            </ul>
-          )}
-
-          {/* Pagination */}
-          {totalPages > 1 && (
-            <div className="mt-6 w-full flex items-center justify-center flex-wrap gap-2">
-              {currentPage > 1 && (
-                <button
-                  className="px-3 py-1 bg-gray-600 rounded-lg text-white dark:text-white"
-                  onClick={() => handlePageChange(currentPage - 1)}
-                >
-                  &lt;
-                </button>
-              )}
-              {renderPaginationItems()}
-              {currentPage < totalPages && (
-                <button
-                  className="px-3 py-1 bg-gray-600 rounded-lg text-white dark:text-white"
-                  onClick={() => handlePageChange(currentPage + 1)}
-                >
-                  &gt;
-                </button>
-              )}
+              <select
+                className="p-2 border rounded-md bg-gray-100 dark:bg-slate-800"
+                value={filters.mess}
+                onChange={(e) => handleFilterChange('mess', e.target.value)}
+              >
+                <option value="All">All Messes</option>
+                {Array.from(new Set(prebookings.map((b) => b.messId?.Mess_Name))).map((mess) => (
+                  <option key={mess} value={mess}>
+                    {mess}
+                  </option>
+                ))}
+              </select>
             </div>
-          )}
-        </div>
-      )}
 
-      {/* Delete Modal */}
+            {filteredBookings.length === 0 ? (
+              <p className="text-center text-gray-500">No prebookings found for the selected filters.</p>
+            ) : (
+              <ul className="space-y-4">
+                {currentItems.map((booking) => (
+                  <li
+                    key={booking._id}
+                    className="p-4 border border-gray-200 rounded-lg shadow-sm bg-gray-100 dark:bg-slate-800 relative hover:shadow-lg transition"
+                  >
+                    {booking.status !== 'Confirmed' && (
+                      <FaTrash
+                        className="absolute top-4 right-4 cursor-pointer"
+                        onClick={() => {
+                          setShowDeleteModal(true);
+                          setBookingToDelete(booking._id);
+                        }}
+                      />
+                    )}
+                    <h3 className="text-xl font-bold">{booking.menuId?.Menu_Name || 'Unknown Menu'}</h3>
+                    <p className="mt-1">
+                      Mess: <span className="font-semibold">{booking.messId?.Mess_Name || 'Unknown Mess'}</span>
+                    </p>
+                    <p className="mt-1">
+                      Date: <span className="font-semibold">{booking.date}</span>
+                    </p>
+                    <p className="mt-1">
+                      Time: <span className="font-semibold">{booking.time}</span>
+                    </p>
+                    <p className="mt-1">
+                      Quantity: <span className="font-semibold">{booking.quantity || 1}</span>
+                    </p>
+                    <p
+                      className={`mt-2 font-semibold ${
+                        booking.status === 'Confirmed'
+                          ? 'text-green-400'
+                          : booking.status === 'Cancelled'
+                          ? 'text-red-600'
+                          : 'text-yellow-400'
+                      }`}
+                    >
+                      Status: {booking.status}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            )}
+            {totalPages > 1 && (
+              <div className="mt-6 w-full flex items-center justify-center flex-wrap gap-2">
+                {currentPage > 1 && (
+                  <button
+                    className="px-3 py-1 bg-gray-600 rounded-lg text-white"
+                    onClick={() => handlePageChange(currentPage - 1)}
+                  >
+                    Prev
+                  </button>
+                )}
+                {renderPaginationItems()}
+                {currentPage < totalPages && (
+                  <button
+                    className="px-3 py-1 bg-gray-600 rounded-lg text-white"
+                    onClick={() => handlePageChange(currentPage + 1)}
+                  >
+                    Next
+                  </button>
+                )}
+              </div>
+            )}
+          </>
+        )}
+      </div>
+
       {showDeleteModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-lg shadow-lg dark:bg-gray-800">
-            <p className="text-lg mb-4">Are you sure you want to delete this prebooking?</p>
-            <div className="flex justify-end space-x-4">
+        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white rounded-lg p-6 shadow-lg max-w-md">
+            <h2 className="text-2xl font-semibold mb-4">Delete Confirmation</h2>
+            <p>Are you sure you want to delete this prebooking?</p>
+            <div className="flex justify-end mt-4">
               <button
+                className="px-4 py-2 bg-gray-500 text-white rounded-md mr-2"
                 onClick={() => setShowDeleteModal(false)}
-                className="px-4 py-2 bg-gray-300 rounded-lg text-black hover:bg-gray-400"
               >
                 Cancel
               </button>
               <button
+                className="px-4 py-2 bg-red-600 text-white rounded-md"
                 onClick={handleDeleteBooking}
-                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
               >
                 Delete
               </button>

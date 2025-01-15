@@ -1,9 +1,9 @@
-import React, { useEffect, useState,useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import { PropagateLoader } from "react-spinners";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 import toast from "react-hot-toast";
-// import { FaGreaterThan, FaLessThan } from "react-icons/fa";
 
 export default function Feedback() {
   const { currentUser } = useSelector((state) => state.user);
@@ -14,20 +14,6 @@ export default function Feedback() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [userRoles, setUserRoles] = useState({});
   const containerRef = useRef(null);
-
-
-  useEffect(() => {
-    const container = containerRef.current;
-
-    if (container) {
-      const cardWidth = 288; // Card width (sm:w-72) in pixels
-      const gap = 24; // Gap between cards (gap-6)
-      const totalWidth = (cardWidth + gap) * feedbacks.length;
-
-      // Dynamically set animation duration based on total width
-      container.style.animationDuration = `${totalWidth / 100}s`;
-    }
-  }, [feedbacks]);
 
   const fetchFeedbacks = async () => {
     try {
@@ -49,7 +35,6 @@ export default function Feedback() {
         `${import.meta.env.VITE_BACKEND_URL}/api/user/getuser/${userId}`
       );
       return response.data.role;
-      
     } catch (error) {
       console.error(`Error fetching role for user:`, error);
     }
@@ -84,24 +69,6 @@ export default function Feedback() {
   };
 
   useEffect(() => {
-    const fetchRoles = async () => {
-      const roles = {};
-      
-      for (const feedback of feedbacks) {
-        
-        if (feedback.userID?._id && !roles[feedback.userID._id]) {
-
-          const role = await fetchUserRole(feedback.userID._id);
-          roles[feedback.userID._id] = role;
-        }
-      }
-      setUserRoles(roles);
-    };
-
-    fetchRoles();
-  }, [feedbacks]);
-
-  useEffect(() => {
     fetchFeedbacks();
   }, []);
 
@@ -118,90 +85,77 @@ export default function Feedback() {
     ));
   };
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center">
-        <PropagateLoader color="#35c9e1" />
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-800 flex flex-col items-center justify-center p-6 font-rubik">
       <h2 className="text-black dark:text-white font-poppins text-3xl font-semibold text-center ">
         What Our Users Say
       </h2>
-      <p className="text-black dark:text-gray-300 text-lg mt-2  mb-10 text-center">
+      <p className="text-black dark:text-gray-300 text-lg mt-2 mb-10 text-center">
         See what our users are saying about their experience with MessBuddy!
       </p>
 
-
-      {/* Wrapper for centering the feedback carousel */}
       <div className="w-full flex justify-center">
-      <div className="relative flex items-center w-full max-w-screen-xl overflow-hidden">
-        {/* Looping animation */}
-        <div className="flex gap-6 animate-scroll">
-          {/* Clone feedbacks to make an infinite loop */}
-          {[...feedbacks].map((feedback, index) => (
-            <div
-              key={`${feedback._id || index}`}
-              className="bg-white dark:bg-gray-900 border dark:border-gray-700 rounded-lg p-4 sm:w-72 w-64 flex-shrink-0 mx-2 transform transition duration-300 hover:scale-102 hover:shadow-lg"
-            >
-              {/* Star Rating */}
-              <div className="flex justify-center items-center mb-4">
-                {renderStars(feedback.rating)}
-              </div>
-
-              {/* Feedback Text */}
-              <p className="text-gray-700 dark:text-white mb-4 text-justify">
-                {feedback.comments}
-              </p>
-
-              {/* Feedbacker Information */}
-              <div className="flex justify-between items-center mt-2">
-                <p className="text-sm text-black dark:text-gray-400 font-semibold">
-                  - {feedback.userID?.username || "Anonymous"}{" "}
-                  {userRoles[feedback.userID?._id]
-                    ? `(${userRoles[feedback.userID._id]})`
-                    : ""}
-                </p>
-              </div>
-            </div>
-          ))}
+        <div className="relative flex items-center w-full max-w-screen-xl overflow-hidden">
+          <div className="flex gap-6 animate-scroll">
+            {loading
+              ? 
+                [...Array(4)].map((_, index) => (
+                  <div
+                    key={index}
+                    className="bg-white dark:bg-gray-900 border dark:border-gray-700 rounded-lg p-4 sm:w-72 w-64 flex-shrink-0 mx-2"
+                  >
+                    <div className="flex justify-center items-center mb-4">
+                      <Skeleton width={120} height={24} />
+                    </div>
+                    <Skeleton count={3} />
+                    <Skeleton width="50%" className="mt-10" />
+                  </div>
+                ))
+              : // Feedback cards when data is loaded
+                feedbacks.map((feedback) => (
+                  <div
+                    key={feedback._id}
+                    className="bg-white dark:bg-gray-900 border dark:border-gray-700 rounded-lg p-4 sm:w-72 w-64 flex-shrink-0 mx-2 transform transition duration-300 hover:scale-102 hover:shadow-lg"
+                  >
+                    <div className="flex justify-center items-center mb-4">
+                      {renderStars(feedback.rating)}
+                    </div>
+                    <p className="text-gray-700 dark:text-white mb-4 text-justify">
+                      {feedback.comments}
+                    </p>
+                    <div className="flex justify-between items-center mt-2">
+                      <p className="text-sm text-black dark:text-gray-400 font-semibold">
+                        - {feedback.userID?.username || "Anonymous"}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+          </div>
         </div>
       </div>
-    </div>
 
-      {/* Floating Button */}
       {currentUser && (
         <button
           onClick={() => setIsModalOpen(true)}
-          className="fixed bottom-4 left-6 bg-blue-500 text-white px-4 py-2 rounded-full shadow-lgbg-blue-600 animate-bounce transition duration-300 z-10"
+          className="fixed bottom-4 left-6 bg-blue-500 text-white px-4 py-2 rounded-full shadow-lg bg-blue-600 animate-bounce transition duration-300 z-10"
         >
           Give Feedback
         </button>
       )}
 
-
-      {/* Feedback Form Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-2xl w-full max-w-md m-4 relative">
-            {/* Close Icon */}
             <button
               onClick={() => setIsModalOpen(false)}
               className="absolute top-2 right-4 text-gray-500 hover:text-gray-800 dark:hover:text-white focus:outline-none text-xl font-bold"
             >
               ✕
             </button>
-
-            {/* Title */}
             <h3 className="text-2xl font-bold mb-4 text-center text-gray-800 dark:text-gray-200">
               Share Your Feedback
             </h3>
-
-            <form onSubmit={handleSubmit} className="">
-              {/* Star Rating */}
+            <form onSubmit={handleSubmit}>
               <div className="text-center mb-4">
                 <p className="text-gray-600 dark:text-gray-300 mb-2 text-lg">
                   How would you rate us?
@@ -220,8 +174,6 @@ export default function Feedback() {
                   ))}
                 </div>
               </div>
-
-              {/* Comment Input */}
               <div className="mb-4">
                 <label className="block mb-2 text-gray-600 dark:text-gray-300 text-lg">
                   Your Feedback
@@ -234,8 +186,6 @@ export default function Feedback() {
                   rows={4}
                 ></textarea>
               </div>
-
-              {/* Submit Button */}
               <button
                 type="submit"
                 className="w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring focus:ring-blue-300 text-lg font-medium transition duration-200"
@@ -246,8 +196,6 @@ export default function Feedback() {
           </div>
         </div>
       )}
-
-
     </div>
   );
 }

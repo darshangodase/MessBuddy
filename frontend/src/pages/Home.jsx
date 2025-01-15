@@ -2,7 +2,6 @@ import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import MenuCard from "../components/MenuCard";
 import { Button } from "flowbite-react";
-import { PropagateLoader } from "react-spinners";
 import axios from "axios";
 import heroImage from "../assets/images/hero.jpg";
 import { motion } from "framer-motion";
@@ -10,6 +9,8 @@ import CountUp from "react-countup";
 import Header from "../components/Header";
 import Feedback from "../components/feedback";
 import { LuCirclePlus, LuCircleMinus } from "react-icons/lu";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 export default function Home() {
   const location = useLocation();
@@ -136,7 +137,6 @@ export default function Home() {
     <div className="w-full font-rubik">
       {/* header */}
       <Header transparent={isHeaderTransparent} />
-
       {/* Hero Section */}
       <section className="h-[100vh] w-full relative flex flex-col lg:flex-row justify-center items-center text-center lg:text-left px-4 py-8 max-w-screen overflow-hidden mb-10">
         <div
@@ -193,38 +193,70 @@ export default function Home() {
           </div>
         </div>
       </section>
-
       {/* Top-Rated Messes */}
       <section
         id="topratedmess"
-        className=" w-full p-3 flex flex-col items-center justify-center gap-1 py-2 max-w-screen overflow-hidden"
+        className="w-full p-3 flex flex-col items-center justify-center gap-1 py-2 max-w-screen overflow-hidden"
       >
         {loading ? (
-          <div className="flex justify-center  items-center min-h-[5vh]">
-            <PropagateLoader color="#35c9e1" />
+          // Skeleton Loader during loading
+          <div className="flex flex-col items-center justify-center text-black dark:text-white min-h-screen">
+            <h2 className="dark:text-white text-black font-poppins text-3xl font-semibold text-center">
+              Best Rated Messes
+            </h2>
+            <p className="dark:text-gray-300 text-black text-lg text-center max-w-3xl mt-2 mb-10 font-rubik">
+              Loading the top messes offering great meals and trusted ratings
+              from the community...
+            </p>
+            <div className="flex flex-wrap justify-center gap-14 mb-10">
+              {[...Array(4)].map((_, index) => (
+                <div
+                  key={index}
+                  className="w-64 h-80 bg-gray-300 dark:bg-gray-800 rounded-lg shadow-md px-6 pt-6 animate-pulse"
+                >
+                  <Skeleton height={160} className="rounded-t-lg" />
+                  <div className="p-4">
+                    <Skeleton width="80%" height={24} />
+                    <Skeleton width="60%" height={18} className="mt-2" />
+                    <Skeleton width="40%" height={18} className="mt-2" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : topMesses && topMesses.length > 0 ? (
+          // Actual messes when data is available
+          <div className="flex flex-col items-center justify-center text-black dark:text-white min-h-screen">
+            <h2 className="dark:text-white text-black font-poppins text-3xl font-semibold text-center">
+              Best Rated Messes
+            </h2>
+            <p className="dark:text-gray-300 text-black text-lg text-center max-w-3xl mt-2 mb-10 font-rubik">
+              Explore the top messes offering great meals and trusted ratings
+              from the community.
+            </p>
+            <div className="flex flex-wrap justify-center gap-14 mb-10">
+              {topMesses.map((mess) => (
+                <MenuCard key={mess._id} menu={mess} />
+              ))}
+            </div>
           </div>
         ) : (
-          topMesses &&
-          topMesses.length > 0 && (
-            <div className="flex flex-col  items-center justify-center text-black dark:text-white min-h-screen">
-              <h2 className=" dark:text-white text-black font-poppins text-3xl font-semibold text-center">
-                Best Rated Messes
-              </h2>
-              <p className="dark:text-gray-300 text-black text-lg text-center max-w-3xl mt-2 mb-10 font-rubik">
-                Explore the top messes offering great meals and trusted ratings
-                from the community.
-              </p>
-              <div className="flex flex-wrap justify-center gap-14 mb-10">
-                {topMesses.map((mess) => (
-                  <MenuCard key={mess._id} menu={mess} />
-                ))}
-              </div>
-            </div>
-          )
+          // Message when no messes are available
+          <div className="flex flex-col items-center justify-center text-black dark:text-white min-h-screen">
+            <h2 className="dark:text-white text-black font-poppins text-3xl font-semibold text-center">
+              Best Rated Messes
+            </h2>
+            <p className="dark:text-gray-300 text-black text-lg text-center max-w-3xl mt-2 mb-10 font-rubik">
+              Explore the top messes offering great meals and trusted ratings
+              from the community.
+            </p>
+            <p className="dark:text-gray-400 text-black text-lg text-center max-w-3xl mt-2 mb-10 font-rubik">
+              No messes available at the moment. Please check back later.
+            </p>
+          </div>
         )}
       </section>
-
-      {/* Features Section */}
+      ;{/* Features Section */}
       <section className="min-h-screen bg-white dark:bg-gray-800 py-10 px-6 rounded-lg max-w-screen overflow-hidden mt-12 font-rubik ">
         <div className="text-center mb-8">
           <h2 className="text-black dark:text-white text-3xl font-semibold font-poppins">
@@ -301,7 +333,6 @@ export default function Home() {
           ))}
         </div>
       </section>
-
       {/* Dynamic Stats Section */}
       <section className="max-w-screen overflow-hidden mb-12 font-poppins ">
         <motion.section
@@ -383,7 +414,6 @@ export default function Home() {
           ))}
         </motion.section>
       </section>
-
       {/* Testimonials Section */}
       {/* <section className=" py-16 px-8 bg-white dark:bg-[#1E1E2F]">
         <div className="text-center mb-12">
@@ -435,7 +465,6 @@ export default function Home() {
         </div>
       </section> */}
       <Feedback />
-
       {/* FAQ Section */}
       <section className="min-h-screen py-12 px-6 bg-gray-100 dark:bg-[#1E1E2F] font-rubik">
         <div className="max-w-6xl mx-auto text-center">

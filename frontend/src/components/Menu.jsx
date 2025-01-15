@@ -3,6 +3,8 @@ import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { Button, Table, Modal, TextInput, Textarea, Label, Select } from 'flowbite-react';
 import toast from 'react-hot-toast';
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 function Menu() {
   const [menus, setMenus] = useState([]);
@@ -16,6 +18,7 @@ function Menu() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [currentMenuId, setCurrentMenuId] = useState(null);
+  const [loading, setLoading] = useState(true); // Add loading state
   const currentUser = useSelector((state) => state.user.currentUser);
 
   useEffect(() => {
@@ -34,6 +37,8 @@ function Menu() {
       }
     } catch (error) {
       toast.error('Failed to fetch menus');
+    } finally {
+      setLoading(false); // Set loading to false when the request is complete
     }
   };
 
@@ -140,49 +145,74 @@ function Menu() {
   return (
     <div className='h-full w-3/4'>
       <Button onClick={openModal} className='m-4'>Add Menu</Button>
-      <Table>
-        <Table.Head>
-          <Table.HeadCell>Menu Name</Table.HeadCell>
-          <Table.HeadCell>Description</Table.HeadCell>
-          <Table.HeadCell>Price</Table.HeadCell>
-          <Table.HeadCell>Availability</Table.HeadCell>
-          <Table.HeadCell>Food Type</Table.HeadCell>
-          <Table.HeadCell>Actions</Table.HeadCell>
-        </Table.Head>
-        <Table.Body>
-          {menus.map((menu) => (
-            <Table.Row key={menu._id}>
-              <Table.Cell>{menu.Menu_Name}</Table.Cell>
-              <Table.Cell>{menu.Description}</Table.Cell>
-              <Table.Cell>{menu.Price}</Table.Cell>
-              <Table.Cell>
-                <Select
-                  id="Availability"
-                  value={menu.Availability}
-                  onChange={(e) => handleAvailabilityChange(menu._id, e.target.value)}
-                >
-                  <option value="Yes">Yes</option>
-                  <option value="No">No</option>
-                </Select>
-              </Table.Cell>
-              <Table.Cell>
-                <Select
-                  id="Food_Type"
-                  value={menu.Food_Type}
-                  onChange={(e) => handleFoodTypeChange(menu._id, e.target.value)}
-                >
-                  <option value="Veg">Veg</option>
-                  <option value="Non-Veg">Non-Veg</option>
-                </Select>
-              </Table.Cell>
-              <Table.Cell className='flex gap-2'>
-                <Button onClick={() => handleEdit(menu)}>Edit</Button>
-                <Button onClick={() => handleDelete(menu._id)}>Delete</Button>
-              </Table.Cell>
-            </Table.Row>
-          ))}
-        </Table.Body>
-      </Table>
+      {!loading ? ( // Show skeleton loader while data is loading
+        <Table>
+          <Table.Head lassName='animate-pulse'>
+            <Table.HeadCell><Skeleton width={100}  /></Table.HeadCell>
+            <Table.HeadCell><Skeleton width={200} /></Table.HeadCell>
+            <Table.HeadCell><Skeleton width={50} /></Table.HeadCell>
+            <Table.HeadCell><Skeleton width={80} /></Table.HeadCell>
+            <Table.HeadCell><Skeleton width={80} /></Table.HeadCell>
+            <Table.HeadCell><Skeleton width={100} /></Table.HeadCell>
+          </Table.Head>
+          <Table.Body>
+            {[...Array(5)].map((_, index) => ( // Create 5 skeleton rows
+              <Table.Row key={index} className='animate-pulse'>
+                <Table.Cell><Skeleton width={100} /></Table.Cell>
+                <Table.Cell><Skeleton width={200} /></Table.Cell>
+                <Table.Cell><Skeleton width={50} /></Table.Cell>
+                <Table.Cell><Skeleton width={80} /></Table.Cell>
+                <Table.Cell><Skeleton width={80} /></Table.Cell>
+                <Table.Cell><Skeleton width={100} /></Table.Cell>
+              </Table.Row>
+            ))}
+          </Table.Body>
+        </Table>
+      ) : (
+        <Table>
+          <Table.Head>
+            <Table.HeadCell>Menu Name</Table.HeadCell>
+            <Table.HeadCell>Description</Table.HeadCell>
+            <Table.HeadCell>Price</Table.HeadCell>
+            <Table.HeadCell>Availability</Table.HeadCell>
+            <Table.HeadCell>Food Type</Table.HeadCell>
+            <Table.HeadCell>Actions</Table.HeadCell>
+          </Table.Head>
+          <Table.Body>
+            {menus.map((menu) => (
+              <Table.Row key={menu._id}>
+                <Table.Cell>{menu.Menu_Name}</Table.Cell>
+                <Table.Cell>{menu.Description}</Table.Cell>
+                <Table.Cell>{menu.Price}</Table.Cell>
+                <Table.Cell>
+                  <Select
+                    id="Availability"
+                    value={menu.Availability}
+                    onChange={(e) => handleAvailabilityChange(menu._id, e.target.value)}
+                  >
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                  </Select>
+                </Table.Cell>
+                <Table.Cell>
+                  <Select
+                    id="Food_Type"
+                    value={menu.Food_Type}
+                    onChange={(e) => handleFoodTypeChange(menu._id, e.target.value)}
+                  >
+                    <option value="Veg">Veg</option>
+                    <option value="Non-Veg">Non-Veg</option>
+                  </Select>
+                </Table.Cell>
+                <Table.Cell className='flex gap-2'>
+                  <Button onClick={() => handleEdit(menu)}>Edit</Button>
+                  <Button onClick={() => handleDelete(menu._id)}>Delete</Button>
+                </Table.Cell>
+              </Table.Row>
+            ))}
+          </Table.Body>
+        </Table>
+      )}
 
       <Modal show={isModalOpen} onClose={closeModal}>
         <Modal.Header>{isEdit ? 'Edit Menu' : 'Add Menu'}</Modal.Header>
@@ -194,7 +224,7 @@ function Menu() {
             </div>
             <div>
               <Label htmlFor="Description" value="Description" />
-              <Textarea id="Description" placeholder="Description" value={formdata.Description} onChange={handleChange} required  className='resize-none'/>
+              <Textarea id="Description" placeholder="Description" value={formdata.Description} onChange={handleChange} required className='resize-none'/>
             </div>
             <div>
               <Label htmlFor="Price" value="Price" />

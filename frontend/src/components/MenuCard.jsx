@@ -43,13 +43,13 @@ const MenuCard = ({ menu }) => {
   };
 
   return (
-    <div className="max-w-sm rounded-lg overflow-hidden shadow-lg transform transition-transform hover:scale-105 hover:shadow-xl cursor-pointer">
+    <div className="max-w-md rounded-lg overflow-hidden shadow-lg transform transition-transform hover:scale-105 hover:shadow-xl cursor-pointer">
       <img src={menu.Image} alt={menu.Mess_Name} className="w-72 h-36 object-cover" />
-      <div className="p-4 bg-white">
-        <h3 className="text-2xl font-bold text-gray-800">{menu.Mess_Name}</h3>
+      <div className="p-4 bg-white dark:bg-slate-800">
+        <h3 className="text-2xl font-bold text-gray-800 dark:text-white">{menu.Mess_Name}</h3>
         <div className="flex items-center justify-between mt-2">
           {renderStars(rating)}
-          <span className="text-gray-700 text-sm">{rating.toFixed(1)} / 5</span>
+          <span className="text-gray-700 dark:text-white text-sm">{rating.toFixed(1)} / 5</span>
         </div>
         <button
           className="mt-4 w-full py-2 px-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold rounded-lg hover:bg-indigo-700 transition duration-300"
