@@ -2,8 +2,8 @@ import React from "react";
 
 function About() {
   return (
-    <div className="flex flex-col items-center justify-center  p-4 sm:p-16 lg:p-28 min-h-screen">
-      <h1 className="text-4xl font-bold font-serif lg:text-6xl hover:text-teal-400 mb-8">
+    <div className="flex flex-col items-center justify-center  p-4 sm:p-16 lg:p-28 min-h-screen font-rubik">
+      <h1 className="text-4xl font-bold font-poppins lg:text-6xl hover:text-teal-400 mb-8">
         About Us
       </h1>
       <p className="text-lg sm:text-xl text-center max-w-2xl mb-8 ">

@@ -133,14 +133,14 @@ const PrebookingsPage = () => {
   };
 
   return (
-    <div className="p-8 min-h-screen">
+    <div className="p-8 min-h-screen font-rubik">
       {loading ? (
         <div className="h-[80vh] w-full flex justify-center items-center">
           <HashLoader color="#35c9e1" />
         </div>
       ) : (
         <div className="max-w-3xl mx-auto mt-10">
-          <h2 className="text-3xl font-semibold mb-6 text-center">My Prebookings</h2>
+          <h2 className="text-3xl font-semibold mb-6 text-center font-poppins">My Prebookings</h2>
 
           {/* Filters */}
           <div className="flex justify-between items-center mb-6 gap-2 flex-wrap">

@@ -127,11 +127,11 @@ export default function Feedback() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-800 flex flex-col items-center justify-center p-6">
-      <h2 className="text-black dark:text-white font-serif text-3xl font-semibold text-center ">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-800 flex flex-col items-center justify-center p-6 font-rubik">
+      <h2 className="text-black dark:text-white font-poppins text-3xl font-semibold text-center ">
         What Our Users Say
       </h2>
-      <p className="text-black dark:text-gray-300 text-lg mt-2 font-serif mb-10 text-center">
+      <p className="text-black dark:text-gray-300 text-lg mt-2  mb-10 text-center">
         See what our users are saying about their experience with MessBuddy!
       </p>
 

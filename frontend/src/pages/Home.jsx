@@ -133,7 +133,7 @@ export default function Home() {
   ];
 
   return (
-    <div className="w-full">
+    <div className="w-full font-rubik">
       {/* header */}
       <Header transparent={isHeaderTransparent} />
 
@@ -150,7 +150,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-gray-700 opacity-70"></div>
         <div className="relative z-10 flex justify-center flex-col items-center text-white">
           <motion.h1
-            className="mt-9 font-serif text-3xl font-black mb-4 md:text-5xl text-center"
+            className="mt-9 font-poppins text-3xl font-black mb-4 md:text-5xl text-center"
             initial={{ opacity: 0, scale: 1 }} // Scale-up and fade-in effect
             animate={{
               opacity: 1,
@@ -207,10 +207,10 @@ export default function Home() {
           topMesses &&
           topMesses.length > 0 && (
             <div className="flex flex-col  items-center justify-center text-black dark:text-white min-h-screen">
-              <h2 className=" dark:text-white text-black font-serif text-3xl font-semibold text-center">
+              <h2 className=" dark:text-white text-black font-poppins text-3xl font-semibold text-center">
                 Best Rated Messes
               </h2>
-              <p className="dark:text-gray-300 text-black text-lg text-center max-w-3xl mt-2 mb-10 font-serif">
+              <p className="dark:text-gray-300 text-black text-lg text-center max-w-3xl mt-2 mb-10 font-rubik">
                 Explore the top messes offering great meals and trusted ratings
                 from the community.
               </p>
@@ -225,12 +225,12 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="min-h-screen bg-white dark:bg-gray-800 py-10 px-6 rounded-lg max-w-screen overflow-hidden mt-12 ">
+      <section className="min-h-screen bg-white dark:bg-gray-800 py-10 px-6 rounded-lg max-w-screen overflow-hidden mt-12 font-rubik ">
         <div className="text-center mb-8">
-          <h2 className="text-black dark:text-white text-3xl font-semibold font-serif">
+          <h2 className="text-black dark:text-white text-3xl font-semibold font-poppins">
             Why Choose MessBuddy?
           </h2>
-          <h1 className="text-black dark:text-gray-300 text-lg mt-2 font-serif">
+          <h1 className="text-black dark:text-gray-300 text-lg mt-2 ">
             Our platform is designed to make your dining experience seamless and
             enjoyable.
           </h1>
@@ -303,7 +303,7 @@ export default function Home() {
       </section>
 
       {/* Dynamic Stats Section */}
-      <section className="max-w-screen overflow-hidden mb-12 font-sans ">
+      <section className="max-w-screen overflow-hidden mb-12 font-poppins ">
         <motion.section
           className="relative flex justify-around py-6 bg-gradient-to-r from-purple-500 to-pink-500 mt-10 text-white overflow-hidden"
           initial="hidden"
@@ -437,12 +437,12 @@ export default function Home() {
       <Feedback />
 
       {/* FAQ Section */}
-      <section className="min-h-screen py-12 px-6 bg-gray-100 dark:bg-[#1E1E2F] ">
+      <section className="min-h-screen py-12 px-6 bg-gray-100 dark:bg-[#1E1E2F] font-rubik">
         <div className="max-w-6xl mx-auto text-center">
-          <h2 className="font-serif text-3xl font-semibold text-black dark:text-white mb-6 ">
+          <h2 className="font-poppins text-3xl font-semibold text-black dark:text-white mb-6 ">
             Frequently Asked Questions
           </h2>
-          <p className="text-black dark:text-gray-300 text-lg mb-10 max-w-4xl mx-auto font-serif">
+          <p className="text-black dark:text-gray-300 text-lg mb-10 max-w-4xl mx-auto font-rubik">
             Have questions? Find answers to the most commonly asked questions
             about MessBuddy and its features below.
           </p>

@@ -31,7 +31,7 @@ function Header({ transparent = false }) {
   };
 
   return (
-    <Navbar className={`w-full z-50  ${
+    <Navbar className={`w-full z-50  font-rubik ${
       transparent ? "bg-transparent text-white dark:bg-transparent fixed top-0 shadow-xl" : "bg-white text-black shadow-md"
     }`}>
       <Link

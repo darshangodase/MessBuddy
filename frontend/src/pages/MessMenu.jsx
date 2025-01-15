@@ -221,7 +221,7 @@ const MessMenu = () => {
   );
 
   return (
-    <div className="p-8 min-h-screen w-full overflow-x-auto scrollbar-none flex flex-col justify-center">
+    <div className="p-8 min-h-screen w-full overflow-x-auto scrollbar-none flex flex-col justify-center font-rubik">
       <Card
         className={`${
           theme === "dark"
@@ -229,7 +229,7 @@ const MessMenu = () => {
             : "bg-gradient-to-r from-green-100 via-blue-100 to-purple-100"
         } md:w-3/4 shadow-lg transition-transform transform hover:scale-105 hover:shadow-2xl mb-5 duration-300 ease-in-out mx-auto`}
       >
-        <h1 className="text-4xl font-bold mb-3 text-center">
+        <h1 className="text-4xl font-bold mb-3 text-center font-poppins">
           {messDetails.Mess_Name}
         </h1>
         <p className="text-lg">Address : {messDetails.Address}</p>

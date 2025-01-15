@@ -226,14 +226,14 @@ const MessPrebookingsPage = () => {
   };
 
   return (
-    <div className="p-8 min-h-screen w-full">
+    <div className="p-8 min-h-screen w-full font-rubik">
       {loading ? (
         <div className="h-[80vh] w-full flex justify-center items-center">
           <HashLoader color="#35c9e1" />
         </div>
       ) : (
         <div className="max-w-5xl mx-auto mt-10">
-          <h2 className="text-3xl font-semibold mb-6 text-center">
+          <h2 className="text-3xl font-semibold mb-6 text-center font-poppins">
             Manage Prebookings
           </h2>
 

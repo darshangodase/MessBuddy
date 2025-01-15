@@ -61,7 +61,7 @@ function DashboardSidebar() {
   };
 
   return (
-    <Sidebar className="bg-slate-300 text-white h-full w-full">
+    <Sidebar className="bg-slate-300 text-white h-full w-full font-rubik">
       <Sidebar.Items>
         <Sidebar.ItemGroup className='grid gap-2'>
           <Link to="/dashboard?tab=profile">

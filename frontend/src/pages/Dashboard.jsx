@@ -19,7 +19,7 @@ function Dashboard() {
   }, [location.search]);
 
   return (
-    <div className='min-h-screen flex flex-col md:flex-row overflow-x-hidden'>
+    <div className='min-h-screen flex flex-col md:flex-row overflow-x-hidden font-rubik'>
       <div className="md:w-56">
         <Dashboardsidebar />
       </div>

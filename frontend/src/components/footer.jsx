@@ -6,7 +6,7 @@ import { BsLinkedin, BsInstagram, BsGithub } from "react-icons/bs";
 function footer() {
   return (
     <div>
-      <Footer container className="border border-t-8 border-pink-300">
+      <Footer container className="border border-t-8 border-pink-300 font-rubik">
         <div className="">
           <div className="">
             <Link

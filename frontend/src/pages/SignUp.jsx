@@ -77,7 +77,7 @@ function SignUp() {
   };
 
   return (
-    <div className='min-h-screen mt-20'>
+    <div className='min-h-screen mt-20 font-rubik'>
       <div className="flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5">
         <div className="flex-1">
           <Link to="/" className="text-3xl font-bold dark:text-white">
@@ -90,7 +90,7 @@ function SignUp() {
           </p>
         </div>
         <div className="flex-1">
-          <h2 className="mb-3 text-3xl text-center font-semibold">Sign Up</h2>
+          <h2 className="mb-3 text-3xl text-center font-semibold font-poppins">Sign Up</h2>
           <form className="flex flex-col gap-2" onSubmit={handlesubmit}>
             <div>
               <Label value="Username" className="" />

@@ -51,7 +51,7 @@ export default function Search() {
   };
 
   return (
-    <div className="flex flex-col md:flex-row">
+    <div className="flex flex-col md:flex-row font-rubik">
       <div className="p-7 border-b md:border-r md:min-h-screen border-gray-500">
         <form className="flex flex-col gap-8" onSubmit={handleSubmit}>
           <div className="flex items-center gap-2">
@@ -78,7 +78,7 @@ export default function Search() {
       </div>
 
       <div className="w-full">
-        <h1 className="text-center text-3xl font-semibold sm:border-b border-gray-500 p-3 mt-5">
+        <h1 className="text-center text-3xl font-semibold sm:border-b border-gray-500 p-3 mt-5 font-poppins">
           Mess Results
         </h1>
         <div className=" p-11 flex flex-wrap gap-4 justify-center ">

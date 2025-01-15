@@ -110,9 +110,9 @@ const PrebookingForm = () => {
           <HashLoader color="#35c9e1" />
         </div>
       ) : (
-        <div className="flex w-full justify-center items-center p-6">
-        <div className="p-8 mb-20 w-96 dark:bg-gray-800 shadow-lg rounded-lg mt-10 mx-auto bg-white ">
-          <h2 className="text-2xl font-semibold mb-4 text-center">Prebook a Meal</h2>
+        <div className="flex w-full justify-center items-center p-6 font-rubik">
+        <div className="p-8 mb-20 w-96 dark:bg-gray-800 shadow-lg rounded-lg mt-10 mx-auto bg-white">
+          <h2 className="text-2xl font-semibold mb-4 text-center font-poppins">Prebook a Meal</h2>
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
               <label className="block text-lg font-medium" htmlFor="mess">

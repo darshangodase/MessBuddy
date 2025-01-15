@@ -105,8 +105,8 @@ function MessForm() {
   };
 
   return (
-    <form className="w-80 flex flex-col  gap-4 mb-6 font-sans" onSubmit={handleSubmit}>
-      <h2 className="text-2xl mx-auto font-bold mb-2 mt-2">Update Mess Information</h2>
+    <form className="w-80 flex flex-col  gap-4 mb-6 font-rubik" onSubmit={handleSubmit}>
+      <h2 className="text-2xl mx-auto font-bold mb-2 mt-2 font-poppins">Update Mess Information</h2>
       
       <div className="flex flex-col items-center ">
         <div
