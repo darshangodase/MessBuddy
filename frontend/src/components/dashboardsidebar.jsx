@@ -8,6 +8,7 @@ import { HiUser, HiArrowSmRight, HiTrash } from 'react-icons/hi';
 import toast from 'react-hot-toast';
 import { CgMenuBoxed } from "react-icons/cg";
 import { IoMdBookmarks } from "react-icons/io";
+import { RiMoneyDollarCircleLine } from "react-icons/ri";
 
 
 function DashboardSidebar() {
@@ -87,6 +88,15 @@ function DashboardSidebar() {
               icon={IoMdBookmarks}
               as="div">
               Prebookings
+            </Sidebar.Item>
+          </Link>
+          
+          <Link to="/dashboard?tab=subscriptions">
+            <Sidebar.Item
+              active={tab === "subscriptions"}
+              icon={RiMoneyDollarCircleLine}
+              as="div">
+              Manage Plans
             </Sidebar.Item>
           </Link>
 

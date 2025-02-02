@@ -22,6 +22,11 @@ const PrebookingForm = () => {
 
   // Fetch messes and menus data from API
   useEffect(() => {
+    if (currentUser && currentUser.Login_Role !== 'User') {
+      navigate('/');
+      toast.error('Prebooking feature is only available for users');
+      return;
+    }
     const fetchMessesAndMenus = async () => {
       try {
         const messRes = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/mess`);
@@ -36,7 +41,7 @@ const PrebookingForm = () => {
     };
 
     fetchMessesAndMenus();
-  }, []);
+  }, [currentUser]);
 
   // Filter menus when a mess is selected
   useEffect(() => {

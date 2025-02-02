@@ -98,6 +98,7 @@ const deleteMess = async (req, res, next) => {
     next(errorhandler(500, 'Internal Server Error'));
   }
 };
+
 const getRating = async (req, res, next) => {
   try {
     const mess = await Mess.findById(req.params.id);
@@ -113,26 +114,70 @@ const getRating = async (req, res, next) => {
   }
 };
 
-const updateRating = async (req, res, next) => {
-  const { rating } = req.body;
-  const {id,userId} = req.params; 
+const hasUserRated = async (req, res, next) => {
   try {
-    const mess = await Mess.findById(req.params.id);
+    const mess = await Mess.findById(req.params.messId);
     if (!mess) {
       return res.status(404).json({ success: false, message: 'Mess not found' });
     }
-    if (mess.RatedBy.includes(userId)) {
-      return res.status(400).json({ success: false, message: 'User has already rated this mess' });
-    }
-    mess.Ratings.push(rating);
-    mess.RatedBy.push(userId);
-    await mess.save();
-    const averageRating = mess.Ratings.reduce((acc, rating) => acc + rating, 0) / mess.Ratings.length;
-    res.status(200).json({ success: true, message: 'Rating updated successfully', rating: averageRating });
+    
+    const userIndex = mess.RatedBy.indexOf(req.params.userId);
+    const hasRated = userIndex !== -1;
+    const rating = hasRated ? mess.Ratings[userIndex] : 0;
+    
+    res.status(200).json({ 
+      success: true, 
+      hasRated,
+      rating: rating
+    });
   } catch (error) {
     next(errorhandler(500, 'Internal Server Error'));
   }
-}
+};
+
+const updateRating = async (req, res, next) => {
+  const { rating } = req.body;
+  const { id, userId } = req.params;
+  
+  try {
+    const mess = await Mess.findById(id);
+    if (!mess) {
+      return res.status(404).json({ success: false, message: 'Mess not found' });
+    }
+
+    // Check if user has already rated
+    if (mess.RatedBy.includes(userId)) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'You have already rated this mess' 
+      });
+    }
+
+    // Validate rating value
+    if (rating < 1 || rating > 5) {
+      return res.status(400).json({
+        success: false,
+        message: 'Rating must be between 1 and 5'
+      });
+    }
+
+    // Add rating and user to the arrays
+    mess.Ratings.push(rating);
+    mess.RatedBy.push(userId);
+    await mess.save();
+
+    // Calculate new average
+    const averageRating = mess.Ratings.reduce((acc, r) => acc + r, 0) / mess.Ratings.length;
+
+    res.status(200).json({ 
+      success: true, 
+      message: 'Rating submitted successfully', 
+      rating: averageRating 
+    });
+  } catch (error) {
+    next(errorhandler(500, 'Internal Server Error'));
+  }
+};
 
 module.exports = {
   createMess,
@@ -142,5 +187,6 @@ module.exports = {
   deleteMess,
   readMess,
   getRating,
+  hasUserRated,
   updateRating,
 };

@@ -11,7 +11,6 @@ function Header({ transparent = false }) {
   const { currentUser } = useSelector((state) => state.user);
   const { theme } = useSelector((state) => state.theme);
 
- 
   const handleSignOut = async () => {
     try {
       const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/user/signout`, {
@@ -104,11 +103,45 @@ function Header({ transparent = false }) {
             About
           </Link>
         </Navbar.Link>
-        <Navbar.Link className="mt-2" active={path === "/prebooking"} as={"div"}>
-          <Link to="/prebooking" className={` text-lg ${transparent ? "md:text-white" : ""}`}>
-            Prebooking
+        <Navbar.Link className="mt-2" active={path === "/search"} as={"div"}>
+          <Link to="/search" className={` text-lg ${transparent ? "md:text-white" : ""}`}>
+            Search
           </Link>
         </Navbar.Link>
+        <Navbar.Link className="mt-2" active={path === "/community"} as={"div"}>
+          <Link to="/community" className={` text-lg ${transparent ? "md:text-white" : ""}`}>
+            Community
+          </Link>
+        </Navbar.Link>
+        {currentUser && currentUser.Login_Role === 'User' && (
+          <>
+            <Navbar.Link className="mt-2" active={path === "/prebooking"} as={"div"}>
+              <Link to="/prebooking" className={`text-lg ${transparent ? "md:text-white" : ""}`}>
+                Prebooking
+              </Link>
+            </Navbar.Link>
+            <Navbar.Link className="mt-2" active={path === "/subscriptions"} as={"div"}>
+              <Link to="/subscriptions" className={`text-lg ${transparent ? "md:text-white" : ""}`}>
+                Subscriptions
+              </Link>
+            </Navbar.Link>
+          </>
+        )}
+
+        {currentUser?.Login_Role === 'User' && (
+          <Navbar.Link className="mt-2" active={path === "/meal-pass"} as={"div"}>
+            <Link to="/meal-pass" className={`text-lg ${transparent ? "md:text-white" : ""}`}>
+              Meal Pass
+            </Link>
+          </Navbar.Link>
+        )}
+        {currentUser?.Login_Role === 'Mess Owner' && (
+          <Navbar.Link className="mt-2" active={path === "/scanner"} as={"div"}>
+            <Link to="/scanner" className={`text-lg ${transparent ? "md:text-white" : ""}`}>
+              Scanner
+            </Link>
+          </Navbar.Link>
+        )}
       </Navbar.Collapse>
     </Navbar>
   );

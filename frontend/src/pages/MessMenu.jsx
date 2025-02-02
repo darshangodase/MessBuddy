@@ -22,8 +22,11 @@ const MessMenu = () => {
   const { theme } = useSelector((state) => state.theme);
   const currentUser = useSelector((state) => state.user.currentUser);
   const navigate = useNavigate();
-  const [submitting, setSubmitting] = useState(false); 
-
+  const [submitting, setSubmitting] = useState(false);
+  const [hover, setHover] = useState(null);
+  const [averageRating, setAverageRating] = useState(0);
+  const [hasRated, setHasRated] = useState(false);
+  const [userRating, setUserRating] = useState(0);
 
   const fetchMenuItems = async (ownerId, query) => {
     try {
@@ -158,6 +161,8 @@ const MessMenu = () => {
         setMessDetails(res.data.mess);
         await fetchMenuItems(res.data.mess.Owner_ID, "");
         await fetchRating(messId);
+        fetchAverageRating();
+        checkIfUserHasRated();
       } catch (error) {
         console.error("Failed to fetch mess details:", error);
         setLoading(false);
@@ -173,6 +178,59 @@ const MessMenu = () => {
     }
   }, [searchQuery, messDetails]);
 
+  const fetchAverageRating = async () => {
+    try {
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/mess/rating/${messId}`);
+      setAverageRating(res.data.rating);
+    } catch (error) {
+      console.error("Failed to fetch rating:", error);
+    }
+  };
+
+  const checkIfUserHasRated = async () => {
+    if (!currentUser) return;
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/api/mess/hasrated/${messId}/${currentUser._id}`
+      );
+      setHasRated(res.data.hasRated);
+      if (res.data.hasRated) {
+        setUserRating(res.data.rating);
+      }
+    } catch (error) {
+      console.error("Failed to check rating status:", error);
+    }
+  };
+
+  const handleRating = async (ratingValue) => {
+    if (!currentUser) {
+      toast.error('Please login to rate this mess');
+      return;
+    }
+
+    if (hasRated) {
+      toast.error('You have already rated this mess');
+      return;
+    }
+
+    try {
+      const res = await axios.put(
+        `${import.meta.env.VITE_BACKEND_URL}/api/mess/rating/${messId}/${currentUser._id}`,
+        { rating: ratingValue }
+      );
+      setHasRated(true);
+      setUserRating(ratingValue);
+      fetchAverageRating();
+      toast.success('Rating submitted successfully');
+    } catch (error) {
+      if (error.response?.data?.message) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error('Failed to submit rating');
+      }
+    }
+  };
+
   const renderStars = (rating) => {
     const fullStars = Math.floor(rating);
     const halfStar = rating - fullStars >= 0.5;
@@ -184,33 +242,24 @@ const MessMenu = () => {
           <FaStar
             key={i}
             className="text-yellow-500"
-            onClick={() => handleStarClick(i)}
+            onClick={() => handleRating(i + 1)}
           />
         ))}
         {halfStar && (
           <FaStarHalfAlt
             className="text-yellow-500"
-            onClick={() => handleStarClick(fullStars)}
+            onClick={() => handleRating(fullStars + 0.5)}
           />
         )}
         {[...Array(emptyStars)].map((_, i) => (
           <FaRegStar
             key={i}
             className="text-yellow-500"
-            onClick={() => handleStarClick(fullStars + (halfStar ? 1 : 0) + i)}
+            onClick={() => handleRating(fullStars + (halfStar ? 0.5 : 0) + i)}
           />
         ))}
       </div>
     );
-  };
-
-  const handleStarClick = (index) => {
-    if (
-      currentUser !== null &&
-      !messDetails.RatedBy.includes(currentUser._id)
-    ) {
-      updateRating(index + 1);
-    }
   };
 
   if (loading) {
@@ -301,12 +350,6 @@ const MessMenu = () => {
         <p className="text-lg">Address : {messDetails.Address}</p>
         <p className="text-lg">About : {messDetails.Description}</p>
         <p className="text-lg">Capacity : {messDetails.Capacity}</p>
-        <div className="flex items-center space-x-2">
-          <p className="text-lg mr-2">Rating :</p>
-          <div className="flex items-center mt-2 cursor-pointer">
-            {renderStars(rating)}
-          </div>
-        </div>
       </Card>
 
       <div className="mb-4 flex justify-end">
@@ -393,11 +436,13 @@ const MessMenu = () => {
         </tbody>
       </Table>
 
-      <div className="flex justify-end mt-4">
-        <Button onClick={handlePrebook} className=" text-white" disabled={!userId || selectedItems.length === 0}>
-          Prebook Meals
-        </Button>
-      </div>
+      {currentUser && currentUser.Login_Role === 'User' && (
+        <div className="flex justify-end mt-4">
+          <Button onClick={handlePrebook} className="text-white" disabled={!userId || selectedItems.length === 0}>
+            Prebook Meals
+          </Button>
+        </div>
+      )}
 
       <Modal show={isModalOpen} onClose={() => setIsModalOpen(false)}>
       <Modal.Body>
@@ -436,6 +481,61 @@ const MessMenu = () => {
         </div>
       </Modal.Body>
     </Modal>
+
+      {/* Display average rating */}
+      <div className="flex items-center gap-2 mb-4">
+        <span className="text-lg font-semibold">Average Rating:</span>
+        <div className="flex items-center">
+          {[...Array(5)].map((_, index) => (
+            <FaStar
+              key={index}
+              className={index < Math.floor(averageRating) ? "text-yellow-500" : "text-gray-300"}
+            />
+          ))}
+        </div>
+        <span>({averageRating.toFixed(1)})</span>
+      </div>
+
+      {/* Rating submission section */}
+      {!hasRated && currentUser && currentUser.Login_Role === 'User' && (
+        <div className="mt-4">
+          <p className="text-lg font-semibold mb-2">Rate this mess:</p>
+          <div className="flex items-center gap-1">
+            {[...Array(5)].map((_, index) => {
+              const ratingValue = index + 1;
+              return (
+                <FaStar
+                  key={index}
+                  className={`cursor-pointer text-2xl ${
+                    hover >= ratingValue ? "text-yellow-500" : "text-gray-300"
+                  }`}
+                  onClick={() => handleRating(ratingValue)}
+                  onMouseEnter={() => setHover(ratingValue)}
+                  onMouseLeave={() => setHover(null)}
+                />
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {hasRated && (
+        <div className="mt-4">
+          <p className="text-sm text-gray-600">
+            You have already rated this mess
+          </p>
+          <div className="flex items-center gap-1 mt-1">
+            {[...Array(5)].map((_, index) => (
+              <FaStar
+                key={index}
+                className={`text-2xl ${
+                  index < userRating ? "text-yellow-500" : "text-gray-300"
+                }`}
+              />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -2,18 +2,19 @@ const jwt = require('jsonwebtoken');
 const errorhandler = require('../utils/error');
 const User = require('../models/user');
 
-const verifyToken = (req, res, next) => {
+const verifyToken = async (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1];
+  
   if (!token) {
-    return next(errorhandler(401, 'Access Denied'));
+    return next(errorhandler(401, 'You must be logged in'));
   }
 
   try {
-    const verified = jwt.verify(token, process.env.JWT_SECRET_KEY);
-    req.user = verified;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded;
     next();
   } catch (error) {
-    next(errorhandler(400, error.message));
+    next(errorhandler(401, 'Invalid token'));
   }
 };
 

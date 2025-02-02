@@ -4,6 +4,7 @@ import Dashboardsidebar from '../components/dashboardsidebar';
 import MessForm from '../components/MessForm';
 import Menu from '../components/Menu';
 import MessPrebookingsPage from '../components/MessPrebookingsPage';
+import ManageSubscriptions from '../components/ManageSubscriptions';
 
 
 function Dashboard() {
@@ -27,6 +28,7 @@ function Dashboard() {
         {tab === 'profile' && <MessForm />}
         {tab === 'menu' && <Menu />}
         {tab === 'Prebookings' && <MessPrebookingsPage />}
+        {tab === 'subscriptions' && <ManageSubscriptions />}
       </div>
     </div>
   );
