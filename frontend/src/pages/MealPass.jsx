@@ -5,6 +5,7 @@ import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import { Card, Button } from 'flowbite-react';
 import { useNavigate } from 'react-router-dom';
+import { HiDownload } from 'react-icons/hi';
 
 export default function MealPass() {
   const [mealPasses, setMealPasses] = useState([]);
@@ -33,6 +34,30 @@ export default function MealPass() {
       setLoading(false);
     }
   }, [currentUser]);
+
+  const downloadQRCode = (qrCode, messName) => {
+    const canvas = document.createElement("canvas");
+    const svg = document.querySelector(`#qr-${qrCode}`);
+    const svgData = new XMLSerializer().serializeToString(svg);
+    const img = new Image();
+    
+    img.onload = () => {
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext("2d");
+      ctx.fillStyle = "white";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0);
+      
+      const pngFile = canvas.toDataURL("image/png");
+      const downloadLink = document.createElement("a");
+      downloadLink.download = `${messName}-qrcode.png`;
+      downloadLink.href = pngFile;
+      downloadLink.click();
+    };
+    
+    img.src = "data:image/svg+xml;base64," + btoa(svgData);
+  };
 
   if (!currentUser) {
     return (
@@ -79,9 +104,17 @@ export default function MealPass() {
                     {pass.messDetails?.Mess_Name}
                   </p>
 
-                  <div className="bg-white dark:bg-gray-700 p-4 rounded-xl shadow-inner mb-6 inline-block">
+                  <div className="bg-white dark:bg-gray-700 p-4 rounded-xl shadow-inner mb-6 inline-block relative">
+                    <button 
+                      onClick={() => downloadQRCode(pass.qrCode, pass.messDetails?.Mess_Name)}
+                      className="absolute top-2 left-2 p-2 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors"
+                      title="Download QR Code"
+                    >
+                      <HiDownload className="w-5 h-5" />
+                    </button>
                     <div className="bg-white p-2 rounded">
                       <QRCodeSVG 
+                        id={`qr-${pass.qrCode}`}
                         value={pass.qrCode}
                         size={200}
                         level="H"

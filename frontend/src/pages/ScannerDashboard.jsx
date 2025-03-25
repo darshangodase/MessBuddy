@@ -15,32 +15,36 @@ export default function ScannerDashboard() {
   });
   const { currentUser } = useSelector(state => state.user);
 
+  const fetchTodayStats = async () => {
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/api/checkin/today-stats/${currentUser._id}`
+      );
+      setTodayStats(res.data);
+    } catch (error) {
+      console.error('Failed to fetch today\'s stats:', error);
+    }
+  };
+
+  const fetchAttendance = async () => {
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/api/checkin/${currentUser._id}`,
+        { params: { date: selectedDate } }
+      );
+      setAttendanceRecords(res.data);
+    } catch (error) {
+      console.error('Failed to fetch attendance records:', error);
+    }
+  };
+
+  const handleAttendanceMarked = () => {
+    fetchTodayStats();
+    fetchAttendance();
+  };
+
   useEffect(() => {
     if (currentUser?.Login_Role !== 'Mess Owner') return;
-
-    const fetchTodayStats = async () => {
-      try {
-        const res = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/api/checkin/today-stats/${currentUser._id}`
-        );
-        setTodayStats(res.data);
-      } catch (error) {
-        console.error('Failed to fetch today\'s stats:', error);
-      }
-    };
-
-    const fetchAttendance = async () => {
-      try {
-        const res = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/api/checkin/${currentUser._id}`,
-          { params: { date: selectedDate } }
-        );
-        setAttendanceRecords(res.data);
-      } catch (error) {
-        console.error('Failed to fetch attendance records:', error);
-      }
-    };
-
     fetchTodayStats();
     fetchAttendance();
   }, [currentUser, selectedDate]);
@@ -98,7 +102,7 @@ export default function ScannerDashboard() {
         {showScanner && (
           <div className="mt-6 flex justify-center">
             <div className="w-full max-w-md bg-gray-100 dark:bg-gray-900 p-4 rounded-lg">
-              <QRScanner />
+              <QRScanner onAttendanceMarked={handleAttendanceMarked} className=""/>
             </div>
           </div>
         )}

@@ -6,15 +6,25 @@ import { useSelector } from 'react-redux';
 import { Button, Modal, Select, Card } from 'flowbite-react';
 import { HiCamera, HiUpload } from 'react-icons/hi';
 
-export default function QRScanner() {
+export default function QRScanner({ onAttendanceMarked }) {
   const [html5Qrcode, setHtml5Qrcode] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [selectedMeal, setSelectedMeal] = useState('');
   const [scannedData, setScannedData] = useState(null);
   const [cameras, setCameras] = useState([]);
   const [selectedCamera, setSelectedCamera] = useState(null);
-  const [scanMethod, setScanMethod] = useState('camera'); // 'camera' or 'upload'
+  const [scanMethod, setScanMethod] = useState('camera'); 
   const { currentUser } = useSelector(state => state.user);
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  const resetStates = () => {
+    setShowModal(false);
+    setSelectedMeal('');
+    setScannedData(null);
+    if (scanMethod === 'camera' && html5Qrcode) {
+      startScanning();
+    }
+  };
 
   useEffect(() => {
     if (scanMethod === 'camera') {
@@ -54,15 +64,24 @@ export default function QRScanner() {
     if (!selectedCamera || !html5Qrcode) return;
 
     try {
+      const isMobile = window.innerWidth < 640;
+      const qrboxSize = isMobile ? 300 : 250;
+
       await html5Qrcode.start(
         selectedCamera,
         {
           fps: 10,
-          qrbox: { width: 250, height: 250 }
+          qrbox: { width: qrboxSize, height: qrboxSize },
+          aspectRatio: 1.0,
+          formatsToSupport: [ Html5Qrcode.FORMATS.QR_CODE ],
+          disableFlip: false,
+          experimentalFeatures: {
+            useBarCodeDetectorIfSupported: true
+          },
         },
         handleQrCode,
         (errorMessage) => {
-          // Ignore error messages during scanning
+          console.debug('Scanning in progress...');
         }
       );
     } catch (err) {
@@ -78,7 +97,7 @@ export default function QRScanner() {
   };
 
   const handleImageUpload = async (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files?.[0];
     if (!file) return;
 
     try {
@@ -86,35 +105,50 @@ export default function QRScanner() {
       const result = await html5QrCode.scanFile(file, true);
       await handleQrCode(result);
       html5QrCode.clear();
+      
+      // Reset file input
+      e.target.value = '';
     } catch (error) {
-      toast.error('Failed to read QR code from image');
+      toast.error('Failed to process image');
+      e.target.value = '';
     }
   };
 
   const handleQrCode = async (decodedText) => {
+    if (isProcessing) return;
+
     try {
+      setIsProcessing(true);
+      
+      if (html5Qrcode?.isScanning) {
+        html5Qrcode.pause();
+      }
+
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/api/mealpass/validate/${currentUser._id}`,
         { qrCode: decodedText }
       );
       
       if (response.data.valid) {
-        if (html5Qrcode?.isScanning) {
-          html5Qrcode.pause();
-        }
         setScannedData(response.data);
         setShowModal(true);
+      } else {
+        toast.error('Invalid QR code');
+        if (scanMethod === 'camera' && html5Qrcode) {
+          html5Qrcode.resume();
+        }
       }
     } catch (error) {
       const errorMessage = error.response?.data?.message || 'Invalid QR code';
-      toast.error(errorMessage);
-      
-      // If using camera, resume scanning after error
-      if (scanMethod === 'camera' && html5Qrcode) {
-        setTimeout(() => {
-          html5Qrcode.resume();
-        }, 2000);
+      if (error.response) {
+        toast.error(errorMessage);
       }
+      
+      if (scanMethod === 'camera' && html5Qrcode) {
+        html5Qrcode.resume();
+      }
+    } finally {
+      setIsProcessing(false);
     }
   };
 
@@ -133,22 +167,19 @@ export default function QRScanner() {
         }
       );
 
-      toast.success(`Attendance marked for ${selectedMeal}`);
-      setShowModal(false);
-      setSelectedMeal('');
-      setScannedData(null);
-      
-      // Resume scanning if using camera
-      if (scanMethod === 'camera' && html5Qrcode) {
-        startScanning();
+      if (response.status === 201) {
+        toast.success('Attendance marked successfully');
+        onAttendanceMarked();
+        resetStates();
       }
     } catch (error) {
       toast.error(error.response?.data?.message || 'Failed to mark attendance');
+      resetStates();
     }
   };
 
   return (
-    <div className="max-w-md mx-auto p-4 font-rubik">
+    <div className="w-full sm:max-w-md mx-auto p-2 sm:p-4 font-rubik">
       <div className="flex gap-2 mb-4 flex-wrap">
         <Button
           color={scanMethod === 'camera' ? 'blue' : 'gray'}
@@ -168,7 +199,7 @@ export default function QRScanner() {
 
       {scanMethod === 'camera' ? (
         <Card>
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6">
             <h2 className="text-2xl font-bold mb-4 dark:text-white">Scan with Camera</h2>
             
             {cameras.length > 0 && (
@@ -199,16 +230,16 @@ export default function QRScanner() {
               </Button>
             </div>
 
-            <div id="reader" className="w-full"></div>
+            <div id="reader" className="w-full h-[300px] sm:h-[250px]"></div>
           </div>
         </Card>
       ) : (
         <Card>
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6">
             <h2 className="text-2xl font-bold mb-4 dark:text-white">Upload QR Code</h2>
             <div className="space-y-4">
               <div className="flex items-center justify-center w-full">
-                <label className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-700 dark:bg-gray-700 hover:bg-gray-100">
+                <label className="flex flex-col items-center justify-center w-full h-[300px] sm:h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-700 dark:bg-gray-700 hover:bg-gray-100">
                   <div className="flex flex-col items-center justify-center pt-5 pb-6">
                     <HiUpload className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" />
                     <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
@@ -227,7 +258,6 @@ export default function QRScanner() {
                 </label>
               </div>
             </div>
-            {/* Hidden element for file scanning */}
             <div id="reader-upload" className="hidden"></div>
           </div>
         </Card>
